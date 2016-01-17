@@ -7,3 +7,6 @@ export Login from './Login/Login';
 export LoginSuccess from './LoginSuccess/LoginSuccess';
 export Survey from './Survey/Survey';
 export NotFound from './NotFound/NotFound';
+export Checkin from './Checkin/Checkin';
+export History from './History/History';
+export Guests from './Guests/Guests';

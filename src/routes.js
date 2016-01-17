@@ -11,6 +11,9 @@ import {
     LoginSuccess,
     Survey,
     NotFound,
+    Checkin,
+    Guests,
+    History
   } from 'containers';
 
 export default (store) => {
@@ -36,7 +39,7 @@ export default (store) => {
    */
   return (
     <Route path="/" component={App}>
-      { /* Home (main) route */ }
+    { /* Home (main) route */ }
       <IndexRoute component={Home}/>
 
       { /* Routes requiring login */ }
@@ -50,6 +53,9 @@ export default (store) => {
       <Route path="login" component={Login}/>
       <Route path="survey" component={Survey}/>
       <Route path="widgets" component={Widgets}/>
+      <Route path="checkin" component={Checkin}/>
+      <Route path="guests" component={Guests}/>
+      <Route path="history" component={History}/>
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
