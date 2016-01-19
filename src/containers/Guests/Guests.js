@@ -1,49 +1,69 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
-import { MiniInfoBar } from 'components';
+import {connect} from 'react-redux';
+import connectData from 'helpers/connectData';
+import * as guestActions from 'redux/modules/guests';
+import {isLoaded, loadAll as loadGuests} from 'redux/modules/guests';
+// import {initializeWithKey} from 'redux-form';
 
+function fetchData(getState, dispatch) {
+  if (!isLoaded(getState())) {
+    return dispatch(loadGuests());
+  }
+}
+
+@connectData(fetchData)
+@connect(
+  state => ({
+    guests: state.guests.data,
+    error: state.guests.error,
+    loading: state.guests.loading
+  }),
+  {...guestActions })
 export default class Guests extends Component {
-
-  state = {
-    showKitten: false
+  static propTypes = {
+    guests: PropTypes.array,
+    error: PropTypes.string,
+    loading: PropTypes.bool,
+    loadAll: PropTypes.func.isRequired
   }
 
-  handleToggleKitten = () => this.setState({showKitten: !this.state.showKitten});
-
   render() {
-    const {showKitten} = this.state;
-    const kitten = require('./kitten.jpg');
+    console.log ("KEETAEK");
+    // const {guests, error, loading, loadAll} = this.props;
+    const { guests } = this.props;
+    const styles = require('../Widgets/Widgets.scss');
+    console.log('KEETAEK ' + JSON.stringify(this.props));
     return (
       <div className="container">
         <h1>Guests</h1>
         <Helmet title="Guests"/>
-
-        <p>This project was originally created by Erik Rasmussen
-          (<a href="https://twitter.com/erikras" target="_blank">@erikras</a>), but has since seen many contributions
-          from the open source community. Thank you to <a
-            href="https://github.com/erikras/react-redux-universal-hot-example/graphs/contributors"
-            target="_blank">all the contributors</a>.
-        </p>
-
-        <h3>Mini Bar <span style={{color: '#aaa'}}>(not that kind)</span></h3>
-
-        <p>Hey! You found the mini info bar! The following component is display-only. Note that it shows the same
-          time as the info bar.</p>
-
-        <MiniInfoBar/>
-
-        <h3>Images</h3>
-
-        <p>
-          Psst! Would you like to see a kitten?
-
-          <button className={'btn btn-' + (showKitten ? 'danger' : 'success')}
-                  style={{marginLeft: 50}}
-                  onClick={this.handleToggleKitten}>
-            {showKitten ? 'No! Take it away!' : 'Yes! Please!'}</button>
-        </p>
-
-        {showKitten && <div><img src={kitten}/></div>}
+        {guests && guests.length &&
+        <table className="table table-striped">
+          <thead>
+          <tr>
+            <th className={styles.idCol}>ID</th>
+            <th className={styles.colorCol}>Color</th>
+            <th className={styles.sprocketsCol}>Sprockets</th>
+            <th className={styles.ownerCol}>Owner</th>
+            <th className={styles.buttonCol}></th>
+          </tr>
+          </thead>
+          <tbody>
+          {
+            guests.map((guest) =>
+              <tr key={guest.id}>
+                <td className={styles.idCol}>{guest.id}</td>
+                <td className={styles.colorCol}>{guest.first_name}</td>
+                <td className={styles.sprocketsCol}>{guest.last_name}</td>
+                <td className={styles.ownerCol}>{guest.birthdate}</td>
+                <td className={styles.buttonCol}>
+                  button
+                </td>
+              </tr>)
+          }
+          </tbody>
+        </table>}
       </div>
     );
   }
