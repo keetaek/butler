@@ -24,7 +24,9 @@ function searchHelper(searchTerm, guestFullList) {
   const regex = new RegExp(searchTerm, 'gi');
   if (!lo.isEmpty(guestFullList)) {
     result = lo.filter(guestFullList, (guest) => {
-      if (!lo.isEmpty(guest.first_name) && guest.first_name.match(regex)) {
+      if (!lo.isEmpty(guest.first_name) && guest.first_name.match(regex) ||
+          !lo.isEmpty(guest.last_name) && guest.last_name.match(regex) ||
+          !lo.isEmpty(guest.nickname) && guest.nickname.match(regex)) {
         return true;
       }
     });
