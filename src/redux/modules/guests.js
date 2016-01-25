@@ -20,10 +20,9 @@ const initialState = {
  * @return {[type]}            [description]
  */
 function searchHelper(searchTerm, guestFullList) {
-  let result = [];
   const regex = new RegExp(searchTerm, 'gi');
   if (!lo.isEmpty(guestFullList)) {
-    result = lo.filter(guestFullList, (guest) => {
+    return lo.filter(guestFullList, (guest) => {
       if (!lo.isEmpty(guest.first_name) && guest.first_name.match(regex) ||
           !lo.isEmpty(guest.last_name) && guest.last_name.match(regex) ||
           !lo.isEmpty(guest.nickname) && guest.nickname.match(regex)) {
@@ -31,7 +30,6 @@ function searchHelper(searchTerm, guestFullList) {
       }
     });
   }
-  return result;
 }
 
 export default function reducer(state = initialState, action = {}) {
