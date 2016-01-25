@@ -2,9 +2,21 @@ import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import connectData from 'helpers/connectData';
-import * as guestActions from 'redux/modules/guests';
-import {isLoaded, loadAll as loadGuests} from 'redux/modules/guests';
-// import {initializeWithKey} from 'redux-form';
+import {isLoaded, searchRequest, loadAll as loadGuests} from 'redux/modules/guests';
+import FixedDataTable from 'fixed-data-table';
+const {Table, Column, Cell} = FixedDataTable;
+
+const DateCell = ({rowIndex, data, col, ...props}) => (
+  <Cell {...props}>
+    {data[rowIndex][col].toLocaleString()}
+  </Cell>
+);
+
+const TextCell = ({rowIndex, data, col, ...props}) => (
+  <Cell {...props}>
+    {data[rowIndex][col]}
+  </Cell>
+);
 
 function fetchData(getState, dispatch) {
   if (!isLoaded(getState())) {
@@ -12,58 +24,86 @@ function fetchData(getState, dispatch) {
   }
 }
 
-@connectData(fetchData)
-@connect(
-  state => ({
+function select(state) {
+  return {
     guests: state.guests.data,
+    filteredGuests: state.guests.filteredData,
     error: state.guests.error,
     loading: state.guests.loading
-  }),
-  {...guestActions })
+  };
+}
+
+@connectData(fetchData)
+@connect(select)
 export default class Guests extends Component {
   static propTypes = {
     guests: PropTypes.array,
+    filteredGuests: PropTypes.array,
     error: PropTypes.string,
     loading: PropTypes.bool,
-    loadAll: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this._onFilterChange = this._onFilterChange.bind(this);
+  }
+
+  _onFilterChange(event) {
+    let filterBy;
+    if (!event || !event.target.value) {
+      filterBy = '';
+    } else {
+      filterBy = event.target.value.toLowerCase();
+    }
+    this.props.dispatch(searchRequest(filterBy));
   }
 
   render() {
-    console.log ("KEETAEK");
-    // const {guests, error, loading, loadAll} = this.props;
-    const { guests } = this.props;
-    const styles = require('../Widgets/Widgets.scss');
-    console.log('KEETAEK ' + JSON.stringify(this.props));
+    const { filteredGuests } = this.props;
+    require('style!css!../../../node_modules/fixed-data-table/dist/fixed-data-table.css');
     return (
       <div className="container">
         <h1>Guests</h1>
         <Helmet title="Guests"/>
-        {guests && guests.length &&
-        <table className="table table-striped">
-          <thead>
-          <tr>
-            <th className={styles.idCol}>ID</th>
-            <th className={styles.colorCol}>Color</th>
-            <th className={styles.sprocketsCol}>Sprockets</th>
-            <th className={styles.ownerCol}>Owner</th>
-            <th className={styles.buttonCol}></th>
-          </tr>
-          </thead>
-          <tbody>
-          {
-            guests.map((guest) =>
-              <tr key={guest.id}>
-                <td className={styles.idCol}>{guest.id}</td>
-                <td className={styles.colorCol}>{guest.first_name}</td>
-                <td className={styles.sprocketsCol}>{guest.last_name}</td>
-                <td className={styles.ownerCol}>{guest.birthdate}</td>
-                <td className={styles.buttonCol}>
-                  button
-                </td>
-              </tr>)
-          }
-          </tbody>
-        </table>}
+        <div>
+          <input
+            onChange={this._onFilterChange}
+            placeholder="Filter by First Name"
+          />
+          <br />
+          <Table
+            rowHeight={50}
+            headerHeight={50}
+            rowsCount={filteredGuests.length}
+            width={1000}
+            height={500}
+            {...this.props}>
+            <Column
+              header={<Cell>First Name</Cell>}
+              cell={<TextCell data={filteredGuests} col="first_name" />}
+              fixed
+              width={100}
+            />
+            <Column
+              header={<Cell>Last Name</Cell>}
+              cell={<TextCell data={filteredGuests} col="last_name" />}
+              fixed
+              width={100}
+            />
+            <Column
+              header={<Cell>Nickname</Cell>}
+              cell={<TextCell data={filteredGuests} col="nickname" />}
+              fixed
+              width={100}
+            />
+            <Column
+              header={<Cell>DOB</Cell>}
+              cell={<DateCell data={filteredGuests} col="birthdate" />}
+              width={200}
+            />
+          </Table>
+        </div>
       </div>
     );
   }
