@@ -62,6 +62,7 @@ export default class Guests extends Component {
 
   render() {
     const { filteredGuests } = this.props;
+    const styles = require('./Guests.scss');
     return (
       <div className="container">
         <h1>Guests</h1>
@@ -69,9 +70,9 @@ export default class Guests extends Component {
         <div>
           <input
             onChange={this._onFilterChange}
-            placeholder="Filter by First Name"
+            className={styles.search_input + ' form-control'}
+            placeholder="Filter by first, last or nickname"
           />
-          <br />
           <Table
             rowHeight={50}
             headerHeight={50}
