@@ -47,6 +47,7 @@ export default class Guests extends Component {
   constructor(props) {
     super(props);
     this._onFilterChange = this._onFilterChange.bind(this);
+    require('fixed-data-table/dist/fixed-data-table.min.css');
   }
 
   _onFilterChange(event) {
@@ -61,7 +62,6 @@ export default class Guests extends Component {
 
   render() {
     const { filteredGuests } = this.props;
-    require('style!css!../../../node_modules/fixed-data-table/dist/fixed-data-table.css');
     return (
       <div className="container">
         <h1>Guests</h1>
