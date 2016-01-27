@@ -5,7 +5,6 @@ import FixedDataTable from 'fixed-data-table';
 const {Table, Column, Cell} = FixedDataTable;
 const Link = require('react-router').Link;
 
-
 const DateCell = ({rowIndex, data, col, ...props}) => (
   <Cell {...props}>
     {data[rowIndex][col].toLocaleString()}
@@ -18,9 +17,9 @@ const TextCell = ({rowIndex, data, col, ...props}) => (
   </Cell>
 );
 
-const CheckinCell = ({rowIndex, data, col, ...props}) => (
+const CheckinCell = ({rowIndex, data, col, checkinHandler, ...props}) => (
   <Cell {...props}>
-    <Link to={`/checkin/${data[rowIndex][col]}`}>Checkin</Link>
+    <Link to={`/checkin/${data[rowIndex][col]}`} onClick={checkinHandler} >Checkin</Link>
   </Cell>
 );
 
@@ -43,6 +42,7 @@ export default class GuestList extends Component {
     loading: PropTypes.bool,
     loaded: PropTypes.bool,
     isCheckin: PropTypes.bool.isRequired,
+    checkinHandler: PropTypes.func,
     dispatch: PropTypes.func.isRequired
   }
 
@@ -75,7 +75,7 @@ export default class GuestList extends Component {
   }
 
   render() {
-    const { filteredGuests, loaded, isCheckin } = this.props;
+    const { filteredGuests, loaded, isCheckin, checkinHandler } = this.props;
     const styles = require('./GuestList.scss');
     if (!loaded) {
       return (
@@ -122,7 +122,7 @@ export default class GuestList extends Component {
             />
             <Column
               header={<Cell>Checkin</Cell>}
-              cell={<CheckinCell data={filteredGuests} col="id" />}
+              cell={<CheckinCell data={filteredGuests} col="id" checkinHandler = {checkinHandler} />}
               width={100}
             />
           </Table>

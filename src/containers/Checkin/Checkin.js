@@ -5,6 +5,11 @@ import { GuestList } from 'components';
 
 export default class Checkin extends Component {
 
+  checkinHandler(event) {
+    event.preventDefault();
+    alert('test');
+  }
+
   render() {
     return (
       <div className="container">
@@ -13,7 +18,7 @@ export default class Checkin extends Component {
         <Grid>
           <Row className="show-grid">
             <Col xs={12} md={8}>
-              <GuestList {...this.props} isCheckin />
+              <GuestList {...this.props} isCheckin checkinHandler={::this.checkinHandler} />
             </Col>
             <Col xs={6} md={4}>
               <code>&lt;{'Col xs={6} md={4}'} /&gt;</code>
