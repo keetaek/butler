@@ -82,7 +82,7 @@ export default class GuestList extends Component {
           rowHeight={50}
           headerHeight={50}
           rowsCount={filteredGuests.length}
-          width={1000}
+          width={600}
           height={500}
           {...this.props}>
           <Column
@@ -104,7 +104,7 @@ export default class GuestList extends Component {
             width={100}
           />
           <Column
-            header={<Cell>DOB</Cell>}
+            header={<Cell>Birthdate</Cell>}
             cell={<DateCell data={filteredGuests} col="birthdate" />}
             width={200}
           />
