@@ -58,7 +58,6 @@ export default function reducer(state = initialState, action = {}) {
         error: action.error
       };
     case SEARCH:
-      console.log('IN REDUCER SEARCH');
       return {
         ...state,
         // when the data is just loaded filteredData will bi
@@ -82,6 +81,5 @@ export function loadAll() {
 }
 
 export function searchRequest(searchTerm) {
-  console.log('SearchRequest', searchTerm);
   return { type: SEARCH, searchTerm };
 }
