@@ -13,7 +13,7 @@ export default class Checkin extends Component {
         <Grid>
           <Row className="show-grid">
             <Col xs={12} md={8}>
-              <GuestList {...this.props} />
+              <GuestList {...this.props} isCheckin />
             </Col>
             <Col xs={6} md={4}>
               <code>&lt;{'Col xs={6} md={4}'} /&gt;</code>
