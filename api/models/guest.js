@@ -16,9 +16,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Guest.hasMany(models.Checkin);
-        Guest.hasMany(models.Locker);
-        Guest.hasMany(models.Bar);
+        Guest.hasMany(models.Checkin, { foreignKey: 'guest_id' });
+        Guest.hasMany(models.Locker, { foreignKey: 'guest_id' });
+        Guest.hasMany(models.Bar, { foreignKey: 'guest_id' });
       }
     }
   });
