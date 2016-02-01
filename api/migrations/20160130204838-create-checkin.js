@@ -1,6 +1,6 @@
 module.exports = {
   up: function (migration, DataTypes) {
-    return migration.createTable('checkin', {
+    return migration.createTable('Checkins', {
       id: {
         allowNull: false,
         type: DataTypes.INTEGER,
@@ -10,7 +10,7 @@ module.exports = {
       guest_id: {
         allowNull: false,
         references: {
-          model: 'guest',
+          model: 'Guests',
           key: 'id'
         },
         type: DataTypes.INTEGER
@@ -19,11 +19,13 @@ module.exports = {
       feel_safe: DataTypes.BOOLEAN,
       heatlh_issue: DataTypes.BOOLEAN,
       reported_items: DataTypes.TEXT,
-      note: DataTypes.TEXT
+      note: DataTypes.TEXT,
+      created_at: DataTypes.DATE,
+      updated_at: DataTypes.DATE
     });
   },
 
   down: function (migration) {
-    return migration.dropTable('checkin');
+    return migration.dropTable('Checkins');
   }
 };

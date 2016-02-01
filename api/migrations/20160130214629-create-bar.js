@@ -1,8 +1,6 @@
-'use strict';
-
 module.exports = {
   up: function (migration, DataTypes) {
-    return migration.createTable('locker', {
+    return migration.createTable('Bars', {
       id: {
         allowNull: false,
         type: DataTypes.INTEGER,
@@ -12,18 +10,20 @@ module.exports = {
       guest_id: {
         allowNull: false,
         references: {
-          model: 'guest',
+          model: 'Guests',
           key: 'id'
         },
         type: DataTypes.INTEGER
       },
-      rent_start_date: DataTypes.DATEONLY,
-      rent_end_date: DataTypes.DATEONLY,
-      locker_number: DataTypes.STRING
+      bar_start_date: DataTypes.DATEONLY,
+      bar_end_date: DataTypes.DATEONLY,
+      reason: DataTypes.TEXT,
+      created_at: DataTypes.DATE,
+      updated_at: DataTypes.DATE
     });
   },
 
   down: function (migration) {
-    return migration.dropTable('locker');
+    return migration.dropTable('Bars');
   }
 };

@@ -1,6 +1,6 @@
 module.exports = {
   up: function (migration, DataTypes) {
-    return migration.createTable('bar', {
+    return migration.createTable('Lockers', {
       id: {
         allowNull: false,
         type: DataTypes.INTEGER,
@@ -10,18 +10,20 @@ module.exports = {
       guest_id: {
         allowNull: false,
         references: {
-          model: 'guest',
+          model: 'Guests',
           key: 'id'
         },
         type: DataTypes.INTEGER
       },
-      bar_start_date: DataTypes.DATEONLY,
-      bar_end_date: DataTypes.DATEONLY,
-      reason: DataTypes.TEXT
+      rent_start_date: DataTypes.DATEONLY,
+      rent_end_date: DataTypes.DATEONLY,
+      locker_number: DataTypes.STRING,
+      created_at: DataTypes.DATE,
+      updated_at: DataTypes.DATE
     });
   },
 
   down: function (migration) {
-    return migration.dropTable('bar');
+    return migration.dropTable('Lockers');
   }
 };

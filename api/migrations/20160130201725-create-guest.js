@@ -1,6 +1,6 @@
 module.exports = {
   up: function (migration, DataTypes) {
-    return migration.createTable('guest', {
+    return migration.createTable('Guests', {
       id: {
         allowNull: false,
         type: DataTypes.INTEGER,
@@ -19,12 +19,14 @@ module.exports = {
       identification_need_by: DataTypes.DATEONLY,
       identification_note: DataTypes.TEXT,
       intake_form_collect_date: DataTypes.DATEONLY,
-      intake_form_collected_by: DataTypes.STRING
+      intake_form_collected_by: DataTypes.STRING,
+      created_at: DataTypes.DATE,
+      updated_at: DataTypes.DATE
     });
   },
 
   down: function (migration) {
-    return migration.dropTable('guest');
+    return migration.dropTable('Guests');
 
   }
 };
