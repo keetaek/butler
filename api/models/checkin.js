@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  const Checkin = sequelize.define('checkin', {
+  const Checkin = sequelize.define('Checkin', {
     checkin_date: DataTypes.DATEONLY,
     feel_safe: DataTypes.BOOLEAN,
     heatlh_issue: DataTypes.BOOLEAN,
