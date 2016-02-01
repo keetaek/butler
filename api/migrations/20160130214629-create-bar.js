@@ -18,8 +18,8 @@ module.exports = {
       bar_start_date: DataTypes.DATEONLY,
       bar_end_date: DataTypes.DATEONLY,
       reason: DataTypes.TEXT,
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE
     });
   },
 

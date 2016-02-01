@@ -20,8 +20,8 @@ module.exports = {
       heatlh_issue: DataTypes.BOOLEAN,
       reported_items: DataTypes.TEXT,
       note: DataTypes.TEXT,
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE
     });
   },
 

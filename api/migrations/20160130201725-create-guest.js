@@ -20,8 +20,8 @@ module.exports = {
       identification_note: DataTypes.TEXT,
       intake_form_collect_date: DataTypes.DATEONLY,
       intake_form_collected_by: DataTypes.STRING,
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE
     });
   },
 
