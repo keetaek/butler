@@ -14,7 +14,6 @@ module.exports = function(sequelize, DataTypes) {
     intake_form_collect_date: DataTypes.DATEONLY,
     intake_form_collected_by: DataTypes.STRING
   }, {
-    underscored: true,
     classMethods: {
       associate: function(models) {
         Guest.hasMany(models.Checkin);

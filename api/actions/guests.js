@@ -1,50 +1,46 @@
 const express = require('express')
 const models = require('../models/index');
 const checkContentType = require('../middlewares/checkContentType');
-const RSVP = require('rsvp');
 
-async function getGuests(req) {
+async function getGuests() {
   return models.Guest.findAll({});
 }
 
 async function getGuest(req) {
-  const guestId = req.params.id;
   return models.Guest.find({
     where: {
-      id: guestId
+      id: req.params.id
     }
   });
 }
 
-// TODO:Needs to add validation - here?  or SQL level?
-// TODO: Need to do content type check
-//
 async function createGuest(req) {
-  console.log('Req.Body', req.body);
   return models.Guest.create({
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    nickname: req.body.nickname,
-    birthdate: req.body.birthdate,
-    gender: req.body.gender,
-    emergency_contact_name: req.body.emergency_contact_name,
-    emergency_contact_phone: req.body.emergency_contact_phone,
-    identification_type: req.body.identification_type,
-    identification_value: req.body.identification_value,
-    identification_need_by: req.body.identification_need_by,
-    identification_note: req.body.identification_note,
-    intake_form_collect_date: req.body.intake_form_collect_date,
-    intake_form_collected_by: req.body.intake_form_collected_by
+    ...req.body
   });
 }
 
-// function updateGuest() {
-//
-// }
-//
-// function deleteGuest() {
-//
-// }
+async function updateGuest(req) {
+  return models.Guest.find({
+    where: {
+      id: req.params.id
+    }
+  }).then((guest) => {
+    if (guest) {
+      return guest.updateAttributes({
+        ...req.body
+      });
+    }
+  });
+}
+
+function deleteGuest(req) {
+  models.Guest.destroy({
+    where: {
+      id: req.params.id
+    }
+  });
+}
 
 
 module.exports = () => {
@@ -69,7 +65,16 @@ module.exports = () => {
   // e.g. api/guests
   router.get('/', async (req, res, next) => {
     try {
-      const data = await getGuests(req);
+      const data = await getGuests();
+      res.status(200).send(data);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.put('/:id', checkContentType, async (req, res, next) => {
+    try {
+      const data = await updateGuest(req);
       res.status(200).send(data);
     } catch (err) {
       next(err);
@@ -80,6 +85,15 @@ module.exports = () => {
     try {
       const data = await createGuest(req);
       res.status(201).send(data);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.delete('/:id', async (req, res, next) => {
+    try {
+      await deleteGuest(req);
+      res.status(204).send();
     } catch (err) {
       next(err);
     }
