@@ -117,6 +117,7 @@
     "redux": "^3.0.4",
     "redux-form": "^3.0.12",
     "redux-router": "1.0.0-beta5",
+    "rsvp": "^3.1.0",
     "scroll-behavior": "^0.3.0",
     "sequelize": "^3.18.0",
     "sequelize-cli": "^2.3.1",
