@@ -7,6 +7,10 @@ import {mapUrl} from 'utils/url.js';
 import PrettyError from 'pretty-error';
 import http from 'http';
 import SocketIo from 'socket.io';
+import guestsAction from './actions/guests';
+// import checkinsAction from './actions/checkins';
+// import lockersAction from './actions/lockers';
+// import barsAction from './actions/bars';
 
 const pretty = new PrettyError();
 const app = express();
@@ -23,8 +27,11 @@ app.use(session({
   cookie: { maxAge: 60000 }
 }));
 app.use(bodyParser.json());
-
-
+app.use('/api/guests', guestsAction());
+// app.use('/api/checkins', checkinsAction);
+// app.use('/api/lockers', lockersAction);
+// app.use('/api/bars', barsAction);
+// TODO Remove below except 404 handler
 app.use((req, res) => {
   const splittedUrlPath = req.url.split('?')[0].split('/').slice(1);
 
@@ -51,6 +58,10 @@ app.use((req, res) => {
   }
 });
 
+app.use((err, req, res) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
 const bufferSize = 100;
 const messageBuffer = new Array(bufferSize);
