@@ -27,10 +27,10 @@ app.use(session({
   cookie: { maxAge: 60000 }
 }));
 app.use(bodyParser.json());
-app.use('/api/guests', guestsAction());
-app.use('/api/checkins', checkinsAction());
-app.use('/api/lockers', lockersAction());
-app.use('/api/bars', barsAction());
+app.use('/guests', guestsAction());
+app.use('/checkins', checkinsAction());
+app.use('/lockers', lockersAction());
+app.use('/bars', barsAction());
 // TODO Remove below except 404 handler
 app.use((req, res) => {
   const splittedUrlPath = req.url.split('?')[0].split('/').slice(1);
