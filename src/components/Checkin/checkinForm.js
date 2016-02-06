@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 // import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
 import checkinFormValidation from './checkinFormValidation';
-// import * as widgetActions from 'redux/modules/widgets';
+import { checkin } from 'redux/modules/checkin';
 
 // function select(state) {
 //   return {
@@ -19,6 +19,8 @@ import checkinFormValidation from './checkinFormValidation';
 export default class CheckinForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
+    guestId: PropTypes.string.isRequired,
+    checkinDate: PropTypes.object.isRequired,
     fields: PropTypes.shape({
       feelSafe: PropTypes.object.isRequired,
       healthIssue: PropTypes.object.isRequired,
@@ -27,7 +29,8 @@ export default class CheckinForm extends Component {
     }).isRequired,
     // currentValue: PropTypes.object,
     messages: PropTypes.object,
-    name: PropTypes.string
+    name: PropTypes.string,
+    dispatch: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -38,15 +41,13 @@ export default class CheckinForm extends Component {
   }
 
   handleSubmit() {
-    // SAVE
-    this.props.postSubmitAction();
+    const { fields: { feelSafe, healthIssue, reportedItems, note }, guestId, checkinDate } = this.props;
+    this.props.dispatch(checkin(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value));
+    // this.props.postSubmitAction();
   }
 
-  // TODO - Wire up submit butotn
-  // TODO - Create SAVE action
   render() {
     const {fields: { feelSafe, healthIssue, reportedItems, note }, postSubmitAction } = this.props;
-    console.log('PROPS', this.props);
     return (
       <div className="modal-content">
         <div className="modal-header">
@@ -84,7 +85,7 @@ export default class CheckinForm extends Component {
         </div>
         <div className="modal-footer">
           <button type="button" className="btn btn-default" onClick={postSubmitAction}>Close</button>
-          <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Check in</button>
+          <button type="button" className="btn btn-primary" onClick={::this.handleSubmit}>Check in</button>
         </div>
       </div>
     );

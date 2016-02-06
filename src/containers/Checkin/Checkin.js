@@ -16,23 +16,31 @@ const customStyles = {
 export default class Checkin extends Component {
 
   static propTypes = {
-    initialModalState: PropTypes.bool
+    initialModalState: PropTypes.bool,
+    selectedGuestId: PropTypes.string,
+    checkinDate: PropTypes.object.isRequired
   };
 
   static defaultProps = {
-    initialModalState: false
+    initialModalState: false,
+    checkinDate: new Date()
   }
 
   constructor(props) {
     super(props);
-    this.state = { showModal: this.props.initialModalState };
+    this.state = {
+      showModal: props.initialModalState,
+      checkinDate: props.checkinDate
+    };
     require('./Checkin.scss');
   }
 
   checkinHandler(event) {
     event.preventDefault();
-    // const dest = event.target.href;
-    // const path = event.target.pathname;
+    const path = event.target.pathname;
+    const checkinGuestId = path.match(/\/checkin\/(\d+)/)[1];
+    // TODO - Check if the checkinGuestId is null (then save raven error)
+    this.setState({selectedGuestId: checkinGuestId });
     this.openModal();
   }
 
@@ -65,7 +73,7 @@ export default class Checkin extends Component {
           isOpen={this.state.showModal}
           onRequestClose={::this.closeModal}
           style={customStyles} >
-          <CheckinForm postSubmitAction={::this.closeModal} name="TEST" />
+          <CheckinForm guestId={this.state.selectedGuestId} checkinDate={this.state.checkinDate} postSubmitAction={::this.closeModal} name="TEST" />
         </Modal>
       </div>
     );
