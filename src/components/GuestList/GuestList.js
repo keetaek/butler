@@ -6,16 +6,7 @@ const {Table, Column, Cell} = FixedDataTable;
 const Link = require('react-router').Link;
 const { Button, Glyphicon } = require('react-bootstrap');
 const AddGuestForm = require('./addGuestForm');
-const Modal = require('react-modal');
-const customStyles = {
-  overlay: {
-    zIndex: 2
-  },
-  content: {
-    padding: 0,
-    zIndex: 3,
-  }
-};
+const FormModal = require('../FormModal/FormModal');
 
 const DateCell = ({rowIndex, data, col, ...props}) => (
   <Cell {...props}>
@@ -157,14 +148,9 @@ export default class GuestList extends Component {
               width={100}
             />
           </Table>
-          <Modal
-            className="Modal__Bootstrap modal-dialog ReactModal__Content--after-open"
-            closeTimeoutMS={150}
-            isOpen={this.state.showModal}
-            onRequestClose={::this.closeModal}
-            style={customStyles} >
+          <FormModal showModal={this.state.showModal} onClose={::this.closeModal} title={'Add New Guest'}>
             <AddGuestForm postSubmitAction={::this.closeModal} />
-          </Modal>
+          </FormModal>
         </div>
       );
     }
@@ -207,14 +193,9 @@ export default class GuestList extends Component {
             width={200}
           />
         </Table>
-        <Modal
-          className="Modal__Bootstrap modal-dialog ReactModal__Content--after-open"
-          closeTimeoutMS={150}
-          isOpen={this.state.showModal}
-          onRequestClose={::this.closeModal}
-          style={customStyles} >
+        <FormModal showModal={this.state.showModal} onClose={::this.closeModal} title={'Add New Guest'}>
           <AddGuestForm postSubmitAction={::this.closeModal} />
-        </Modal>
+        </FormModal>
       </div>
     );
   }

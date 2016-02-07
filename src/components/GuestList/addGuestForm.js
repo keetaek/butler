@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 const { reduxForm } = require('redux-form');
 // const checkinFormValidation = require('./checkinFormValidation');
 const { addNewGuest } = require('redux/modules/guests');
-const { Input } = require('react-bootstrap');
+const { Input, Button, Modal, OverlayTrigger } = require('react-bootstrap');
 
 // function select(state) {
 //   return {
@@ -50,14 +50,7 @@ export default class AddGuestForm extends Component {
     const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy }, postSubmitAction } = this.props;
 
     return (
-      <div className="modal-content">
-        <div className="modal-header">
-          <button type="button" className="close" onClick={postSubmitAction}>
-            <span aria-hidden="true">&times;</span>
-            <span className="sr-only">Close</span>
-          </button>
-          <h4 className="modal-title">Add a new guest</h4>
-        </div>
+      <span>
         <div className="modal-body">
           <form>
             <div>
@@ -69,7 +62,7 @@ export default class AddGuestForm extends Component {
           <button type="button" className="btn btn-default" onClick={postSubmitAction}>Cancel</button>
           <button type="button" className="btn btn-primary" onClick={::this.handleSubmit}>Add Guest</button>
         </div>
-      </div>
+      </span>
     );
   }
 }
