@@ -43,7 +43,7 @@ export default class CheckinForm extends Component {
   handleSubmit() {
     const { fields: { feelSafe, healthIssue, reportedItems, note }, guestId, checkinDate } = this.props;
     this.props.dispatch(checkin(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value));
-    // this.props.postSubmitAction();
+    this.props.postSubmitAction();
   }
 
   render() {

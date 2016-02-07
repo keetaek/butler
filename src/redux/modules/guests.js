@@ -1,6 +1,11 @@
 const LOAD_ALL = 'butler/guests/LOAD_ALL';
 const LOAD_ALL_SUCCESS = 'butler/guests/LOAD_ALL_SUCCESS';
 const LOAD_ALL_FAIL = 'butler/guests/LOAD_ALL_FAIL';
+
+const CREATE = 'butler/guests/CREATE';
+const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
+const CREATE_FAIL = 'butler/guests/CREATE_FAIL';
+
 const SEARCH = 'butler/guests/SEARCH';
 import lo from 'lodash';
 
@@ -82,4 +87,28 @@ export function loadAll() {
 
 export function searchRequest(searchTerm) {
   return { type: SEARCH, searchTerm };
+}
+
+export function addNewGuest(firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy) {
+  const payload = {
+    first_name: firstName,
+    last_name: lastName,
+    nickname: nickname,
+    birthdate: birthdate,
+    gender: gender,
+    emergency_contact_name: emergencyContactName || '',
+    emergency_contact_phone: identificationNeedBy || '',
+    identification_type: identificationType || '',
+    identification_value: identificationValue || '',
+    identification_need_by: identificationNeedBy || '',
+    identification_note: identificationNote || '',
+    intake_form_collect_date: intakeFormCollectDate,
+    intake_form_collected_by: intakeFormCollectedBy || ''
+  };
+  return {
+    types: [CREATE, CREATE_SUCCESS, CREATE_FAIL],
+    promise: (client) => client.post('/guests', {
+      data: payload
+    }) // params not used, just shown as demonstration
+  };
 }

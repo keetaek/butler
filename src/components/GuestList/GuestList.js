@@ -4,6 +4,18 @@ import { searchRequest, loadAll as loadGuests} from 'redux/modules/guests';
 import FixedDataTable from 'fixed-data-table';
 const {Table, Column, Cell} = FixedDataTable;
 const Link = require('react-router').Link;
+const { Button, Glyphicon } = require('react-bootstrap');
+const AddGuestForm = require('./addGuestForm');
+const Modal = require('react-modal');
+const customStyles = {
+  overlay: {
+    zIndex: 2
+  },
+  content: {
+    padding: 0,
+    zIndex: 3,
+  }
+};
 
 const DateCell = ({rowIndex, data, col, ...props}) => (
   <Cell {...props}>
@@ -43,16 +55,20 @@ export default class GuestList extends Component {
     loaded: PropTypes.bool,
     isCheckin: PropTypes.bool.isRequired,
     checkinHandler: PropTypes.func,
+    postAddGuestHandler: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired
   }
 
   static defaultProps = {
-    isCheckin: false
+    isCheckin: false,
   }
   constructor(props) {
     super(props);
     this._onFilterChange = this._onFilterChange.bind(this);
     require('fixed-data-table/dist/fixed-data-table.min.css');
+    this.state = {
+      showModal: false
+    };
   }
   /**
    * Loading the data if not loaded yet.
@@ -62,6 +78,14 @@ export default class GuestList extends Component {
     if (!this.props.loaded) {
       return this.props.dispatch(loadGuests());
     }
+  }
+
+  openModal() {
+    this.setState({showModal: true});
+  }
+
+  closeModal() {
+    this.setState({showModal: false});
   }
 
   _onFilterChange(event) {
@@ -74,6 +98,12 @@ export default class GuestList extends Component {
     this.props.dispatch(searchRequest(filterBy));
   }
 
+  addGuestHandler() {
+    console.log('Getting into addGuestHandler');
+
+    // this.props.postAddGuestHandler();
+  }
+
   render() {
     const { filteredGuests, loaded, isCheckin, checkinHandler } = this.props;
     const styles = require('./GuestList.scss');
@@ -84,18 +114,19 @@ export default class GuestList extends Component {
     }
     if (isCheckin) {
       return (
-        <div>
+        <div className={styles.guest_search_container}>
           <input
             onChange={this._onFilterChange}
             className={styles.search_input + ' form-control'}
             placeholder="Filter by first, last or nickname"
           />
+        <Button bsStyle="primary" onClick={::this.openModal} className={styles.right_top_action_button}><Glyphicon glyph="plus" /> Add New Guest </Button>
           <Table
             rowHeight={50}
             headerHeight={50}
             rowsCount={filteredGuests.length}
             width={600}
-            height={500}
+            height={300}
             {...this.props}>
             <Column
               header={<Cell>First Name</Cell>}
@@ -126,22 +157,31 @@ export default class GuestList extends Component {
               width={100}
             />
           </Table>
+          <Modal
+            className="Modal__Bootstrap modal-dialog ReactModal__Content--after-open"
+            closeTimeoutMS={150}
+            isOpen={this.state.showModal}
+            onRequestClose={::this.closeModal}
+            style={customStyles} >
+            <AddGuestForm postSubmitAction={::this.closeModal} />
+          </Modal>
         </div>
       );
     }
     return (
-      <div>
+      <div className={styles.guest_search_container}>
         <input
           onChange={this._onFilterChange}
           className={styles.search_input + ' form-control'}
           placeholder="Filter by first, last or nickname"
         />
+      <Button bsStyle="primary" onClick={::this.openModal} className={styles.right_top_action_button}><Glyphicon glyph="plus" /> Add New Guest </Button>
         <Table
           rowHeight={50}
           headerHeight={50}
           rowsCount={filteredGuests.length}
           width={600}
-          height={500}
+          height={300}
           {...this.props}>
           <Column
             header={<Cell>First Name</Cell>}
@@ -167,6 +207,14 @@ export default class GuestList extends Component {
             width={200}
           />
         </Table>
+        <Modal
+          className="Modal__Bootstrap modal-dialog ReactModal__Content--after-open"
+          closeTimeoutMS={150}
+          isOpen={this.state.showModal}
+          onRequestClose={::this.closeModal}
+          style={customStyles} >
+          <AddGuestForm postSubmitAction={::this.closeModal} />
+        </Modal>
       </div>
     );
   }
