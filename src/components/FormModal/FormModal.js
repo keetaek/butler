@@ -1,6 +1,6 @@
 const React = require('react');
 const { Component, PropTypes } = require('react');
-const { Button, Modal } = require('react-bootstrap');
+const { Modal } = require('react-bootstrap');
 
 
 export default class GuestList extends Component {

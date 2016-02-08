@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 const { reduxForm } = require('redux-form');
 // const checkinFormValidation = require('./checkinFormValidation');
 const { addNewGuest } = require('redux/modules/guests');
-const { Input, Button, Modal, OverlayTrigger } = require('react-bootstrap');
+const { Input } = require('react-bootstrap');
 
 // function select(state) {
 //   return {
@@ -49,12 +49,38 @@ export default class AddGuestForm extends Component {
   render() {
     const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy }, postSubmitAction } = this.props;
 
+    console.log('Gender', this.props.fields.gender);
     return (
       <span>
         <div className="modal-body">
           <form>
             <div>
               <Input type="text" placeholder="First Name" label="First Name" {...firstName} />
+              <Input type="text" placeholder="Last Name" label="Last Name" {...lastName} />
+              <Input type="text" placeholder="Nickname" label="Nickname" {...nickname} />
+              <Input type="date" label="Birthdate" {...birthdate} />
+
+              <Input label="Male" type="radio" name="gender" checked={gender.value === 'male'} value="male" {...gender} />
+              <Input label="Female" type="radio" name="gender" checked={gender.value === 'female'} value="female" {...gender} />
+              <Input label="MTF" type="radio" name="gender" checked={gender.value === 'mtf'} value="mtf" {...gender} />
+              <Input label="FTM" type="radio" name="gender" checked={gender.value === 'ftm'} value="ftm" {...gender} />
+              <Input label="Other" type="radio" name="gender" checked={gender.value === 'other'} value="other" {...gender} />
+
+              <Input type="text" placeholder="name" label="Emergency Contact" {...emergencyContactName} />
+              <Input type="tel" label="Emergency Contact #" {...emergencyContactPhone} />
+
+              <Input type="select" label="Identification Type" placeholder="select" {...identificationType}>
+                <option value="state">State Id</option>
+                <option value="driver">Driver</option>
+                <option value="passport">Passport</option>
+                <option value="other">Other</option>
+              </Input>
+              <Input type="text" placeholder="name" label="Identification #" {...identificationValue} />
+              <Input type="date" label="ID need by" {...identificationNeedBy} />
+              <Input type="text" placeholder="note" label="Note" {...identificationNote} />
+
+              <Input type="date" label="Collection Date" {...intakeFormCollectDate} />
+              <Input type="text" label="Collected By" {...intakeFormCollectedBy} />
             </div>
           </form>
         </div>
