@@ -43,7 +43,7 @@ export default class AddGuestForm extends Component {
   handleSubmit() {
     const { fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
 
-    this.props.dispatch(addNewGuest(firstName.value, lastName.value, nickname.value, birthdate, gender.value, emergencyContactName.value, emergencyContactPhone.value, identificationType.value, identificationValue.value, identificationNeedBy, identificationNote.value, intakeFormCollectDate, intakeFormCollectedBy.value));
+    this.props.dispatch(addNewGuest(firstName.value, lastName.value, nickname.value, birthdate.value, gender.value, emergencyContactName.value, emergencyContactPhone.value, identificationType.value, identificationValue.value, identificationNeedBy.value, identificationNote.value, intakeFormCollectDate.value, intakeFormCollectedBy.value));
   }
 
   render() {
@@ -80,10 +80,10 @@ export default class AddGuestForm extends Component {
             <fieldset>
               <h4>Emergency Contact</h4>
               <div className="row form-group">
-                <Input type="text" placeholder="name" label="Emergency Contact"
+                <Input type="text" placeholder="name" label="Name"
                 labelClassName="col-md-2" wrapperClassName="col-md-4"
                 groupClassName={styles.inline_form_group} {...emergencyContactName} />
-                <Input type="tel" label="Emergency Contact #" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              <Input type="tel" label="Phone Number" labelClassName="col-md-2" wrapperClassName="col-md-4"
                 groupClassName={styles.inline_form_group} {...emergencyContactPhone} />
               </div>
             </fieldset>
