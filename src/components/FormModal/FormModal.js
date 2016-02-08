@@ -23,13 +23,11 @@ export default class GuestList extends Component {
     const { showModal, title, children } = this.props;
     return (
       <span>
-        <Modal show={showModal} onHide={::this.close}>
+        <Modal show={showModal} onHide={::this.close} bsSize="large">
           <Modal.Header closeButton>
            <Modal.Title>{title}</Modal.Title>
          </Modal.Header>
-          <Modal.Body>
-            {children}
-          </Modal.Body>
+          {children}
         </Modal>
     </span>
     );
