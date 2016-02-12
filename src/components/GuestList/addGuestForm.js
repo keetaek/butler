@@ -97,7 +97,7 @@ export default class AddGuestForm extends Component {
                   <option value="passport">Passport</option>
                   <option value="other">Other</option>
                 </Input>
-                <Input type="text" placeholder="name" label="Identification #" labelClassName="col-md-2" wrapperClassName="col-md-4"
+                <Input type="text" label="Identification #" labelClassName="col-md-2" wrapperClassName="col-md-4"
                 groupClassName={styles.inline_form_group} {...identificationValue} />
               </div>
               <div className="row form-group">

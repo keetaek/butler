@@ -1,6 +1,8 @@
-const express = require('express')
+const express = require('express');
 const models = require('../models/index');
 const checkContentType = require('../middlewares/checkContentType');
+const isEmpty = require('lodash').isEmpty;
+const moment = require('moment');
 
 async function getGuests() {
   return models.Guest.findAll({});
@@ -14,11 +16,24 @@ async function getGuest(req) {
   });
 }
 
+function parseDate(dateField) {
+  if (isEmpty(dateField)) {
+    return null;
+  }
+  const parsedDate = moment(dateField);
+  return parsedDate.isValid() ? parsedDate.toDate() : null;
+}
+
 async function createGuest(req) {
+  const payload = {...req.body};
+  payload.birthdate = parseDate(payload.birthdate);
+  payload.identification_need_by = parseDate(payload.identification_need_by);
+  payload.intake_form_collect_date = parseDate(payload.intake_form_collect_date);
   return models.Guest.create({
-    ...req.body
+    ...payload
   });
 }
+
 
 async function updateGuest(req) {
   return models.Guest.find({
@@ -41,7 +56,6 @@ function deleteGuest(req) {
     }
   });
 }
-
 
 module.exports = () => {
 /*eslint-disable */
