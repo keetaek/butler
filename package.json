@@ -88,6 +88,7 @@
     "compression": "^1.6.0",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
+    "express-validator": "^2.19.1",
     "faker": "^3.0.1",
     "file-loader": "^0.8.5",
     "fixed-data-table": "^0.6.0",
@@ -129,6 +130,7 @@
     "sqlite3": "^3.1.1",
     "superagent": "^1.4.0",
     "url-loader": "^0.5.7",
+    "util": "^0.10.3",
     "warning": "^2.1.0",
     "webpack-isomorphic-tools": "^2.2.18"
   },

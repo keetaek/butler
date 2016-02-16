@@ -3,6 +3,7 @@ const models = require('../models/index');
 const checkContentType = require('../middlewares/checkContentType');
 const isEmpty = require('lodash').isEmpty;
 const moment = require('moment');
+const util = require('util');
 
 async function getGuests() {
   return models.Guest.findAll({});
@@ -24,16 +25,19 @@ function parseDate(dateField) {
   return parsedDate.isValid() ? parsedDate.toDate() : null;
 }
 
-async function createGuest(req) {
-  const payload = {...req.body};
+function updateFields(payload) {
   payload.birthdate = parseDate(payload.birthdate);
   payload.identification_need_by = parseDate(payload.identification_need_by);
   payload.intake_form_collect_date = parseDate(payload.intake_form_collect_date);
+}
+
+async function createGuest(req) {
+  const payload = {...req.body};
+  updateFields(payload);
   return models.Guest.create({
     ...payload
   });
 }
-
 
 async function updateGuest(req) {
   return models.Guest.find({
@@ -42,8 +46,10 @@ async function updateGuest(req) {
     }
   }).then((guest) => {
     if (guest) {
+      const payload = {...req.body};
+      updateFields(payload);
       return guest.updateAttributes({
-        ...req.body
+        ...payload
       });
     }
   });
@@ -95,9 +101,37 @@ module.exports = () => {
     }
   });
 
-  router.post('/', checkContentType, async (req, res, next) => {
+  router.post('/', (req, res, next) => {
+    req.checkBody({
+      'first_name': {
+        notEmpty: true
+      },
+      'last_name': {
+        notEmpty: true
+      },
+      'birthdate': {
+        optional: true,
+        isDate: true
+      },
+      'identification_need_by': {
+        optional: true,
+        isDate: true
+      },
+      'intake_form_collect_date': {
+        optional: true,
+        isDate: true
+      }
+    });
+    const errors = req.validationErrors();
+    if (errors) {
+      res.send('There have been validation errors: ' + util.inspect(errors), 400);
+      return;
+    }
+    next();
+  }, async (req, res, next) => {
     try {
-      const data = await createGuest(req);
+      await createGuest(req);
+      const data = await getGuests();
       res.status(201).send(data);
     } catch (err) {
       next(err);

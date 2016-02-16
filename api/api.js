@@ -11,7 +11,8 @@ import guestsAction from './actions/guests';
 import checkinsAction from './actions/checkins';
 import lockersAction from './actions/lockers';
 import barsAction from './actions/bars';
-
+import expressValidator from 'express-validator';
+const moment = require('moment');
 const pretty = new PrettyError();
 const app = express();
 
@@ -27,6 +28,13 @@ app.use(session({
   cookie: { maxAge: 60000 }
 }));
 app.use(bodyParser.json());
+app.use(expressValidator({
+  customValidators: {
+    isDate: function(field) {
+      return moment(field).isValid();
+    }
+  }
+}));
 app.use('/guests', guestsAction());
 app.use('/checkins', checkinsAction());
 app.use('/lockers', lockersAction());

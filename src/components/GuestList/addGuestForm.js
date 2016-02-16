@@ -44,6 +44,8 @@ export default class AddGuestForm extends Component {
     const { fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
 
     this.props.dispatch(addNewGuest(firstName.value, lastName.value, nickname.value, birthdate.value, gender.value, emergencyContactName.value, emergencyContactPhone.value, identificationType.value, identificationValue.value, identificationNeedBy.value, identificationNote.value, intakeFormCollectDate.value, intakeFormCollectedBy.value));
+
+    this.props.postSubmitAction();
   }
 
   render() {

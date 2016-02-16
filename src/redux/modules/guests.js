@@ -62,6 +62,27 @@ export default function reducer(state = initialState, action = {}) {
         data: null,
         error: action.error
       };
+    case CREATE_SUCCESS:
+      console.log('CREATE SUCCESS');
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        data: action.result,
+        filteredData: action.result,
+        showModal: false,
+      };
+    case CREATE_FAIL:
+      console.log('CREATE FAIL');
+      return {
+        ...state,
+        loading: false,
+        loaded: false,
+        data: null,
+        filteredData: null,
+        showModal: false,
+        error: action.error,
+      };
     case SEARCH:
       return {
         ...state,
@@ -96,14 +117,14 @@ export function addNewGuest(firstName, lastName, nickname, birthdate, gender, em
     nickname: nickname,
     birthdate: birthdate,
     gender: gender,
-    emergency_contact_name: emergencyContactName || '',
-    emergency_contact_phone: identificationNeedBy || '',
-    identification_type: identificationType || '',
-    identification_value: identificationValue || '',
-    identification_need_by: identificationNeedBy || '',
-    identification_note: identificationNote || '',
+    emergency_contact_name: emergencyContactName,
+    emergency_contact_phone: identificationNeedBy,
+    identification_type: identificationType,
+    identification_value: identificationValue,
+    identification_need_by: identificationNeedBy,
+    identification_note: identificationNote,
     intake_form_collect_date: intakeFormCollectDate,
-    intake_form_collected_by: intakeFormCollectedBy || ''
+    intake_form_collected_by: intakeFormCollectedBy
   };
   return {
     types: [CREATE, CREATE_SUCCESS, CREATE_FAIL],

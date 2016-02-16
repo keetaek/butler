@@ -37,7 +37,8 @@ class _ApiClient {
           request.send(data);
         }
 
-        request.end((err, { body } = {}) => err ? reject(body || err) : resolve(body));
+        request.end((err, { body } = {}) => err ? reject(body || err) :
+        resolve(body));
       }));
   }
 }

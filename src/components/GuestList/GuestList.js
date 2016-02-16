@@ -7,12 +7,15 @@ const Link = require('react-router').Link;
 const { Button, Glyphicon } = require('react-bootstrap');
 const AddGuestForm = require('./addGuestForm');
 const FormModal = require('../FormModal/FormModal');
+const moment = require('moment');
 
-const DateCell = ({rowIndex, data, col, ...props}) => (
-  <Cell {...props}>
-    {data[rowIndex][col].toLocaleString()}
-  </Cell>
-);
+const DateCell = ({rowIndex, data, col, ...props}) => {
+  const dateField = data[rowIndex][col];
+  const formattedDate = dateField ? moment(dateField).format('MM/DD/YYYY') : '';
+  return (<Cell {...props}>
+    {formattedDate}
+  </Cell>);
+};
 
 const TextCell = ({rowIndex, data, col, ...props}) => (
   <Cell {...props}>
@@ -32,7 +35,8 @@ function select(state) {
     filteredGuests: state.guests.filteredData,
     error: state.guests.error,
     loading: state.guests.loading,
-    loaded: state.guests.loaded
+    loaded: state.guests.loaded,
+    isCheckin: state.guests.isCheckin,
   };
 }
 
@@ -41,7 +45,7 @@ export default class GuestList extends Component {
   static propTypes = {
     guests: PropTypes.array,
     filteredGuests: PropTypes.array,
-    error: PropTypes.string,
+    error: PropTypes.object,
     loading: PropTypes.bool,
     loaded: PropTypes.bool,
     isCheckin: PropTypes.bool.isRequired,
@@ -91,8 +95,7 @@ export default class GuestList extends Component {
 
   addGuestHandler() {
     console.log('Getting into addGuestHandler');
-
-    // this.props.postAddGuestHandler();
+    this.props.postAddGuestHandler();
   }
 
   render() {
