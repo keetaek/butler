@@ -12,7 +12,7 @@ const { Input } = require('react-bootstrap');
 
 // @connect(select)
 @reduxForm({
-  form: 'checkin',
+  form: 'addGuest',
   fields: ['firstName', 'lastName', 'nickname', 'birthdate', 'gender',
             'emergencyContactName', 'emergencyContactPhone', 'identificationType', 'identificationValue',
             'identificationNeedBy', 'identificationNote',

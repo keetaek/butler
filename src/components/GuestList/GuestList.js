@@ -36,7 +36,6 @@ function select(state) {
     error: state.guests.error,
     loading: state.guests.loading,
     loaded: state.guests.loaded,
-    isCheckin: state.guests.isCheckin,
   };
 }
 

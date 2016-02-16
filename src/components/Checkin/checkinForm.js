@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import {reduxForm} from 'redux-form';
 import checkinFormValidation from './checkinFormValidation';
 import { checkin } from 'redux/modules/checkin';
-
+const { Input } = require('react-bootstrap');
 // function select(state) {
 //   return {
 //     saveError: state.checkinForm.saveError
@@ -27,9 +27,6 @@ export default class CheckinForm extends Component {
       reportedItems: PropTypes.object.isOptional,
       note: PropTypes.object.isOptional,
     }).isRequired,
-    // currentValue: PropTypes.object,
-    messages: PropTypes.object,
-    name: PropTypes.string,
     dispatch: PropTypes.func.isRequired
   };
 
@@ -42,52 +39,37 @@ export default class CheckinForm extends Component {
 
   handleSubmit() {
     const { fields: { feelSafe, healthIssue, reportedItems, note }, guestId, checkinDate } = this.props;
+
     this.props.dispatch(checkin(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value));
+
     this.props.postSubmitAction();
   }
 
   render() {
     const {fields: { feelSafe, healthIssue, reportedItems, note }, postSubmitAction } = this.props;
+    // const styles = require('./addGuestForm.scss');
     return (
-      <div className="modal-content">
-        <div className="modal-header">
-          <button type="button" className="close" onClick={postSubmitAction}>
-            <span aria-hidden="true">&times;</span>
-            <span className="sr-only">Close</span>
-          </button>
-          <h4 className="modal-title">Modal title</h4>
-        </div>
+      <span>
         <div className="modal-body">
           <form>
-            <div>
-              <label>
-                <input type="checkbox" {...feelSafe}/> Feeling safe?
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" {...healthIssue}/> Any health issue?
-              </label>
-            </div>
-            <div>
-              <label>Items to report?</label>
-              <div>
-                <input type="text" placeholder="Items" {...reportedItems}/>
+            <fieldset>
+              <div className="row form-group">
+                <Input type="checkbox" label="Feeling Safe?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...feelSafe} />
+                <Input type="checkbox" label="Health Issues?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...healthIssue} />
               </div>
-            </div>
-            <div>
-              <label>Note</label>
-              <div>
-                <input type="text" placeholder="comment..." {...note}/>
+              <div className="row form-group">
+                <Input type="text" label="Reported Items" labelClassName="col-md-4" wrapperClassName="col-md-12"
+                {...reportedItems} />
+                <Input type="textarea" label="Note" placeholder="Comments?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...note} />
               </div>
-            </div>
+            </fieldset>
           </form>
         </div>
         <div className="modal-footer">
           <button type="button" className="btn btn-default" onClick={postSubmitAction}>Close</button>
           <button type="button" className="btn btn-primary" onClick={::this.handleSubmit}>Check in</button>
         </div>
-      </div>
+      </span>
     );
   }
 }

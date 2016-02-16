@@ -2,17 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { GuestList } from 'components';
-const Modal = require('react-modal');
+const FormModal = require('../../components/FormModal/FormModal');
 const CheckinForm = require('../../components/Checkin/checkinForm');
-const customStyles = {
-  overlay: {
-    zIndex: 2
-  },
-  content: {
-    padding: 0,
-    zIndex: 3,
-  }
-};
+const AddGuestForm = require('../../components/GuestList/addGuestForm');
+
 export default class Checkin extends Component {
 
   static propTypes = {
@@ -29,7 +22,8 @@ export default class Checkin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: props.initialModalState,
+      showGuestModal: props.initialModalState,
+      showCheckinModal: props.initialModalState,
       checkinDate: props.checkinDate
     };
     require('./Checkin.scss');
@@ -41,15 +35,23 @@ export default class Checkin extends Component {
     const checkinGuestId = path.match(/\/checkin\/(\d+)/)[1];
     // TODO - Check if the checkinGuestId is null (then save raven error)
     this.setState({selectedGuestId: checkinGuestId });
-    this.openModal();
+    this.openCheckinModal();
   }
 
-  openModal() {
-    this.setState({showModal: true});
+  openGuestModal() {
+    this.setState({showGuestModal: true});
   }
 
-  closeModal() {
-    this.setState({showModal: false});
+  closeGuestModal() {
+    this.setState({showGuestModal: false});
+  }
+
+  openCheckinModal() {
+    this.setState({showCheckinModal: true});
+  }
+
+  closeCheckinModal() {
+    this.setState({showCheckinModal: false});
   }
 
   render() {
@@ -67,14 +69,12 @@ export default class Checkin extends Component {
             </Col>
           </Row>
         </Grid>
-        <Modal
-          className="Modal__Bootstrap modal-dialog ReactModal__Content--after-open"
-          closeTimeoutMS={150}
-          isOpen={this.state.showModal}
-          onRequestClose={::this.closeModal}
-          style={customStyles} >
-          <CheckinForm guestId={this.state.selectedGuestId} checkinDate={this.state.checkinDate} postSubmitAction={::this.closeModal} name="TEST" />
-        </Modal>
+        <FormModal showModal={this.state.showGuestModal} onClose={::this.closeGuestModal} title={'Add New Guest'}>
+          <AddGuestForm postSubmitAction={::this.closeGuestModal} />
+        </FormModal>
+        <FormModal showModal={this.state.showCheckinModal} onClose={::this.closeCheckinModal} title={'Check in guest'}>
+          <CheckinForm postSubmitAction={::this.closeCheckinModal} />
+        </FormModal>
       </div>
     );
   }
