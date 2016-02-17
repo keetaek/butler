@@ -14,7 +14,8 @@ const initialState = {
   data: null,
   filteredData: null,
   error: null,
-  searchTerm: null
+  searchTerm: null,
+  newGuest: null
 };
 
 
@@ -63,14 +64,17 @@ export default function reducer(state = initialState, action = {}) {
         error: action.error
       };
     case CREATE_SUCCESS:
-      console.log('CREATE SUCCESS');
+      // Just add a newly added item to the list.
+      const updatedList = lo.concat(state.data, action.result);
       return {
         ...state,
         loading: false,
         loaded: true,
-        data: action.result,
-        filteredData: action.result,
+        // Just adding the newly added item
+        data: updatedList,
+        filteredData: updatedList,
         showModal: false,
+        newGuest: action.result
       };
     case CREATE_FAIL:
       console.log('CREATE FAIL');

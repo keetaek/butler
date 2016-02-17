@@ -130,8 +130,7 @@ module.exports = () => {
     next();
   }, async (req, res, next) => {
     try {
-      await createGuest(req);
-      const data = await getGuests();
+      const data = await createGuest(req);
       res.status(201).send(data);
     } catch (err) {
       next(err);

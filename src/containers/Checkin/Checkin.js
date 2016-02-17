@@ -54,6 +54,11 @@ export default class Checkin extends Component {
     this.setState({showCheckinModal: false});
   }
 
+  showSnackBar() {
+    console.log('Implement something.');
+    console.log('');
+  }
+
   render() {
     return (
       <div className="container">

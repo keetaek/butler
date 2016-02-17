@@ -49,7 +49,7 @@ export default class GuestList extends Component {
     loaded: PropTypes.bool,
     isCheckin: PropTypes.bool.isRequired,
     checkinHandler: PropTypes.func,
-    postAddGuestHandler: PropTypes.func.isRequired,
+    postAddGuestHandler: PropTypes.func.isOptional,
     dispatch: PropTypes.func.isRequired
   }
 
@@ -94,6 +94,7 @@ export default class GuestList extends Component {
 
   addGuestHandler() {
     console.log('Getting into addGuestHandler');
+    this.closeModal();
     this.props.postAddGuestHandler();
   }
 
@@ -196,7 +197,7 @@ export default class GuestList extends Component {
           />
         </Table>
         <FormModal showModal={this.state.showModal} onClose={::this.closeModal} title={'Add New Guest'}>
-          <AddGuestForm postSubmitAction={::this.closeModal} />
+          <AddGuestForm postSubmitAction={::this.addGuestHandler} />
         </FormModal>
       </div>
     );

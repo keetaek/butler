@@ -60,6 +60,8 @@ export default class CheckinForm extends Component {
               <div className="row form-group">
                 <Input type="text" label="Reported Items" labelClassName="col-md-4" wrapperClassName="col-md-12"
                 {...reportedItems} />
+              </div>
+              <div className="row form-group">
                 <Input type="textarea" label="Note" placeholder="Comments?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...note} />
               </div>
             </fieldset>
