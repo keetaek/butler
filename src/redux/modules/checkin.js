@@ -20,7 +20,6 @@ const HEALTH_ISSUE_DEFAULT_VALUE = false;
 
 const initialState = {
   loaded: false,
-  selectedGuestId: null,
   showCheckinModal: false,
   showGuestModal: false,
   checkinDate: new Date(),
@@ -48,7 +47,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         selectedGuestId: guestId,
-        showCheckinModal : true,
+        showCheckinModal: true,
         showGuestModal: false,
       };
     case FINISH_CHECKIN:
@@ -57,7 +56,7 @@ export default function reducer(state = initialState, action = {}) {
         selectedGuestId: null,
         updateGuest: false,
         showCheckinModal: false
-      }
+      };
     case LOAD_DATE:
       return {
 

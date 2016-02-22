@@ -49,7 +49,7 @@ export default class GuestList extends Component {
     loaded: PropTypes.bool,
     isCheckin: PropTypes.bool.isRequired,
     checkinHandler: PropTypes.func,
-    postAddGuestHandler: PropTypes.func.isOptional,
+    postAddGuestHandler: PropTypes.func,
     dispatch: PropTypes.func.isRequired
   }
 

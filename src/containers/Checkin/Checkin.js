@@ -21,7 +21,8 @@ function select(state) {
     showCheckinModal: state.checkin.showCheckinModal,
     showGuestModal: state.checkin.showGuestModal,
     checkinDate: state.checkin.checkinDate,
-    loaded: state.checkin.loaded
+    loaded: state.checkin.loaded,
+    updateGuest: state.checkin.updateGuest
   };
 }
 
@@ -31,21 +32,27 @@ export default class Checkin extends Component {
   static propTypes = {
     guests: PropTypes.shape({
       newGuest: PropTypes.object.isOptional,
-      showNotification: PropTypes.bool
     }),
-    selectedGuestId: PropTypes.string.isOptional,
+    selectedGuestId: PropTypes.string,
+    notificationMessage: PropTypes.string,
     showCheckinModal: PropTypes.bool.isRequired,
     showGuestModal: PropTypes.bool.isRequired,
     showNotification: PropTypes.bool.isRequired,
-    notificationMessage: PropTypes.string.isOptional,
     updateGuest: PropTypes.bool.isRequired,
-    checkinDate: PropTypes.object.isRequired,
+    checkinDate: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    checkinDate: new Date()
-  }
+    showNotification: false,
+    notificationMessage: '',
+    selectedGuestId: null,
+    showCheckinModal: false,
+    showGuestModal: false,
+    checkinDate: new Date(),
+    loaded: false,
+    updateGuest: false
+  };
 
   constructor(props) {
     super(props);
