@@ -6,6 +6,8 @@ const CREATE = 'butler/guests/CREATE';
 const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
 const CREATE_FAIL = 'butler/guests/CREATE_FAIL';
 
+const CLEAR_NEW_GUEST = 'butler/guests/CLEAR_NEW_GUEST';
+
 const SEARCH = 'butler/guests/SEARCH';
 import lo from 'lodash';
 
@@ -66,6 +68,7 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
       const updatedList = lo.concat(state.data, action.result);
+      console.log('CREATE SUCCESS');
       return {
         ...state,
         loading: false,
@@ -86,6 +89,7 @@ export default function reducer(state = initialState, action = {}) {
         filteredData: null,
         showModal: false,
         error: action.error,
+        newGuest: null
       };
     case SEARCH:
       return {
@@ -136,4 +140,8 @@ export function addNewGuest(firstName, lastName, nickname, birthdate, gender, em
       data: payload
     }) // params not used, just shown as demonstration
   };
+}
+
+export function clearNewGuest() {
+  return { type: CLEAR_NEW_GUEST };
 }

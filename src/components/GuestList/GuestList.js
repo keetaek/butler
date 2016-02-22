@@ -95,7 +95,9 @@ export default class GuestList extends Component {
   addGuestHandler() {
     console.log('Getting into addGuestHandler');
     this.closeModal();
-    this.props.postAddGuestHandler();
+    if (this.props.postAddGuestHandler) {
+      this.props.postAddGuestHandler();
+    }
   }
 
   render() {
@@ -152,7 +154,7 @@ export default class GuestList extends Component {
             />
           </Table>
           <FormModal showModal={this.state.showModal} onClose={::this.closeModal} title={'Add New Guest'}>
-            <AddGuestForm postSubmitAction={::this.closeModal} />
+            <AddGuestForm postSubmitAction={::this.addGuestHandler} />
           </FormModal>
         </div>
       );

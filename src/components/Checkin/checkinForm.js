@@ -19,6 +19,7 @@ const { Input } = require('react-bootstrap');
 export default class CheckinForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
+    postCancelAction: PropTypes.func,
     guestId: PropTypes.string.isRequired,
     checkinDate: PropTypes.object.isRequired,
     fields: PropTypes.shape({
