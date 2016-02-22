@@ -7,6 +7,7 @@ const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
 const CREATE_FAIL = 'butler/guests/CREATE_FAIL';
 
 const CLEAR_NEW_GUEST = 'butler/guests/CLEAR_NEW_GUEST';
+const HIDE_NOTIFICATION = 'butler/guests/HIDE_NOTIFICATION';
 
 const SEARCH = 'butler/guests/SEARCH';
 import lo from 'lodash';
@@ -17,7 +18,9 @@ const initialState = {
   filteredData: null,
   error: null,
   searchTerm: null,
-  newGuest: null
+  newGuest: null,
+  showNotification: false,
+  notificationMessage: ''
 };
 
 
@@ -77,7 +80,9 @@ export default function reducer(state = initialState, action = {}) {
         data: updatedList,
         filteredData: updatedList,
         showModal: false,
-        newGuest: action.result
+        newGuest: action.result,
+        notificationMessage: `Would you like to check in ${action.result.first_name}?`,
+        showNotification: true
       };
     case CREATE_FAIL:
       console.log('CREATE FAIL');
@@ -97,6 +102,17 @@ export default function reducer(state = initialState, action = {}) {
         // when the data is just loaded filteredData will bi
         filteredData: searchHelper(action.searchTerm, state.data),
         searchTerm: action.searchTerm
+      };
+    case CLEAR_NEW_GUEST:
+      return {
+        ...state,
+        newGuest: null
+      };
+    case HIDE_NOTIFICATION:
+      return {
+        ...state,
+        notificationMessage: null,
+        showNotification: false
       };
     default:
       return state;
@@ -144,4 +160,8 @@ export function addNewGuest(firstName, lastName, nickname, birthdate, gender, em
 
 export function clearNewGuest() {
   return { type: CLEAR_NEW_GUEST };
+}
+
+export function hideGuestNotification() {
+  return { type: HIDE_NOTIFICATION };
 }

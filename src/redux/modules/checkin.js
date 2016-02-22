@@ -5,6 +5,7 @@ const LOAD_DATE = 'butler/checkin/LOAD_DATE';
 const LOAD_DATE_SUCCESS = 'butler/checkin/LOAD_DATE_SUCCESS';
 const LOAD_DATE_FAIL = 'butler/checkin/LOAD_DATE_FAIL';
 const START_CHECKIN = 'butler/checkin/START_CHECKIN';
+const FINISH_CHECKIN = 'butler/checkin/FINISH_CHECKIN';
 // const LOAD_GUEST_HISTORY = 'butler/checkin/LOAD_GUEST_HISTORY';
 // const LOAD_GUEST_HISTORY_SUCCESS = 'butler/checkin/LOAD_GUEST_HISTORY_SUCCESS';
 // const LOAD_GUEST_HISTORY_FAIL = 'butler/checkin/LOAD_GUEST_HISTORY_FAIL';
@@ -19,8 +20,13 @@ const HEALTH_ISSUE_DEFAULT_VALUE = false;
 
 const initialState = {
   loaded: false,
-  editing: {},
-  saveError: {}
+  selectedGuestId: null,
+  showCheckinModal: false,
+  showGuestModal: false,
+  checkinDate: new Date(),
+  updateGuest: false
+  // editing: {},
+  // saveError: {},
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -38,9 +44,20 @@ export default function reducer(state = initialState, action = {}) {
 
       };
     case START_CHECKIN:
+      const guestId = action.guestId;
       return {
-
+        ...state,
+        selectedGuestId: guestId,
+        showCheckinModal : true,
+        showGuestModal: false,
       };
+    case FINISH_CHECKIN:
+      return {
+        ...state,
+        selectedGuestId: null,
+        updateGuest: false,
+        showCheckinModal: false
+      }
     case LOAD_DATE:
       return {
 
@@ -76,10 +93,13 @@ export function checkinGuest(guestId, feelSafe, healthIssue, date, reportedItems
   };
 }
 
-export function startCheckin(guest) {
-  console.log('STart checking in for ', guest);
+export function startCheckin(guestId) {
+  return { type: START_CHECKIN, guestId };
 }
 
+export function finishCheckin() {
+  return { type: FINISH_CHECKIN };
+}
 // function removeCheckin(guest) {
 //
 // }
