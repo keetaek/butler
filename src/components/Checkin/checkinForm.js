@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 // import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
 import checkinFormValidation from './checkinFormValidation';
-import { checkin } from 'redux/modules/checkin';
+import { checkinGuest } from 'redux/modules/checkin';
 const { Input } = require('react-bootstrap');
 // function select(state) {
 //   return {
@@ -21,12 +21,12 @@ export default class CheckinForm extends Component {
     postSubmitAction: PropTypes.func,
     postCancelAction: PropTypes.func,
     guestId: PropTypes.string.isRequired,
-    checkinDate: PropTypes.object.isRequired,
+    checkinDate: PropTypes.string.isRequired,
     fields: PropTypes.shape({
       feelSafe: PropTypes.object.isRequired,
       healthIssue: PropTypes.object.isRequired,
-      reportedItems: PropTypes.object.isOptional,
-      note: PropTypes.object.isOptional,
+      reportedItems: PropTypes.object,
+      note: PropTypes.object,
     }).isRequired,
     dispatch: PropTypes.func.isRequired
   };
@@ -41,7 +41,7 @@ export default class CheckinForm extends Component {
   handleSubmit() {
     const { fields: { feelSafe, healthIssue, reportedItems, note }, guestId, checkinDate } = this.props;
 
-    this.props.dispatch(checkin(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value));
+    this.props.dispatch(checkinGuest(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value));
 
     this.props.postSubmitAction();
   }

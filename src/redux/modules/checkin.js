@@ -1,5 +1,5 @@
 const CHECKIN = 'butler/checkin/CREATE';
-const CHECKIN_SUCCESS = 'butler/checkin/CREATE_SUCCESS';
+const CHECKIN_SUCCESS = 'butler/checkin/CHECKIN_SUCCESS';
 const CHECKIN_FAIL = 'butler/checkin/CREATE_FAIL';
 const LOAD_DATE = 'butler/checkin/LOAD_DATE';
 const LOAD_DATE_SUCCESS = 'butler/checkin/LOAD_DATE_SUCCESS';

@@ -90,7 +90,7 @@ export default class Checkin extends Component {
   }
 
   render() {
-    const { showCheckinModal, showGuestModal, updateGuest, checkinDate, showNotification, notificationMessage } = this.props;
+    const { showCheckinModal, showGuestModal, updateGuest, checkinDate, showNotification, notificationMessage, selectedGuestId } = this.props;
 
     return (
       <div className="container">
@@ -115,7 +115,7 @@ export default class Checkin extends Component {
         */}
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} title={'Check in guest'}>
-          <CheckinForm postSubmitAction={::this.closeCheckin} />
+          <CheckinForm postSubmitAction={::this.closeCheckin} guestId={selectedGuestId} checkinDate={checkinDate} />
         </FormModal>
 
         <Notification
