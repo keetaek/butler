@@ -1,11 +1,11 @@
-const CHECKIN = 'butler/checkin/CREATE';
+const CHECKIN = 'butler/checkin/CHECKIN';
 const CHECKIN_SUCCESS = 'butler/checkin/CHECKIN_SUCCESS';
-const CHECKIN_FAIL = 'butler/checkin/CREATE_FAIL';
+const CHECKIN_FAIL = 'butler/checkin/CHECKIN_FAIL';
 const LOAD_DATE = 'butler/checkin/LOAD_DATE';
 const LOAD_DATE_SUCCESS = 'butler/checkin/LOAD_DATE_SUCCESS';
 const LOAD_DATE_FAIL = 'butler/checkin/LOAD_DATE_FAIL';
 const START_CHECKIN = 'butler/checkin/START_CHECKIN';
-const FINISH_CHECKIN = 'butler/checkin/FINISH_CHECKIN';
+const CANCEL_CHECKIN = 'butler/checkin/CANCEL_CHECKIN';
 // const LOAD_GUEST_HISTORY = 'butler/checkin/LOAD_GUEST_HISTORY';
 // const LOAD_GUEST_HISTORY_SUCCESS = 'butler/checkin/LOAD_GUEST_HISTORY_SUCCESS';
 // const LOAD_GUEST_HISTORY_FAIL = 'butler/checkin/LOAD_GUEST_HISTORY_FAIL';
@@ -24,23 +24,34 @@ const initialState = {
   showGuestModal: false,
   checkinDate: new Date(),
   updateGuest: false
-  // editing: {},
-  // saveError: {},
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case CHECKIN:
-      return {
-
-      };
     case CHECKIN_SUCCESS:
+    // After successful checkin, check to see if we need to update a user
+      const updateGuest = action.updateGuest;
+      console.log("UPDATE GUEST", updateGuest, "ACTION", action.updateGuest);
+      let selectedGuestId = null;
+      let showGuestModal = false;
+      if (updateGuest) {
+        selectedGuestId = state.selectedGuestId;
+        showGuestModal = true;
+      }
       return {
-
+        ...state,
+        selectedGuestId: selectedGuestId,
+        updateGuest: updateGuest,
+        showCheckinModal: false,
+        showGuestModal: showGuestModal
       };
     case CHECKIN_FAIL:
       return {
-
+        selectedGuestId: null,
+        updateGuest: false,
+        showCheckinModal: false,
+        showGuestModal: false,
+        // showSnackBar: true
       };
     case START_CHECKIN:
       const guestId = action.guestId;
@@ -50,12 +61,13 @@ export default function reducer(state = initialState, action = {}) {
         showCheckinModal: true,
         showGuestModal: false,
       };
-    case FINISH_CHECKIN:
+    case CANCEL_CHECKIN:
       return {
         ...state,
         selectedGuestId: null,
         updateGuest: false,
-        showCheckinModal: false
+        showCheckinModal: false,
+        showGuestModal: false
       };
     case LOAD_DATE:
       return {
@@ -75,7 +87,7 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 
-export function checkinGuest(guestId, feelSafe, healthIssue, date, reportedItems, note) {
+export function checkinGuest(guestId, feelSafe, healthIssue, date, reportedItems, note, updateGuest) {
   const payload = {
     'guest_id': guestId,
     'feel_safe': feelSafe || FEEL_SAFE_DEFAULT_VALUE,
@@ -88,7 +100,8 @@ export function checkinGuest(guestId, feelSafe, healthIssue, date, reportedItems
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],
     promise: (client) => client.post('/checkins', {
       data: payload
-    }) // params not used, just shown as demonstration
+    }), // params not used, just shown as demonstration
+    updateGuest
   };
 }
 
@@ -96,8 +109,8 @@ export function startCheckin(guestId) {
   return { type: START_CHECKIN, guestId };
 }
 
-export function finishCheckin() {
-  return { type: FINISH_CHECKIN };
+export function cancelCheckin() {
+  return { type: CANCEL_CHECKIN };
 }
 // function removeCheckin(guest) {
 //

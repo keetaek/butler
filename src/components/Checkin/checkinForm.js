@@ -13,7 +13,7 @@ const { Input } = require('react-bootstrap');
 // @connect(select)
 @reduxForm({
   form: 'checkin',
-  fields: ['feelSafe', 'healthIssue', 'reportedItems', 'note'],
+  fields: ['feelSafe', 'healthIssue', 'reportedItems', 'note', 'updateGuest'],
   validate: checkinFormValidation
 })
 export default class CheckinForm extends Component {
@@ -27,6 +27,7 @@ export default class CheckinForm extends Component {
       healthIssue: PropTypes.object.isRequired,
       reportedItems: PropTypes.object,
       note: PropTypes.object,
+      updateGuest: PropTypes.object.isRequired
     }).isRequired,
     dispatch: PropTypes.func.isRequired
   };
@@ -39,15 +40,17 @@ export default class CheckinForm extends Component {
   }
 
   handleSubmit() {
-    const { fields: { feelSafe, healthIssue, reportedItems, note }, guestId, checkinDate } = this.props;
+    const { fields: { feelSafe, healthIssue, reportedItems, note, updateGuest }, guestId, checkinDate } = this.props;
 
-    this.props.dispatch(checkinGuest(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value));
-
-    this.props.postSubmitAction();
+    this.props.dispatch(checkinGuest(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value, updateGuest.checked));
+    // postSubmitAction is optional
+    if (this.props.postSubmitAction) {
+      this.props.postSubmitAction();
+    }
   }
 
   render() {
-    const {fields: { feelSafe, healthIssue, reportedItems, note }, postSubmitAction } = this.props;
+    const {fields: { feelSafe, healthIssue, reportedItems, note, updateGuest }, postCancelAction } = this.props;
     // const styles = require('./addGuestForm.scss');
     return (
       <span>
@@ -65,11 +68,14 @@ export default class CheckinForm extends Component {
               <div className="row form-group">
                 <Input type="textarea" label="Note" placeholder="Comments?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...note} />
               </div>
+              <div className="row form-group">
+                <Input type="checkbox" label="Would you like to update the guest info?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...updateGuest} />
+              </div>
             </fieldset>
           </form>
         </div>
         <div className="modal-footer">
-          <button type="button" className="btn btn-default" onClick={postSubmitAction}>Close</button>
+          <button type="button" className="btn btn-default" onClick={postCancelAction}>Close</button>
           <button type="button" className="btn btn-primary" onClick={::this.handleSubmit}>Check in</button>
         </div>
       </span>

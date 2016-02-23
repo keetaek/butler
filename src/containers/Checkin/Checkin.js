@@ -8,7 +8,7 @@ const CheckinForm = require('../../components/Checkin/checkinForm');
 const { Notification } = require('react-notification');
 const clone = require('lodash').clone;
 // actions checkinGuest
-const { startCheckin, finishCheckin } = require('redux/modules/checkin');
+const { startCheckin, cancelCheckin } = require('redux/modules/checkin');
 const { clearNewGuest, hideGuestNotification } = require('redux/modules/guests');
 
 function select(state) {
@@ -66,16 +66,12 @@ export default class Checkin extends Component {
     this.props.dispatch(this.props.dispatch(startCheckin(checkinGuestId)));
   }
 
-  openGuestModal() {
-    this.setState({showGuestModal: true});
-  }
-
-  closeGuestModal() {
+  cancelGuestUpdate() {
     this.setState({showGuestModal: false});
   }
 
   closeCheckin() {
-    this.props.dispatch(finishCheckin());
+    this.props.dispatch(cancelCheckin());
   }
 
   notificationOnClickHandler() {
@@ -107,15 +103,13 @@ export default class Checkin extends Component {
           </Row>
         </Grid>
         {/* This is for updating the guest info. The modal for adding a guest will be under GuestList component */}
-        {/*
-          TODO: Update guest - Revive this
-          <FormModal showModal={showGuestModal} onClose={::this.closeGuestModal} title={'Check in guest'}>
-          <CheckinForm postSubmitAction={::this.closeGuestModal} />
+
+        <FormModal showModal={showGuestModal} onClose={::this.cancelGuestUpdate} title={'Update Guest'}>
+          {/*<CheckinForm postSubmitAction={::this.closeGuestModal} />*/}
         </FormModal>
-        */}
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} title={'Check in guest'}>
-          <CheckinForm postSubmitAction={::this.closeCheckin} guestId={selectedGuestId} checkinDate={checkinDate} />
+          <CheckinForm postCancelAction={::this.closeCheckin} guestId={selectedGuestId} checkinDate={checkinDate} />
         </FormModal>
 
         <Notification
