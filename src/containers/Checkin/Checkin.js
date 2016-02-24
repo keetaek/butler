@@ -5,10 +5,11 @@ import { GuestList } from 'components';
 import { connect } from 'react-redux';
 const FormModal = require('../../components/FormModal/FormModal');
 const CheckinForm = require('../../components/Checkin/checkinForm');
+const Guestform = require('components/GuestList/GuestForm');
 const { Notification } = require('react-notification');
 const clone = require('lodash').clone;
 // actions checkinGuest
-const { startCheckin, cancelCheckin } = require('redux/modules/checkin');
+const { startCheckin, cancelCheckin, cancelGuestUpdate } = require('redux/modules/checkin');
 const { clearNewGuest, hideGuestNotification } = require('redux/modules/guests');
 
 function select(state) {
@@ -66,8 +67,8 @@ export default class Checkin extends Component {
     this.props.dispatch(this.props.dispatch(startCheckin(checkinGuestId)));
   }
 
-  cancelGuestUpdate() {
-    this.setState({showGuestModal: false});
+  closeGuestUpdate() {
+    this.props.dispatch(cancelGuestUpdate());
   }
 
   closeCheckin() {
@@ -86,7 +87,7 @@ export default class Checkin extends Component {
   }
 
   render() {
-    const { showCheckinModal, showGuestModal, updateGuest, checkinDate, showNotification, notificationMessage, selectedGuestId } = this.props;
+    const { showCheckinModal, showGuestModal, checkinDate, showNotification, notificationMessage, selectedGuestId } = this.props;
 
     return (
       <div className="container">
@@ -102,10 +103,8 @@ export default class Checkin extends Component {
             </Col>
           </Row>
         </Grid>
-        {/* This is for updating the guest info. The modal for adding a guest will be under GuestList component */}
-
-        <FormModal showModal={showGuestModal} onClose={::this.cancelGuestUpdate} title={'Update Guest'}>
-          {/*<CheckinForm postSubmitAction={::this.closeGuestModal} />*/}
+        <FormModal showModal={showGuestModal} onClose={::this.closeGuestUpdate} title={'Update Guest'}>
+          <Guestform postCancelAction={::this.closeGuestUpdate} />
         </FormModal>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} title={'Check in guest'}>

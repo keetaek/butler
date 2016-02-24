@@ -1,3 +1,4 @@
+const RESET = 'butler/checkin/RESET';
 const CHECKIN = 'butler/checkin/CHECKIN';
 const CHECKIN_SUCCESS = 'butler/checkin/CHECKIN_SUCCESS';
 const CHECKIN_FAIL = 'butler/checkin/CHECKIN_FAIL';
@@ -23,7 +24,8 @@ const initialState = {
   showCheckinModal: false,
   showGuestModal: false,
   checkinDate: new Date(),
-  updateGuest: false
+  updateGuest: false,
+  selectedGuestId: null
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -31,7 +33,6 @@ export default function reducer(state = initialState, action = {}) {
     case CHECKIN_SUCCESS:
     // After successful checkin, check to see if we need to update a user
       const updateGuest = action.updateGuest;
-      console.log("UPDATE GUEST", updateGuest, "ACTION", action.updateGuest);
       let selectedGuestId = null;
       let showGuestModal = false;
       if (updateGuest) {
@@ -81,6 +82,8 @@ export default function reducer(state = initialState, action = {}) {
       return {
 
       };
+    case RESET:
+      return initialState;
     default:
       return state;
   }
@@ -111,6 +114,16 @@ export function startCheckin(guestId) {
 
 export function cancelCheckin() {
   return { type: CANCEL_CHECKIN };
+}
+
+/**
+ * Why is this method here and not in Guest Module?
+ * Because the module display occurs in the checkin.
+ *
+ * @return {[type]} [description]
+ */
+export function cancelGuestUpdate() {
+  return { type: RESET };
 }
 // function removeCheckin(guest) {
 //

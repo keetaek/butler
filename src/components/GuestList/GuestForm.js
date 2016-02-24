@@ -22,6 +22,7 @@ const { Input } = require('react-bootstrap');
 export default class GuestForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
+    postCancelAction: PropTypes.func,
     fields: PropTypes.shape({
       firstName: PropTypes.object.isRequired,
       lastName: PropTypes.object.isRequired,
@@ -49,7 +50,7 @@ export default class GuestForm extends Component {
   }
 
   render() {
-    const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy }, postSubmitAction } = this.props;
+    const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy }, postCancelAction } = this.props;
     const styles = require('./GuestForm.scss');
     return (
       <span>
@@ -118,7 +119,7 @@ export default class GuestForm extends Component {
           </form>
         </div>
         <div className="modal-footer">
-          <button type="button" className="btn btn-default" onClick={postSubmitAction}>Cancel</button>
+          <button type="button" className="btn btn-default" onClick={postCancelAction}>Cancel</button>
           <button type="button" className="btn btn-primary" onClick={::this.handleSubmit}>Add Guest</button>
         </div>
       </span>

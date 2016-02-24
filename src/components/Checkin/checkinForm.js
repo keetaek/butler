@@ -51,7 +51,6 @@ export default class CheckinForm extends Component {
 
   render() {
     const {fields: { feelSafe, healthIssue, reportedItems, note, updateGuest }, postCancelAction } = this.props;
-    // const styles = require('./addGuestForm.scss');
     return (
       <span>
         <div className="modal-body">
