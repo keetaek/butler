@@ -19,7 +19,7 @@ const { Input } = require('react-bootstrap');
             'intakeFormCollectDate', 'intakeFormCollectedBy'],
   // validate: checkinFormValidation
 })
-export default class AddGuestForm extends Component {
+export default class GuestForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
     fields: PropTypes.shape({
@@ -50,7 +50,7 @@ export default class AddGuestForm extends Component {
 
   render() {
     const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy }, postSubmitAction } = this.props;
-    const styles = require('./addGuestForm.scss');
+    const styles = require('./GuestForm.scss');
     return (
       <span>
         <div className="modal-body">
@@ -126,4 +126,4 @@ export default class AddGuestForm extends Component {
   }
 }
 
-module.exports = AddGuestForm;
+module.exports = GuestForm;

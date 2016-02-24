@@ -5,8 +5,8 @@ import FixedDataTable from 'fixed-data-table';
 const {Table, Column, Cell} = FixedDataTable;
 const Link = require('react-router').Link;
 const { Button, Glyphicon } = require('react-bootstrap');
-const AddGuestForm = require('./addGuestForm');
-const FormModal = require('../FormModal/FormModal');
+const AddGuestForm = require('components/GuestList/GuestForm');
+const FormModal = require('components/FormModal/FormModal');
 const moment = require('moment');
 
 const DateCell = ({rowIndex, data, col, ...props}) => {
