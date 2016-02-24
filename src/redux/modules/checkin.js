@@ -24,7 +24,6 @@ const initialState = {
   showCheckinModal: false,
   showGuestModal: false,
   checkinDate: new Date(),
-  updateGuest: false,
   selectedGuestId: null
 };
 
@@ -42,14 +41,12 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         selectedGuestId: selectedGuestId,
-        updateGuest: updateGuest,
         showCheckinModal: false,
         showGuestModal: showGuestModal
       };
     case CHECKIN_FAIL:
       return {
         selectedGuestId: null,
-        updateGuest: false,
         showCheckinModal: false,
         showGuestModal: false,
         // showSnackBar: true
@@ -66,7 +63,6 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         selectedGuestId: null,
-        updateGuest: false,
         showCheckinModal: false,
         showGuestModal: false
       };

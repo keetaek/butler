@@ -22,8 +22,7 @@ function select(state) {
     showCheckinModal: state.checkin.showCheckinModal,
     showGuestModal: state.checkin.showGuestModal,
     checkinDate: state.checkin.checkinDate,
-    loaded: state.checkin.loaded,
-    updateGuest: state.checkin.updateGuest
+    loaded: state.checkin.loaded
   };
 }
 
@@ -39,7 +38,6 @@ export default class Checkin extends Component {
     showCheckinModal: PropTypes.bool.isRequired,
     showGuestModal: PropTypes.bool.isRequired,
     showNotification: PropTypes.bool.isRequired,
-    updateGuest: PropTypes.bool.isRequired,
     checkinDate: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
@@ -51,8 +49,7 @@ export default class Checkin extends Component {
     showCheckinModal: false,
     showGuestModal: false,
     checkinDate: new Date(),
-    loaded: false,
-    updateGuest: false
+    loaded: false
   };
 
   constructor(props) {
