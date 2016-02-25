@@ -1,6 +1,12 @@
+const { mapIncomingGuests, mapIncomingGuest } = require('helpers/guestDataMapper');
+
 const LOAD_ALL = 'butler/guests/LOAD_ALL';
 const LOAD_ALL_SUCCESS = 'butler/guests/LOAD_ALL_SUCCESS';
 const LOAD_ALL_FAIL = 'butler/guests/LOAD_ALL_FAIL';
+
+const LOAD = 'butler/guests/LOAD';
+const LOAD_SUCCESS = 'butler/guests/LOAD_SUCCESS';
+const LOAD_FAIL = 'butler/guests/LOAD_FAIL';
 
 const CREATE = 'butler/guests/CREATE';
 const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
@@ -14,13 +20,17 @@ import lo from 'lodash';
 
 const initialState = {
   loaded: false,
+  loading: false,
   data: null,
   filteredData: null,
   error: null,
   searchTerm: null,
   newGuest: null,
   showNotification: false,
-  notificationMessage: ''
+  notificationMessage: '',
+  selectedGuest: null,
+  selectedGuestLoading: false,
+  selectedGuestLoaded: false
 };
 
 
@@ -51,13 +61,13 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOAD_ALL_SUCCESS:
+      const transformedGuests = mapIncomingGuests(action.result);
       return {
         ...state,
         loading: false,
         loaded: true,
-        data: action.result,
-        // Freshly loaded data.
-        filteredData: action.result,
+        data: transformedGuests,
+        filteredData: transformedGuests,
         error: null
       };
     case LOAD_ALL_FAIL:
@@ -68,6 +78,34 @@ export default function reducer(state = initialState, action = {}) {
         data: null,
         error: action.error
       };
+    case LOAD:
+      return {
+        ...state,
+        selectedGuestLoading: true
+      };
+    case LOAD_SUCCESS:
+      const transformedGuest = mapIncomingGuest(action.result);
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        selectedGuest: transformedGuest,
+        selectedGuestLoading: false,
+        selectedGuestLoaded: true,
+        // Freshly loaded data.
+        error: null
+      };
+    case LOAD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        loaded: false,
+        selectedGuest: null,
+        selectedGuestLoading: false,
+        selectedGuestLoaded: false,
+        error: action.error
+      };
+
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
       const updatedList = lo.concat(state.data, action.result);
@@ -126,7 +164,14 @@ export function isLoaded(globalState) {
 export function loadAll() {
   return {
     types: [LOAD_ALL, LOAD_ALL_SUCCESS, LOAD_ALL_FAIL],
-    promise: (client) => client.get('/mockGuests') // params not used, just shown as demonstration
+    promise: (client) => client.get('/guests') // params not used, just shown as demonstration
+  };
+}
+
+export function load(guestId) {
+  return {
+    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    promise: (client) => client.get(`/guests/${guestId}`) // params not used, just shown as demonstration
   };
 }
 

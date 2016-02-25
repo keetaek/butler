@@ -101,7 +101,7 @@ export default class Checkin extends Component {
           </Row>
         </Grid>
         <FormModal showModal={showGuestModal} onClose={::this.closeGuestUpdate} title={'Update Guest'}>
-          <Guestform postCancelAction={::this.closeGuestUpdate} />
+          <Guestform postCancelAction={::this.closeGuestUpdate} guestIdForUpdate={selectedGuestId} />
         </FormModal>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} title={'Check in guest'}>

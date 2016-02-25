@@ -1,16 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 const { reduxForm } = require('redux-form');
-// const checkinFormValidation = require('./checkinFormValidation');
-const { addNewGuest } = require('redux/modules/guests');
+const { addNewGuest, load } = require('redux/modules/guests');
 const { Input } = require('react-bootstrap');
 
-// function select(state) {
-//   return {
-//     saveError: state.checkinForm.saveError
-//   };
-// }
-
-// @connect(select)
 @reduxForm({
   form: 'addGuest',
   fields: ['firstName', 'lastName', 'nickname', 'birthdate', 'gender',
@@ -18,11 +10,14 @@ const { Input } = require('react-bootstrap');
             'identificationNeedBy', 'identificationNote',
             'intakeFormCollectDate', 'intakeFormCollectedBy'],
   // validate: checkinFormValidation
-})
+}, state => ({ // mapStateToProps
+  initialValues: state.guests.selectedGuest // will pull state into form's initialValues
+}))
 export default class GuestForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
     postCancelAction: PropTypes.func,
+    guestIdForUpdate: PropTypes.string,
     fields: PropTypes.shape({
       firstName: PropTypes.object.isRequired,
       lastName: PropTypes.object.isRequired,
@@ -40,6 +35,13 @@ export default class GuestForm extends Component {
     }).isRequired,
     dispatch: PropTypes.func.isRequired
   };
+
+  componentWillMount() {
+    // If this is a update operation, we prefill guest information
+    if (this.props.guestIdForUpdate) {
+      return this.props.dispatch(load(this.props.guestIdForUpdate));
+    }
+  }
 
   handleSubmit() {
     const { fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
