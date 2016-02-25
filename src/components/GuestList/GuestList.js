@@ -126,13 +126,13 @@ export default class GuestList extends Component {
             {...this.props}>
             <Column
               header={<Cell>First Name</Cell>}
-              cell={<TextCell data={filteredGuests} col="first_name" />}
+              cell={<TextCell data={filteredGuests} col="firstName" />}
               fixed
               width={100}
             />
             <Column
               header={<Cell>Last Name</Cell>}
-              cell={<TextCell data={filteredGuests} col="last_name" />}
+              cell={<TextCell data={filteredGuests} col="lastName" />}
               fixed
               width={100}
             />
@@ -176,13 +176,13 @@ export default class GuestList extends Component {
           {...this.props}>
           <Column
             header={<Cell>First Name</Cell>}
-            cell={<TextCell data={filteredGuests} col="first_name" />}
+            cell={<TextCell data={filteredGuests} col="firstName" />}
             fixed
             width={100}
           />
           <Column
             header={<Cell>Last Name</Cell>}
-            cell={<TextCell data={filteredGuests} col="last_name" />}
+            cell={<TextCell data={filteredGuests} col="lastName" />}
             fixed
             width={100}
           />
