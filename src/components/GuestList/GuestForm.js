@@ -1,18 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 const { reduxForm } = require('redux-form');
-const { addNewGuest, load } = require('redux/modules/guests');
+const { addNewGuest, updateGuest, load } = require('redux/modules/guests');
 const { Input } = require('react-bootstrap');
+const mapValues = require('lodash').mapValues;
 
 @reduxForm({
-  form: 'addGuest',
+  form: 'guestForm',
   fields: ['firstName', 'lastName', 'nickname', 'birthdate', 'gender',
             'emergencyContactName', 'emergencyContactPhone', 'identificationType', 'identificationValue',
             'identificationNeedBy', 'identificationNote',
             'intakeFormCollectDate', 'intakeFormCollectedBy'],
   // validate: checkinFormValidation
-}, state => ({ // mapStateToProps
-  initialValues: state.guests.selectedGuest // will pull state into form's initialValues
-}))
+})
+// , state => ({ // mapStateToProps
+//   initialValues: state.guests.selectedGuest // will pull state into form's initialValues
+// })
 export default class GuestForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
@@ -44,9 +46,17 @@ export default class GuestForm extends Component {
   }
 
   handleSubmit() {
-    const { fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
-
-    this.props.dispatch(addNewGuest(firstName.value, lastName.value, nickname.value, birthdate.value, gender.value, emergencyContactName.value, emergencyContactPhone.value, identificationType.value, identificationValue.value, identificationNeedBy.value, identificationNote.value, intakeFormCollectDate.value, intakeFormCollectedBy.value));
+    // const { fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
+    const allFields = this.props.fields;
+    console.log('allFields', allFields);
+    const { guestIdForUpdate } = this.props;
+    const fieldValues = mapValues(allFields, (field) => { return field.value; });
+    if (this.props.guestIdForUpdate) {
+      this.props.dispatch(updateGuest(guestIdForUpdate, fieldValues));
+    } else {
+      this.props.dispatch(addNewGuest(fieldValues));
+      // this.props.dispatch(addNewGuest(firstName.value, lastName.value, nickname.value, birthdate.value, gender.value, emergencyContactName.value, emergencyContactPhone.value, identificationType.value, identificationValue.value, identificationNeedBy.value, identificationNote.value, intakeFormCollectDate.value, intakeFormCollectedBy.value));
+    }
 
     this.props.postSubmitAction();
   }

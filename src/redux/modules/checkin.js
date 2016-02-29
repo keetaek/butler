@@ -24,7 +24,8 @@ const initialState = {
   showCheckinModal: false,
   showGuestModal: false,
   checkinDate: new Date(),
-  selectedGuestId: null
+  selectedGuestId: null,
+  notification: null
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -42,14 +43,19 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         selectedGuestId: selectedGuestId,
         showCheckinModal: false,
-        showGuestModal: showGuestModal
+        showGuestModal: showGuestModal,
+        notification: null
       };
     case CHECKIN_FAIL:
       return {
+        ...state,
         selectedGuestId: null,
         showCheckinModal: false,
         showGuestModal: false,
-        // showSnackBar: true
+        notification: {
+          status: CHECKIN_FAIL,
+          notificationMessage: 'There was a problem checking in the guest to the system.'
+        }
       };
     case START_CHECKIN:
       const guestId = action.guestId;
@@ -57,7 +63,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         selectedGuestId: guestId,
         showCheckinModal: true,
-        showGuestModal: false,
+        showGuestModal: false
       };
     case CANCEL_CHECKIN:
       return {
@@ -68,7 +74,6 @@ export default function reducer(state = initialState, action = {}) {
       };
     case LOAD_DATE:
       return {
-
       };
     case LOAD_DATE_SUCCESS:
       return {

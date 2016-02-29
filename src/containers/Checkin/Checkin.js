@@ -3,21 +3,17 @@ import Helmet from 'react-helmet';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { GuestList } from 'components';
 import { connect } from 'react-redux';
-const FormModal = require('../../components/FormModal/FormModal');
-const CheckinForm = require('../../components/Checkin/checkinForm');
+const FormModal = require('components/FormModal/FormModal');
+const CheckinForm = require('components/Checkin/checkinForm');
 const Guestform = require('components/GuestList/GuestForm');
-const { Notification } = require('react-notification');
-const clone = require('lodash').clone;
-// actions checkinGuest
+const Notification = require('components/CheckinNotification/CheckinNotification');
 const { startCheckin, cancelCheckin, cancelGuestUpdate } = require('redux/modules/checkin');
-const { clearNewGuest, hideGuestNotification } = require('redux/modules/guests');
 
 function select(state) {
   return {
     ...state,
-    guests: state.guests,
-    showNotification: state.guests.showNotification,
-    notificationMessage: state.guests.notificationMessage,
+    guestNotification: state.guests.notification,
+    checkinNotification: state.checkin.notification,
     selectedGuestId: state.checkin.selectedGuestId,
     showCheckinModal: state.checkin.showCheckinModal,
     showGuestModal: state.checkin.showGuestModal,
@@ -30,20 +26,24 @@ function select(state) {
 export default class Checkin extends Component {
 
   static propTypes = {
-    guests: PropTypes.shape({
-      newGuest: PropTypes.object.isOptional,
+    guestNotification: PropTypes.shape({
+      status: PropTypes.string,
+      notificationMessage: PropTypes.string,
+      updatedGuest: PropTypes.object
+    }),
+    checkinNotification: PropTypes.shape({
+      status: PropTypes.string,
+      notificationMessage: PropTypes.string,
+      updatedGuest: PropTypes.object
     }),
     selectedGuestId: PropTypes.string,
-    notificationMessage: PropTypes.string,
     showCheckinModal: PropTypes.bool.isRequired,
     showGuestModal: PropTypes.bool.isRequired,
-    showNotification: PropTypes.bool.isRequired,
     checkinDate: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    showNotification: false,
     notificationMessage: '',
     selectedGuestId: null,
     showCheckinModal: false,
@@ -72,19 +72,8 @@ export default class Checkin extends Component {
     this.props.dispatch(cancelCheckin());
   }
 
-  notificationOnClickHandler() {
-    const newGuest = clone(this.props.guests.newGuest);
-    this.props.dispatch(startCheckin(newGuest.id)); // start checkin
-    this.props.dispatch(clearNewGuest()); // clear guest newGuest
-  }
-
-  // Dismiss the notification.
-  dismissNotification() {
-    this.props.dispatch(hideGuestNotification());
-  }
-
   render() {
-    const { showCheckinModal, showGuestModal, checkinDate, showNotification, notificationMessage, selectedGuestId } = this.props;
+    const { showCheckinModal, showGuestModal, checkinDate, selectedGuestId, guestNotification, checkinNotification, dispatch } = this.props;
 
     return (
       <div className="container">
@@ -100,22 +89,16 @@ export default class Checkin extends Component {
             </Col>
           </Row>
         </Grid>
+
         <FormModal showModal={showGuestModal} onClose={::this.closeGuestUpdate} title={'Update Guest'}>
           <Guestform postCancelAction={::this.closeGuestUpdate} guestIdForUpdate={selectedGuestId} />
         </FormModal>
-
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} title={'Check in guest'}>
           <CheckinForm postCancelAction={::this.closeCheckin} guestId={selectedGuestId} checkinDate={checkinDate} />
         </FormModal>
 
-        <Notification
-          isActive={showNotification}
-          message={notificationMessage}
-          action={'Check in'}
-          onClick={::this.notificationOnClickHandler}
-          onDismiss={::this.dismissNotification}
-          dismissAfter={2000}
-/>
+        <Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/>
+
       </div>
     );
   }

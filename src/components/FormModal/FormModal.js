@@ -3,7 +3,7 @@ const { Component, PropTypes } = require('react');
 const { Modal } = require('react-bootstrap');
 
 
-export default class GuestList extends Component {
+export default class FormModal extends Component {
   static propTypes = {
     showModal: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,

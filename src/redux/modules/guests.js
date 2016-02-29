@@ -1,4 +1,6 @@
-const { mapIncomingGuests, mapIncomingGuest } = require('helpers/guestDataMapper');
+const { mapIncomingGuests, mapIncomingGuest } =
+require('helpers/guestDataMapper');
+const { reduce, isEmpty, filter, concat } = require('lodash');
 
 const LOAD_ALL = 'butler/guests/LOAD_ALL';
 const LOAD_ALL_SUCCESS = 'butler/guests/LOAD_ALL_SUCCESS';
@@ -9,14 +11,17 @@ const LOAD_SUCCESS = 'butler/guests/LOAD_SUCCESS';
 const LOAD_FAIL = 'butler/guests/LOAD_FAIL';
 
 const CREATE = 'butler/guests/CREATE';
-const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
+export const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
 const CREATE_FAIL = 'butler/guests/CREATE_FAIL';
 
-const CLEAR_NEW_GUEST = 'butler/guests/CLEAR_NEW_GUEST';
-const HIDE_NOTIFICATION = 'butler/guests/HIDE_NOTIFICATION';
+const UPDATE = 'butler/guests/UPDATE';
+const UPDATE_SUCCESS = 'butler/guests/UPDATE_SUCCESS';
+const UPDATE_FAIL = 'butler/guests/UPDATE_FAIL';
+
+const CLEAR_NOTIFICATION = 'butler/guests/CLEAR_NOTIFICATION';
 
 const SEARCH = 'butler/guests/SEARCH';
-import lo from 'lodash';
+
 
 const initialState = {
   loaded: false,
@@ -25,12 +30,10 @@ const initialState = {
   filteredData: null,
   error: null,
   searchTerm: null,
-  newGuest: null,
-  showNotification: false,
-  notificationMessage: '',
   selectedGuest: null,
   selectedGuestLoading: false,
-  selectedGuestLoaded: false
+  selectedGuestLoaded: false,
+  notification: null
 };
 
 
@@ -42,11 +45,11 @@ const initialState = {
  */
 function searchHelper(searchTerm, guestFullList) {
   const regex = new RegExp(searchTerm, 'gi');
-  if (!lo.isEmpty(guestFullList)) {
-    return lo.filter(guestFullList, (guest) => {
-      if (!lo.isEmpty(guest.first_name) && guest.first_name.match(regex) ||
-          !lo.isEmpty(guest.last_name) && guest.last_name.match(regex) ||
-          !lo.isEmpty(guest.nickname) && guest.nickname.match(regex)) {
+  if (!isEmpty(guestFullList)) {
+    return filter(guestFullList, (guest) => {
+      if (!isEmpty(guest.first_name) && guest.first_name.match(regex) ||
+          !isEmpty(guest.last_name) && guest.last_name.match(regex) ||
+          !isEmpty(guest.nickname) && guest.nickname.match(regex)) {
         return true;
       }
     });
@@ -108,22 +111,25 @@ export default function reducer(state = initialState, action = {}) {
 
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
-      const updatedList = lo.concat(state.data, action.result);
+      const listWithNewItem = concat(state.data, action.result);
       console.log('CREATE SUCCESS');
       return {
         ...state,
         loading: false,
         loaded: true,
         // Just adding the newly added item
-        data: updatedList,
-        filteredData: updatedList,
+        data: listWithNewItem,
+        filteredData: listWithNewItem,
         showModal: false,
-        newGuest: action.result,
-        notificationMessage: `Would you like to check in ${action.result.first_name}?`,
-        showNotification: true
+        notification: {
+          status: CREATE_SUCCESS,
+          notificationMessage: `Guest ${action.result.first_name}? has been added to the system`,
+          updatedGuest: action.result
+        }
+        // newGuest: action.result,
+        // notificationMessage: `Would you like to check in ${action.result.first_name}?`,
       };
     case CREATE_FAIL:
-      console.log('CREATE FAIL');
       return {
         ...state,
         loading: false,
@@ -132,7 +138,43 @@ export default function reducer(state = initialState, action = {}) {
         filteredData: null,
         showModal: false,
         error: action.error,
-        newGuest: null
+        notification: {
+          status: CREATE_FAIL,
+          notificationMessage: 'There was a problem adding a guest to the system. Please try again',
+        }
+      };
+
+    case UPDATE_SUCCESS:
+      // Just add a newly added item to the list.
+      const updatedItem = action.result;
+      const listWithUpdatedItem = reduce(state.data, (result, item) => {
+        if (item.id === updatedItem.id) {
+          result.push(updatedItem);
+        } else {
+          result.push(item);
+        }
+        return result;
+      }, []);
+      return {
+        ...state,
+        data: listWithUpdatedItem,
+        filteredData: listWithUpdatedItem,
+        showModal: false,
+        notification: {
+          status: UPDATE_SUCCESS,
+          notificationMessage: `Guest ${action.result.first_name}? has been updated`,
+          updatedGuest: action.result
+        }
+      };
+    case UPDATE_FAIL:
+      return {
+        ...state,
+        showModal: false,
+        notification: {
+          status: UPDATE_FAIL,
+          notificationMessage: 'There was a problem adding a guest to the system. Please try again'
+        },
+        error: action.error
       };
     case SEARCH:
       return {
@@ -141,20 +183,33 @@ export default function reducer(state = initialState, action = {}) {
         filteredData: searchHelper(action.searchTerm, state.data),
         searchTerm: action.searchTerm
       };
-    case CLEAR_NEW_GUEST:
+    case CLEAR_NOTIFICATION:
       return {
         ...state,
-        newGuest: null
-      };
-    case HIDE_NOTIFICATION:
-      return {
-        ...state,
-        notificationMessage: null,
-        showNotification: false
+        notification: null
       };
     default:
       return state;
   }
+}
+
+
+function buildPayload(fields) {
+  return {
+    first_name: fields.firstName,
+    last_name: fields.lastName,
+    nickname: fields.nickname,
+    birthdate: fields.birthdate,
+    gender: fields.gender,
+    emergency_contact_name: fields.emergencyContactName,
+    emergency_contact_phone: fields.identificationNeedBy,
+    identification_type: fields.identificationType,
+    identification_value: fields.identificationValue,
+    identification_need_by: fields.identificationNeedBy,
+    identification_note: fields.identificationNote,
+    intake_form_collect_date: fields.intakeFormCollectDate,
+    intake_form_collected_by: fields.intakeFormCollectedBy
+  };
 }
 
 export function isLoaded(globalState) {
@@ -179,22 +234,9 @@ export function searchRequest(searchTerm) {
   return { type: SEARCH, searchTerm };
 }
 
-export function addNewGuest(firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy) {
-  const payload = {
-    first_name: firstName,
-    last_name: lastName,
-    nickname: nickname,
-    birthdate: birthdate,
-    gender: gender,
-    emergency_contact_name: emergencyContactName,
-    emergency_contact_phone: identificationNeedBy,
-    identification_type: identificationType,
-    identification_value: identificationValue,
-    identification_need_by: identificationNeedBy,
-    identification_note: identificationNote,
-    intake_form_collect_date: intakeFormCollectDate,
-    intake_form_collected_by: intakeFormCollectedBy
-  };
+export function addNewGuest(fields) {
+  const payload = buildPayload(fields);
+
   return {
     types: [CREATE, CREATE_SUCCESS, CREATE_FAIL],
     promise: (client) => client.post('/guests', {
@@ -203,10 +245,17 @@ export function addNewGuest(firstName, lastName, nickname, birthdate, gender, em
   };
 }
 
-export function clearNewGuest() {
-  return { type: CLEAR_NEW_GUEST };
+export function updateGuest(guestId, fields) {
+  const payload = buildPayload(fields);
+
+  return {
+    types: [UPDATE, UPDATE_SUCCESS, UPDATE_FAIL],
+    promise: (client) => client.put(`/guests/${guestId}`, {
+      data: payload
+    }) // params not used, just shown as demonstration
+  };
 }
 
-export function hideGuestNotification() {
-  return { type: HIDE_NOTIFICATION };
+export function clearNotification() {
+  return { type: CLEAR_NOTIFICATION };
 }
