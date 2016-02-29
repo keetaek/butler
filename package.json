@@ -118,7 +118,7 @@
     "react-router": "1.0.3",
     "react-router-bootstrap": "^0.19.3",
     "redux": "^3.0.4",
-    "redux-form": "^3.0.12",
+    "redux-form": "4.2.0",
     "redux-router": "1.0.0-beta5",
     "rsvp": "^3.1.0",
     "scroll-behavior": "^0.3.0",

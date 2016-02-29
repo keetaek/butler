@@ -19,7 +19,6 @@ const { Input } = require('react-bootstrap');
 export default class CheckinForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
-    postCancelAction: PropTypes.func,
     guestId: PropTypes.string.isRequired,
     checkinDate: PropTypes.string.isRequired,
     fields: PropTypes.shape({
@@ -39,6 +38,7 @@ export default class CheckinForm extends Component {
     }
   }
 
+  // TODO remove once the handler is confirmed to be working fine outside this jsx
   handleSubmit() {
     const { fields: { feelSafe, healthIssue, reportedItems, note, updateGuest }, guestId, checkinDate } = this.props;
 
@@ -50,7 +50,7 @@ export default class CheckinForm extends Component {
   }
 
   render() {
-    const {fields: { feelSafe, healthIssue, reportedItems, note, updateGuest }, postCancelAction } = this.props;
+    const {fields: { feelSafe, healthIssue, reportedItems, note, updateGuest } } = this.props;
     return (
       <span>
         <div className="modal-body">
@@ -72,10 +72,6 @@ export default class CheckinForm extends Component {
               </div>
             </fieldset>
           </form>
-        </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-default" onClick={postCancelAction}>Close</button>
-          <button type="button" className="btn btn-primary" onClick={::this.handleSubmit}>Check in</button>
         </div>
       </span>
     );

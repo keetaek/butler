@@ -5,9 +5,10 @@ import FixedDataTable from 'fixed-data-table';
 const {Table, Column, Cell} = FixedDataTable;
 const Link = require('react-router').Link;
 const { Button, Glyphicon } = require('react-bootstrap');
-const AddGuestForm = require('components/GuestList/GuestForm');
+const GuestForm = require('components/GuestList/GuestForm');
 const FormModal = require('components/FormModal/FormModal');
 const moment = require('moment');
+const { addNewGuest } = require('redux/modules/guests');
 
 const DateCell = ({rowIndex, data, col, ...props}) => {
   const dateField = data[rowIndex][col];
@@ -92,8 +93,8 @@ export default class GuestList extends Component {
     this.props.dispatch(searchRequest(filterBy));
   }
 
-  addGuestHandler() {
-    console.log('Getting into addGuestHandler');
+  handleSubmit() {
+    this.refs.addGuestForm.submit();  // will return a promise
     this.closeModal();
     if (this.props.postAddGuestHandler) {
       this.props.postAddGuestHandler();
@@ -101,7 +102,7 @@ export default class GuestList extends Component {
   }
 
   render() {
-    const { filteredGuests, loaded, isCheckin, checkinHandler } = this.props;
+    const { filteredGuests, loaded, isCheckin, checkinHandler, dispatch } = this.props;
     const styles = require('./GuestList.scss');
     if (!loaded) {
       return (
@@ -153,8 +154,10 @@ export default class GuestList extends Component {
               width={100}
             />
           </Table>
-          <FormModal showModal={this.state.showModal} onClose={::this.closeModal} title={'Add New Guest'}>
-            <AddGuestForm postSubmitAction={::this.addGuestHandler} />
+          <FormModal showModal={this.state.showModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={'Add New Guest'}>
+            <GuestForm ref="addGuestForm" onSubmit={data => {
+              dispatch(addNewGuest(data));
+            }}/>
           </FormModal>
         </div>
       );
@@ -198,8 +201,11 @@ export default class GuestList extends Component {
             width={200}
           />
         </Table>
-        <FormModal showModal={this.state.showModal} onClose={::this.closeModal} title={'Add New Guest'}>
-          <AddGuestForm postSubmitAction={::this.addGuestHandler} />
+
+        <FormModal showModal={this.state.showModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={'Add New Guest'}>
+          <GuestForm ref="addGuestForm" onSubmit={data => {
+            dispatch(addNewGuest(data));
+          }}/>
         </FormModal>
       </div>
     );

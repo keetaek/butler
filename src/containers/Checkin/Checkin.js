@@ -5,9 +5,10 @@ import { GuestList } from 'components';
 import { connect } from 'react-redux';
 const FormModal = require('components/FormModal/FormModal');
 const CheckinForm = require('components/Checkin/checkinForm');
-const Guestform = require('components/GuestList/GuestForm');
+const GuestForm = require('components/GuestList/GuestForm');
 const Notification = require('components/CheckinNotification/CheckinNotification');
-const { startCheckin, cancelCheckin, cancelGuestUpdate } = require('redux/modules/checkin');
+const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
+const { updateGuest } = require('redux/modules/guests');
 
 function select(state) {
   return {
@@ -16,7 +17,6 @@ function select(state) {
     checkinNotification: state.checkin.notification,
     selectedGuestId: state.checkin.selectedGuestId,
     showCheckinModal: state.checkin.showCheckinModal,
-    showGuestModal: state.checkin.showGuestModal,
     checkinDate: state.checkin.checkinDate,
     loaded: state.checkin.loaded
   };
@@ -38,7 +38,6 @@ export default class Checkin extends Component {
     }),
     selectedGuestId: PropTypes.string,
     showCheckinModal: PropTypes.bool.isRequired,
-    showGuestModal: PropTypes.bool.isRequired,
     checkinDate: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
@@ -47,7 +46,6 @@ export default class Checkin extends Component {
     notificationMessage: '',
     selectedGuestId: null,
     showCheckinModal: false,
-    showGuestModal: false,
     checkinDate: new Date(),
     loaded: false
   };
@@ -57,23 +55,25 @@ export default class Checkin extends Component {
     require('./Checkin.scss');
   }
 
-  checkinHandler(event) {
+  onClickCheckinLinkHandler(event) {
     event.preventDefault();
     const path = event.target.pathname;
     const checkinGuestId = path.match(/\/checkin\/(\d+)/)[1];
-    this.props.dispatch(this.props.dispatch(startCheckin(checkinGuestId)));
-  }
-
-  closeGuestUpdate() {
-    this.props.dispatch(cancelGuestUpdate());
+    this.props.dispatch(startCheckin(checkinGuestId));
   }
 
   closeCheckin() {
-    this.props.dispatch(cancelCheckin());
+    this.props.dispatch(finishCheckin());
+  }
+
+  checkinHandler() {
+    this.refs.checkinForm.submit();
+    this.refs.updateGuestForm.submit();
+    this.props.dispatch(finishCheckin());
   }
 
   render() {
-    const { showCheckinModal, showGuestModal, checkinDate, selectedGuestId, guestNotification, checkinNotification, dispatch } = this.props;
+    const { showCheckinModal, checkinDate, selectedGuestId, guestNotification, checkinNotification, dispatch } = this.props;
 
     return (
       <div className="container">
@@ -82,7 +82,7 @@ export default class Checkin extends Component {
         <Grid>
           <Row className="show-grid">
             <Col xs={12} md={8}>
-              <GuestList {...this.props} isCheckin checkinHandler={::this.checkinHandler} />
+              <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
             </Col>
             <Col xs={6} md={4}>
               <code>&lt;{'Col xs={6} md={4}'} /&gt;</code>
@@ -90,11 +90,14 @@ export default class Checkin extends Component {
           </Row>
         </Grid>
 
-        <FormModal showModal={showGuestModal} onClose={::this.closeGuestUpdate} title={'Update Guest'}>
-          <Guestform postCancelAction={::this.closeGuestUpdate} guestIdForUpdate={selectedGuestId} />
-        </FormModal>
-        <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} title={'Check in guest'}>
-          <CheckinForm postCancelAction={::this.closeCheckin} guestId={selectedGuestId} checkinDate={checkinDate} />
+        <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={'Check-in'}>
+          <CheckinForm ref="checkinForm" onSubmit={data => {
+            dispatch(checkinGuest(data));
+          }}/>
+          <hr />
+          <GuestForm ref="guestForm" onSubmit={data => {
+            dispatch(updateGuest(data));
+          }}/>
         </FormModal>
 
         <Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/>

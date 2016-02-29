@@ -6,7 +6,7 @@ const LOAD_DATE = 'butler/checkin/LOAD_DATE';
 const LOAD_DATE_SUCCESS = 'butler/checkin/LOAD_DATE_SUCCESS';
 const LOAD_DATE_FAIL = 'butler/checkin/LOAD_DATE_FAIL';
 const START_CHECKIN = 'butler/checkin/START_CHECKIN';
-const CANCEL_CHECKIN = 'butler/checkin/CANCEL_CHECKIN';
+const FINISH_CHECKIN = 'butler/checkin/FINISH_CHECKIN';
 // const LOAD_GUEST_HISTORY = 'butler/checkin/LOAD_GUEST_HISTORY';
 // const LOAD_GUEST_HISTORY_SUCCESS = 'butler/checkin/LOAD_GUEST_HISTORY_SUCCESS';
 // const LOAD_GUEST_HISTORY_FAIL = 'butler/checkin/LOAD_GUEST_HISTORY_FAIL';
@@ -22,7 +22,6 @@ const HEALTH_ISSUE_DEFAULT_VALUE = false;
 const initialState = {
   loaded: false,
   showCheckinModal: false,
-  showGuestModal: false,
   checkinDate: new Date(),
   selectedGuestId: null,
   notification: null
@@ -31,27 +30,16 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case CHECKIN_SUCCESS:
-    // After successful checkin, check to see if we need to update a user
-      const updateGuest = action.updateGuest;
-      let selectedGuestId = null;
-      let showGuestModal = false;
-      if (updateGuest) {
-        selectedGuestId = state.selectedGuestId;
-        showGuestModal = true;
-      }
+    console.log('Successfully checked in');
       return {
         ...state,
-        selectedGuestId: selectedGuestId,
         showCheckinModal: false,
-        showGuestModal: showGuestModal,
         notification: null
       };
     case CHECKIN_FAIL:
       return {
         ...state,
-        selectedGuestId: null,
         showCheckinModal: false,
-        showGuestModal: false,
         notification: {
           status: CHECKIN_FAIL,
           notificationMessage: 'There was a problem checking in the guest to the system.'
@@ -63,14 +51,12 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         selectedGuestId: guestId,
         showCheckinModal: true,
-        showGuestModal: false
       };
-    case CANCEL_CHECKIN:
+    case FINISH_CHECKIN:
       return {
         ...state,
         selectedGuestId: null,
         showCheckinModal: false,
-        showGuestModal: false
       };
     case LOAD_DATE:
       return {
@@ -90,22 +76,24 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-
-export function checkinGuest(guestId, feelSafe, healthIssue, date, reportedItems, note, updateGuest) {
-  const payload = {
-    'guest_id': guestId,
-    'feel_safe': feelSafe || FEEL_SAFE_DEFAULT_VALUE,
-    'health_issue': healthIssue || HEALTH_ISSUE_DEFAULT_VALUE,
-    'checkin_date': date || new Date(),
-    'reported_items': reportedItems || '',
-    'note': note || ''
+function buildPayload(fields) {
+  return {
+    'guest_id': fields.guestId,
+    'feel_safe': fields.feelSafe || FEEL_SAFE_DEFAULT_VALUE,
+    'health_issue': fields.healthIssue || HEALTH_ISSUE_DEFAULT_VALUE,
+    'checkin_date': fields.date || new Date(),
+    'reported_items': fields.reportedItems || '',
+    'note': fields.note || ''
   };
+}
+
+export function checkinGuest(fields) {
+  const payload = buildPayload(fields);
   return {
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],
     promise: (client) => client.post('/checkins', {
       data: payload
-    }), // params not used, just shown as demonstration
-    updateGuest
+    })
   };
 }
 
@@ -113,18 +101,8 @@ export function startCheckin(guestId) {
   return { type: START_CHECKIN, guestId };
 }
 
-export function cancelCheckin() {
-  return { type: CANCEL_CHECKIN };
-}
-
-/**
- * Why is this method here and not in Guest Module?
- * Because the module display occurs in the checkin.
- *
- * @return {[type]} [description]
- */
-export function cancelGuestUpdate() {
-  return { type: RESET };
+export function finishCheckin() {
+  return { type: FINISH_CHECKIN };
 }
 // function removeCheckin(guest) {
 //
