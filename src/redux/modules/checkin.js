@@ -22,7 +22,6 @@ const HEALTH_ISSUE_DEFAULT_VALUE = false;
 const initialState = {
   loaded: false,
   showCheckinModal: false,
-  checkinDate: new Date(),
   selectedGuest: null,
   notification: null
 };

@@ -18,7 +18,6 @@ function select(state) {
     selectedGuest: state.checkin.selectedGuest,
     idBasedData: state.guests.idBasedData,
     showCheckinModal: state.checkin.showCheckinModal,
-    checkinDate: state.checkin.checkinDate,
     loaded: state.checkin.loaded
   };
 }
@@ -39,7 +38,7 @@ export default class Checkin extends Component {
     }),
     selectedGuest: PropTypes.object,
     showCheckinModal: PropTypes.bool.isRequired,
-    checkinDate: PropTypes.string.isRequired,
+    checkinDate: PropTypes.object.isRequired,
     idBasedData: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   };
@@ -103,7 +102,6 @@ export default class Checkin extends Component {
         </Grid>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in:  ${guestFirstName} ${guestLastName}`}>
-
           <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, id: guestId, checkinDate: checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>
