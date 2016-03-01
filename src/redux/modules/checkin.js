@@ -86,7 +86,6 @@ function buildPayload(fields) {
 }
 
 export function checkinGuest(fields) {
-  console.log('CHeckin guest', fields);
   const payload = buildPayload(fields);
   return {
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],

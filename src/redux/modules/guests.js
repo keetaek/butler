@@ -154,7 +154,7 @@ export default function reducer(state = initialState, action = {}) {
 
     case UPDATE_SUCCESS:
       // Just add a newly added item to the list.
-      const updatedItem = action.result;
+      const updatedItem = mapIncomingGuest(action.result);
       const listWithUpdatedItem = reduce(state.data, (result, item) => {
         if (item.id === updatedItem.id) {
           result.push(updatedItem);
