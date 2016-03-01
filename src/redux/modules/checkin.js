@@ -77,7 +77,7 @@ export default function reducer(state = initialState, action = {}) {
 
 function buildPayload(fields) {
   return {
-    'guest_id': fields.guestId,
+    'guest_id': fields.id,
     'feel_safe': fields.feelSafe || FEEL_SAFE_DEFAULT_VALUE,
     'health_issue': fields.healthIssue || HEALTH_ISSUE_DEFAULT_VALUE,
     'checkin_date': fields.date || new Date(),
@@ -87,6 +87,7 @@ function buildPayload(fields) {
 }
 
 export function checkinGuest(fields) {
+  console.log('CHeckin guest', fields);
   const payload = buildPayload(fields);
   return {
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],

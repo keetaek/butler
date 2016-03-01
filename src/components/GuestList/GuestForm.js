@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 const { reduxForm } = require('redux-form');
-const { addNewGuest, updateGuest, load } = require('redux/modules/guests');
 const { Input } = require('react-bootstrap');
-const mapValues = require('lodash').mapValues;
 
 @reduxForm({
   form: 'guestForm',
@@ -13,9 +11,6 @@ const mapValues = require('lodash').mapValues;
 })
 export default class GuestForm extends Component {
   static propTypes = {
-    postSubmitAction: PropTypes.func,
-    guestIdForUpdate: PropTypes.string,
-    onSubmit: PropTypes.func,
     fields: PropTypes.shape({
       firstName: PropTypes.object.isRequired,
       lastName: PropTypes.object.isRequired,
@@ -33,28 +28,6 @@ export default class GuestForm extends Component {
     }).isRequired,
     dispatch: PropTypes.func.isRequired
   };
-
-  componentWillMount() {
-    // If this is a update operation, we prefill guest information
-    if (this.props.guestIdForUpdate) {
-      return this.props.dispatch(load(this.props.guestIdForUpdate));
-    }
-  }
-
-  // This handleSubmit is only used when this form is self-standing
-  // Currently GuestList.jsx and Checkin.jsx. May have to refactor this out
-  handleSubmit() {
-    const allFields = this.props.fields;
-    const { guestIdForUpdate } = this.props;
-    const fieldValues = mapValues(allFields, (field) => { return field.value; });
-    if (this.props.guestIdForUpdate) {
-      this.props.dispatch(updateGuest(guestIdForUpdate, fieldValues));
-    } else {
-      this.props.dispatch(addNewGuest(fieldValues));
-    }
-
-    this.props.postSubmitAction();
-  }
 
   render() {
     const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
