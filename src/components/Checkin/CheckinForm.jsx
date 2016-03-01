@@ -4,45 +4,33 @@ import {reduxForm} from 'redux-form';
 import checkinFormValidation from './checkinFormValidation';
 import { checkinGuest } from 'redux/modules/checkin';
 const { Input } = require('react-bootstrap');
-// function select(state) {
-//   return {
-//     saveError: state.checkinForm.saveError
-//   };
-// }
 
-// @connect(select)
 @reduxForm({
   form: 'checkin',
-  fields: ['feelSafe', 'healthIssue', 'reportedItems', 'note', 'updateGuest'],
+  fields: ['id', 'checkinDate', 'feelSafe', 'healthIssue', 'reportedItems', 'note', 'updateGuest'],
   validate: checkinFormValidation
 })
 export default class CheckinForm extends Component {
   static propTypes = {
     postSubmitAction: PropTypes.func,
-    guestId: PropTypes.string.isRequired,
-    checkinDate: PropTypes.string.isRequired,
+    selectedGuest: PropTypes.object,
     fields: PropTypes.shape({
+      id: PropTypes.object.isRequired,
+      checkinDate: PropTypes.object.isRequired,
       feelSafe: PropTypes.object.isRequired,
       healthIssue: PropTypes.object.isRequired,
+      updateGuest: PropTypes.object.isRequired,
       reportedItems: PropTypes.object,
-      note: PropTypes.object,
-      updateGuest: PropTypes.object.isRequired
+      note: PropTypes.object
     }).isRequired,
     dispatch: PropTypes.func.isRequired
   };
 
-  static defaultProps = {
-    fields: {
-      feelSafe: true,
-      healthIssue: false
-    }
-  }
-
   // TODO remove once the handler is confirmed to be working fine outside this jsx
   handleSubmit() {
-    const { fields: { feelSafe, healthIssue, reportedItems, note, updateGuest }, guestId, checkinDate } = this.props;
+    const { fields: { id, feelSafe, healthIssue, reportedItems, note, updateGuest }, selectedGuest, checkinDate } = this.props;
 
-    this.props.dispatch(checkinGuest(guestId, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value, updateGuest.checked));
+    this.props.dispatch(checkinGuest(selectedGuest, feelSafe.checked, healthIssue.checked, checkinDate, reportedItems.value, note.value, updateGuest.checked));
     // postSubmitAction is optional
     if (this.props.postSubmitAction) {
       this.props.postSubmitAction();
@@ -50,7 +38,8 @@ export default class CheckinForm extends Component {
   }
 
   render() {
-    const {fields: { feelSafe, healthIssue, reportedItems, note, updateGuest } } = this.props;
+    const {fields: { feelSafe, healthIssue, reportedItems, note } } = this.props;
+    
     return (
       <span>
         <div className="modal-body">
@@ -67,9 +56,9 @@ export default class CheckinForm extends Component {
               <div className="row form-group">
                 <Input type="textarea" label="Note" placeholder="Comments?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...note} />
               </div>
-              <div className="row form-group">
+              {/*<div className="row form-group">
                 <Input type="checkbox" label="Would you like to update the guest info?" labelClassName="col-md-4" wrapperClassName="col-md-12" {...updateGuest} />
-              </div>
+              </div>*/}
             </fieldset>
           </form>
         </div>

@@ -1,4 +1,4 @@
-const isEmpty = require('lodash').isEmpty;
+const { isEmpty, reduce } = require('lodash');
 const moment = require('moment');
 
 export function mapIncomingGuest(rawData) {
@@ -51,4 +51,16 @@ export function mapOutgoingGuestData(data) {
     intake_form_collect_date: data.intakeFormCollectDate,
     intake_form_collected_by: data.intakeFormCollectedBy
   };
+}
+
+export function createdIdBasedData(rawData) {
+  if (isEmpty(rawData)) {
+    return null;
+  }
+
+  return reduce(rawData, (result, value) => {
+    const id = value.id;
+    result[id] = value;
+    return result;
+  }, {});
 }

@@ -8,14 +8,15 @@ const CheckinForm = require('components/Checkin/checkinForm');
 const GuestForm = require('components/GuestList/GuestForm');
 const Notification = require('components/CheckinNotification/CheckinNotification');
 const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
-const { updateGuest } = require('redux/modules/guests');
+const { updateGuest, searchGuestbyId } = require('redux/modules/guests');
 
 function select(state) {
   return {
     ...state,
     guestNotification: state.guests.notification,
     checkinNotification: state.checkin.notification,
-    selectedGuestId: state.checkin.selectedGuestId,
+    selectedGuest: state.checkin.selectedGuest,
+    idBasedData: state.guests.idBasedData,
     showCheckinModal: state.checkin.showCheckinModal,
     checkinDate: state.checkin.checkinDate,
     loaded: state.checkin.loaded
@@ -36,15 +37,16 @@ export default class Checkin extends Component {
       notificationMessage: PropTypes.string,
       updatedGuest: PropTypes.object
     }),
-    selectedGuestId: PropTypes.string,
+    selectedGuest: PropTypes.object,
     showCheckinModal: PropTypes.bool.isRequired,
     checkinDate: PropTypes.string.isRequired,
+    idBasedData: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     notificationMessage: '',
-    selectedGuestId: null,
+    selectedGuest: null,
     showCheckinModal: false,
     checkinDate: new Date(),
     loaded: false
@@ -59,7 +61,8 @@ export default class Checkin extends Component {
     event.preventDefault();
     const path = event.target.pathname;
     const checkinGuestId = path.match(/\/checkin\/(\d+)/)[1];
-    this.props.dispatch(startCheckin(checkinGuestId));
+    const guest = searchGuestbyId(this.props.idBasedData, checkinGuestId);
+    this.props.dispatch(startCheckin(guest));
   }
 
   closeCheckin() {
@@ -73,7 +76,12 @@ export default class Checkin extends Component {
   }
 
   render() {
-    const { showCheckinModal, checkinDate, selectedGuestId, guestNotification, checkinNotification, dispatch } = this.props;
+    const { showCheckinModal, selectedGuest, checkinDate, dispatch } = this.props;
+
+    let guestId = null;
+    if (selectedGuest) {
+      guestId = selectedGuest.id;
+    }
 
     return (
       <div className="container">
@@ -91,7 +99,7 @@ export default class Checkin extends Component {
         </Grid>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={'Check-in'}>
-          <CheckinForm ref="checkinForm" onSubmit={data => {
+          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, id: guestId, checkinDate: checkinDate}} selectedGuest={selectedGuest} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>
           <hr />
@@ -100,7 +108,7 @@ export default class Checkin extends Component {
           }}/>
         </FormModal>
 
-        <Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/>
+        {/*<Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/>*/}
 
       </div>
     );

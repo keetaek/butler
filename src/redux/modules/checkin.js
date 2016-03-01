@@ -23,14 +23,13 @@ const initialState = {
   loaded: false,
   showCheckinModal: false,
   checkinDate: new Date(),
-  selectedGuestId: null,
+  selectedGuest: null,
   notification: null
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case CHECKIN_SUCCESS:
-    console.log('Successfully checked in');
       return {
         ...state,
         showCheckinModal: false,
@@ -46,16 +45,16 @@ export default function reducer(state = initialState, action = {}) {
         }
       };
     case START_CHECKIN:
-      const guestId = action.guestId;
+      const guest = action.guest;
       return {
         ...state,
-        selectedGuestId: guestId,
+        selectedGuest: guest,
         showCheckinModal: true,
       };
     case FINISH_CHECKIN:
       return {
         ...state,
-        selectedGuestId: null,
+        selectedGuest: null,
         showCheckinModal: false,
       };
     case LOAD_DATE:
@@ -97,8 +96,8 @@ export function checkinGuest(fields) {
   };
 }
 
-export function startCheckin(guestId) {
-  return { type: START_CHECKIN, guestId };
+export function startCheckin(guest) {
+  return { type: START_CHECKIN, guest };
 }
 
 export function finishCheckin() {

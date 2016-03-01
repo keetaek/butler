@@ -1,4 +1,4 @@
-const { mapIncomingGuests, mapIncomingGuest } =
+const { mapIncomingGuests, mapIncomingGuest, createdIdBasedData } =
 require('helpers/guestDataMapper');
 const { reduce, isEmpty, filter, concat } = require('lodash');
 
@@ -28,6 +28,7 @@ const initialState = {
   loading: false,
   data: null,
   filteredData: null,
+  idBasedData: null, // created to search by id.
   error: null,
   searchTerm: null,
   selectedGuest: null,
@@ -65,12 +66,14 @@ export default function reducer(state = initialState, action = {}) {
       };
     case LOAD_ALL_SUCCESS:
       const transformedGuests = mapIncomingGuests(action.result);
+      const idBasedData = createdIdBasedData(transformedGuests);
       return {
         ...state,
         loading: false,
         loaded: true,
         data: transformedGuests,
         filteredData: transformedGuests,
+        idBasedData: idBasedData,
         error: null
       };
     case LOAD_ALL_FAIL:
@@ -79,39 +82,42 @@ export default function reducer(state = initialState, action = {}) {
         loading: false,
         loaded: false,
         data: null,
+        filteredData: null,
+        idBasedData: null,
         error: action.error
       };
-    case LOAD:
-      return {
-        ...state,
-        selectedGuestLoading: true
-      };
-    case LOAD_SUCCESS:
-      const transformedGuest = mapIncomingGuest(action.result);
-      return {
-        ...state,
-        loading: false,
-        loaded: true,
-        selectedGuest: transformedGuest,
-        selectedGuestLoading: false,
-        selectedGuestLoaded: true,
-        // Freshly loaded data.
-        error: null
-      };
-    case LOAD_FAIL:
-      return {
-        ...state,
-        loading: false,
-        loaded: false,
-        selectedGuest: null,
-        selectedGuestLoading: false,
-        selectedGuestLoaded: false,
-        error: action.error
-      };
+    // TODO; LOAD IS NOT BEING USED.
+    // case LOAD:
+    //   return {
+    //     ...state,
+    //     selectedGuestLoading: true
+    //   };
+    // case LOAD_SUCCESS:
+    //   const transformedGuest = mapIncomingGuest(action.result);
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     loaded: true,
+    //     selectedGuest: transformedGuest,
+    //     selectedGuestLoading: false,
+    //     selectedGuestLoaded: true,
+    //     // Freshly loaded data.
+    //     error: null
+    //   };
+    // case LOAD_FAIL:
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     loaded: false,
+    //     selectedGuest: null,
+    //     selectedGuestLoading: false,
+    //     selectedGuestLoaded: false,
+    //     error: action.error
+    //   };
 
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
-      const listWithNewItem = concat(state.data, action.result);
+      const listWithNewItem = concat(state.data, mapIncomingGuest(action.result));
       console.log('CREATE SUCCESS');
       return {
         ...state,
@@ -120,6 +126,7 @@ export default function reducer(state = initialState, action = {}) {
         // Just adding the newly added item
         data: listWithNewItem,
         filteredData: listWithNewItem,
+        idBasedData: createdIdBasedData((idBasedData)),
         showModal: false,
         notification: {
           status: CREATE_SUCCESS,
@@ -136,6 +143,7 @@ export default function reducer(state = initialState, action = {}) {
         loaded: false,
         data: null,
         filteredData: null,
+        idBasedData: null,
         showModal: false,
         error: action.error,
         notification: {
@@ -159,6 +167,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         data: listWithUpdatedItem,
         filteredData: listWithUpdatedItem,
+        idBasedData: createdIdBasedData((idBasedData)),
         showModal: false,
         notification: {
           status: UPDATE_SUCCESS,
@@ -258,4 +267,11 @@ export function updateGuest(guestId, fields) {
 
 export function clearNotification() {
   return { type: CLEAR_NOTIFICATION };
+}
+
+export function searchGuestbyId(idBasedData, id) {
+  if (!isEmpty(idBasedData)) {
+    return idBasedData[id];
+  }
+  return null;
 }

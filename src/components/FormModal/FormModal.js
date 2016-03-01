@@ -8,7 +8,10 @@ export default class FormModal extends Component {
     showModal: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
-    children: PropTypes.object.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.array
+    ]),
     cancelButtonLabel: PropTypes.string.isRequired,
     submitButtonLabel: PropTypes.string.isRequired,
     cancelHandler: PropTypes.func,
