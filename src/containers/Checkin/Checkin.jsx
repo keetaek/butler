@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 const FormModal = require('components/FormModal/FormModal');
 const CheckinForm = require('components/Checkin/checkinForm');
 const GuestForm = require('components/GuestList/GuestForm');
-// const Notification = require('components/CheckinNotification/CheckinNotification');
+const Notification = require('components/CheckinNotification/CheckinNotification');
 const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
 const { updateGuest, searchGuestbyId } = require('redux/modules/guests');
 
@@ -28,13 +28,11 @@ export default class Checkin extends Component {
   static propTypes = {
     guestNotification: PropTypes.shape({
       status: PropTypes.string,
-      notificationMessage: PropTypes.string,
-      updatedGuest: PropTypes.object
+      data: PropTypes.object
     }),
     checkinNotification: PropTypes.shape({
       status: PropTypes.string,
-      notificationMessage: PropTypes.string,
-      updatedGuest: PropTypes.object
+      data: PropTypes.object
     }),
     selectedGuest: PropTypes.object,
     showCheckinModal: PropTypes.bool.isRequired,
@@ -75,7 +73,7 @@ export default class Checkin extends Component {
   }
 
   render() {
-    const { showCheckinModal, selectedGuest, checkinDate, dispatch } = this.props;
+    const { showCheckinModal, selectedGuest, checkinDate, guestNotification, checkinNotification, dispatch } = this.props;
 
     let guestId = null;
     let guestFirstName = null;
@@ -111,7 +109,7 @@ export default class Checkin extends Component {
           }}/>
         </FormModal>
 
-        {/* <Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/> */}
+         <Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/>
 
       </div>
     );

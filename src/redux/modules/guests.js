@@ -12,11 +12,11 @@ const LOAD_FAIL = 'butler/guests/LOAD_FAIL';
 
 const CREATE = 'butler/guests/CREATE';
 export const CREATE_SUCCESS = 'butler/guests/CREATE_SUCCESS';
-const CREATE_FAIL = 'butler/guests/CREATE_FAIL';
+export const CREATE_FAIL = 'butler/guests/CREATE_FAIL';
 
 const UPDATE = 'butler/guests/UPDATE';
-const UPDATE_SUCCESS = 'butler/guests/UPDATE_SUCCESS';
-const UPDATE_FAIL = 'butler/guests/UPDATE_FAIL';
+export const UPDATE_SUCCESS = 'butler/guests/UPDATE_SUCCESS';
+export const UPDATE_FAIL = 'butler/guests/UPDATE_FAIL';
 
 const CLEAR_NOTIFICATION = 'butler/guests/CLEAR_NOTIFICATION';
 
@@ -117,7 +117,8 @@ export default function reducer(state = initialState, action = {}) {
 
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
-      const listWithNewItem = concat(state.data, mapIncomingGuest(action.result));
+      const newGuest = mapIncomingGuest(action.result);
+      const listWithNewItem = concat(state.data, newGuest);
       console.log('CREATE SUCCESS');
       return {
         ...state,
@@ -126,12 +127,11 @@ export default function reducer(state = initialState, action = {}) {
         // Just adding the newly added item
         data: listWithNewItem,
         filteredData: listWithNewItem,
-        idBasedData: createdIdBasedData((idBasedData)),
+        idBasedData: createdIdBasedData((listWithNewItem)),
         showModal: false,
         notification: {
           status: CREATE_SUCCESS,
-          notificationMessage: `Guest ${action.result.first_name}? has been added to the system`,
-          updatedGuest: action.result
+          data: newGuest
         }
         // newGuest: action.result,
         // notificationMessage: `Would you like to check in ${action.result.first_name}?`,
@@ -148,7 +148,7 @@ export default function reducer(state = initialState, action = {}) {
         error: action.error,
         notification: {
           status: CREATE_FAIL,
-          notificationMessage: 'There was a problem adding a guest to the system. Please try again',
+          data: action.error
         }
       };
 
@@ -167,12 +167,11 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         data: listWithUpdatedItem,
         filteredData: listWithUpdatedItem,
-        idBasedData: createdIdBasedData((idBasedData)),
+        idBasedData: createdIdBasedData((listWithUpdatedItem)),
         showModal: false,
         notification: {
           status: UPDATE_SUCCESS,
-          notificationMessage: `Guest ${action.result.first_name}? has been updated`,
-          updatedGuest: action.result
+          data: updatedItem
         }
       };
     case UPDATE_FAIL:
@@ -181,7 +180,7 @@ export default function reducer(state = initialState, action = {}) {
         showModal: false,
         notification: {
           status: UPDATE_FAIL,
-          notificationMessage: 'There was a problem adding a guest to the system. Please try again'
+          data: action.error
         },
         error: action.error
       };

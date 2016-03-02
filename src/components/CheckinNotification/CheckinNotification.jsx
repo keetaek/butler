@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-const { Notification } = require('react-notification');
+const NotificationSystem = require('react-notification-system');
 const clearGuestNotification = require('redux/modules/guests').clearNotification;
 const clearCheckinNotification = require('redux/modules/checkin').clearNotification;
 const { startCheckin } = require('redux/modules/checkin');
-const { CREATE_SUCCESS } = require('redux/modules/guests');
-const { clone } = require('lodash');
+const { CREATE_SUCCESS, CREATE_FAIL, UPDATE_FAIL } = require('redux/modules/guests');
+// const { clone } = require('lodash');
 
 /**
  * Show Checkin Notification based on Guest status and Checkin status
@@ -13,13 +13,11 @@ export default class CheckinNotification extends Component {
   static propTypes = {
     guestNotification: PropTypes.shape({
       status: PropTypes.string,
-      notificationMessage: PropTypes.string,
-      updatedGuest: PropTypes.object
+      data: PropTypes.object
     }),
     checkinNotification: PropTypes.shape({
       status: PropTypes.string,
-      notificationMessage: PropTypes.string,
-      guest: PropTypes.object
+      data: PropTypes.object
     }),
     dispatch: PropTypes.func
     // showNotification: PropTypes.bool.isRequired,
@@ -30,10 +28,60 @@ export default class CheckinNotification extends Component {
     // dismissAfter: PropTypes.number,
   }
 
-  notificationOnClickHandler() {
-    const updatedGuest = clone(this.props.guestNotification.updatedGuest);
-    this.props.dispatch(startCheckin(updatedGuest.id)); // start checkin
-    this.dismissNotification();
+  componentDidMount() {
+    this.notificationSystem = this.refs.notificationSystem;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { guestNotification, checkinNotification, dispatch } = nextProps;
+    this.addNotifications(guestNotification, checkinNotification, dispatch);
+  }
+
+  static notificationSystem = null;
+
+  addNotifications(guestNotification, checkinNotification, dispatch) {
+    if (guestNotification) {
+      switch (guestNotification.status) {
+        case CREATE_SUCCESS:
+          const guest = guestNotification.data;
+          this.notificationSystem.addNotification({
+            message: `Guest ${guest.firstName} has been added to the system!`,
+            level: 'success',
+            action: {
+              label: 'Checkin',
+              callback: () => {
+                console.log('CHECKIN. ... ');
+                dispatch((startCheckin(guest)));
+              }
+            },
+            autoDismiss: 0,
+            uid: `${CREATE_SUCCESS}.${guest.firstName}.${guest.lastName}`,
+            onRemove: () => {
+              dispatch(clearGuestNotification());
+            }
+          });
+          break;
+        case CREATE_FAIL:
+          break;
+        case UPDATE_FAIL:
+          break;
+        default:
+          break;
+      }
+    }
+    // if (checkinNotification) {
+    //   switch (checkinNotification.status) {
+    //     case:
+    //   }
+    // }
+  }
+
+  addCheckinErrorNotification() {
+
+  }
+
+  addGuestErrorNotification() {
+
   }
 
   dismissNotification() {
@@ -42,32 +90,8 @@ export default class CheckinNotification extends Component {
   }
 
   render() {
-    const { guestNotification, checkinNotification } = this.props;
-    let showNotification = false;
-    let notificationMessage = '';
-    let actionMessage = '';
-    let actionOnClick = null;
-
-    if (guestNotification) {
-      showNotification = true;
-      notificationMessage = guestNotification.notificationMessage;
-      if (guestNotification.status === CREATE_SUCCESS) {
-        actionMessage = 'Check in';
-        actionOnClick = ::this.notificationOnClickHandler;
-      }
-    } else if (checkinNotification) {
-      showNotification = true;
-      notificationMessage = checkinNotification.notificationMessage;
-    }
-
     return (
-      <Notification
-        isActive={showNotification}
-        message={notificationMessage}
-        action={actionMessage}
-        onClick={actionOnClick}
-        onDismiss={::this.dismissNotification}
-        dismissAfter={2000} />
+      <NotificationSystem ref="notificationSystem" />
     );
   }
 }

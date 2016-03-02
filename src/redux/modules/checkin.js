@@ -32,7 +32,10 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         showCheckinModal: false,
-        notification: null
+        notification: {
+          status: CHECKIN_SUCCESS,
+          data: action.guestId
+        }
       };
     case CHECKIN_FAIL:
       return {
@@ -40,7 +43,7 @@ export default function reducer(state = initialState, action = {}) {
         showCheckinModal: false,
         notification: {
           status: CHECKIN_FAIL,
-          notificationMessage: 'There was a problem checking in the guest to the system.'
+          data: action.error
         }
       };
     case START_CHECKIN:
@@ -90,7 +93,8 @@ export function checkinGuest(fields) {
   return {
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],
     promise: (client) => client.post('/checkins', {
-      data: payload
+      data: payload,
+      guestId: fields.id
     })
   };
 }
