@@ -1,7 +1,7 @@
 const RESET = 'butler/checkin/RESET';
 const CHECKIN = 'butler/checkin/CHECKIN';
 const CHECKIN_SUCCESS = 'butler/checkin/CHECKIN_SUCCESS';
-const CHECKIN_FAIL = 'butler/checkin/CHECKIN_FAIL';
+export const CHECKIN_FAIL = 'butler/checkin/CHECKIN_FAIL';
 const LOAD_DATE = 'butler/checkin/LOAD_DATE';
 const LOAD_DATE_SUCCESS = 'butler/checkin/LOAD_DATE_SUCCESS';
 const LOAD_DATE_FAIL = 'butler/checkin/LOAD_DATE_FAIL';
