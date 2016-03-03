@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = function(sequelize, DataTypes) {
   const Checkin = sequelize.define('Checkin', {
     guest_id: {
@@ -6,7 +8,14 @@ module.exports = function(sequelize, DataTypes) {
         notEmpty: true
       }
     },
-    checkin_date: DataTypes.DATEONLY,
+    checkin_date: {
+      type: DataTypes.DATEONLY,
+      // Why do we have to do this?
+      // getDataValue for Date field will return Date object and assume the date field was in UTC. We need to ensure there aren't any time fields.
+      get: function() {
+        return moment(this.getDataValue('checkin_date')).utc().format('YYYY-MM-DD');
+      }
+    },
     feel_safe: DataTypes.BOOLEAN,
     heatlh_issue: DataTypes.BOOLEAN,
     reported_items: DataTypes.TEXT,

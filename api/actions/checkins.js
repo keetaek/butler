@@ -1,9 +1,33 @@
-const express = require('express')
+const express = require('express');
 const models = require('../models/index');
 const checkContentType = require('../middlewares/checkContentType');
+const { isEmpty } = require('lodash');
 
-async function getCheckins() {
-  return models.Checkin.findAll({});
+function checkinQueryBuilder(startDate, endDate, guestId) {
+  const condition = {};
+  // TODO validate the start and endDate field to make sure
+  // 1. startDate < endDate
+  // 2. They are both valid fields
+  if (startDate && endDate) {
+    condition.checkin_date = {
+      $between: [startDate, endDate]
+    };
+  }
+  if (guestId) {
+    condition.guest_id = guestId;
+  }
+  return condition;
+}
+
+async function getCheckins(startDate, endDate, guestId) {
+  const queryCondition = checkinQueryBuilder(startDate, endDate, guestId);
+  let queryResult;
+  if (isEmpty(queryCondition)) {
+    queryResult = models.Checkin.findAll({});
+  } else {
+    queryResult = models.Checkin.findAll({ where: queryCondition });
+  }
+  return queryResult;
 }
 
 async function getCheckin(req) {
@@ -62,15 +86,25 @@ module.exports = () => {
     }
   });
 
-  // e.g. api/checkins
+  /**
+   * Return list of checkins based on the guest or date field
+   * @param  {[type]} '/'   [description]
+   * @param  {[type]} async (req,         res, next [description]
+   * @return {[type]}       [description]
+   */
   router.get('/', async (req, res, next) => {
     try {
-      const data = await getCheckins();
+      const startDate = req.query.startDate;
+      const endDate = req.query.endDate;
+      const guestId = req.query.guestId;
+
+      const data = await getCheckins(startDate, endDate, guestId);
       res.status(200).send(data);
     } catch (err) {
       next(err);
     }
   });
+
 
   router.put('/:id', checkContentType, async (req, res, next) => {
     try {
