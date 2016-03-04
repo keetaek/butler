@@ -16,16 +16,6 @@ class CheckinList extends Component {
     guests: PropTypes.object
   };
 
-  static defaultProps = {
-    loaded: false,
-    checkins: [],
-  };
-
-  constructor(props) {
-    super(props);
-    // require('./Checkin.scss');
-  }
-
   componentWillMount() {
     const { checkinDate, dispatch } = this.props;
     dispatch(loadCheckins(checkinDate));
