@@ -6,13 +6,14 @@ import { connect } from 'react-redux';
 const FormModal = require('components/FormModal/FormModal');
 const CheckinForm = require('components/Checkin/checkinForm');
 const GuestForm = require('components/GuestList/GuestForm');
+const CheckinList = require('components/CheckinList/CheckinList');
 const Notification = require('components/CheckinNotification/CheckinNotification');
 const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
 const { updateGuest, searchGuestbyId } = require('redux/modules/guests');
+const moment = require('moment');
 
 function select(state) {
   return {
-    ...state,
     guestNotification: state.guests.notification,
     checkinNotification: state.checkin.notification,
     selectedGuest: state.checkin.selectedGuest,
@@ -45,7 +46,7 @@ export default class Checkin extends Component {
     notificationMessage: '',
     selectedGuest: null,
     showCheckinModal: false,
-    checkinDate: new Date(),
+    checkinDate: moment(),
     loaded: false
   };
 
@@ -94,13 +95,13 @@ export default class Checkin extends Component {
               <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
             </Col>
             <Col xs={6} md={4}>
-              <code>&lt;{'Col xs={6} md={4}'} /&gt;</code>
+              <CheckinList checkinDate={checkinDate} {...this.props}/>
             </Col>
           </Row>
         </Grid>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in:  ${guestFirstName} ${guestLastName}`}>
-          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, id: guestId, checkinDate: checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
+          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>
           <hr />

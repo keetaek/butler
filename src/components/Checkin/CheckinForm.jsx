@@ -5,14 +5,14 @@ const { Input } = require('react-bootstrap');
 
 @reduxForm({
   form: 'checkin',
-  fields: ['id', 'checkinDate', 'feelSafe', 'healthIssue', 'reportedItems', 'note', 'updateGuest']
+  fields: ['guestId', 'checkinDate', 'feelSafe', 'healthIssue', 'reportedItems', 'note', 'updateGuest']
   // validate: checkinFormValidation
 })
 export default class CheckinForm extends Component {
   static propTypes = {
     selectedGuest: PropTypes.object,
     fields: PropTypes.shape({
-      id: PropTypes.object.isRequired,
+      guestId: PropTypes.object.isRequired,
       checkinDate: PropTypes.object.isRequired,
       feelSafe: PropTypes.object.isRequired,
       healthIssue: PropTypes.object.isRequired,
