@@ -17,7 +17,7 @@ export const DELETE_CHECKIN_FAIL = 'butler/checkin/DELETE_CHECKIN_FAIL';
 // const UPDATE_SUCCESS = 'butler/checkin/UPDATE_SUCCESS';
 // const UPDATE_FAIL = 'butler/checkin/UPDATE_FAIL';
 const moment = require('moment');
-const { buildCheckinPayLoad, mapIncomingCheckins } =
+const { buildCheckinPayLoad, mapIncomingCheckins, mapIncomingCheckin } =
 require('helpers/checkinDataMapper');
 const { isEmpty, filter } = require('lodash');
 
@@ -30,6 +30,15 @@ const initialState = {
   checkins: null
 };
 
+function addNewCheckin(newCheckin, list) {
+  if (!newCheckin || isEmpty(list)) {
+    return list;
+  }
+  const mappedData = mapIncomingCheckin(newCheckin);
+  list.push(mappedData);
+  return list;
+}
+
 function removeCheckinFromList(checkinId, checkinList) {
   if (isEmpty(checkinList) || !checkinId) {
     return checkinList;
@@ -41,10 +50,19 @@ function removeCheckinFromList(checkinId, checkinList) {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case CHECKIN:
+      return {
+        ...state,
+        loading: true,
+        loaded: false,
+      };
     case CHECKIN_SUCCESS:
       return {
         ...state,
         showCheckinModal: false,
+        loading: false,
+        loaded: true,
+        checkins: addNewCheckin(action.result, state.checkins),
         notification: {
           status: CHECKIN_SUCCESS,
           data: action.guestId
@@ -54,6 +72,8 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         showCheckinModal: false,
+        loading: false,
+        loaded: true,
         notification: {
           status: CHECKIN_FAIL,
           data: action.error
