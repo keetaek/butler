@@ -15,11 +15,12 @@ const moment = require('moment');
 function select(state) {
   return {
     guestNotification: state.guests.notification,
+    guests: state.guests.idBasedData,
+    checkins: state.checkin.checkins,
+    showCheckinModal: state.checkin.showCheckinModal,
     checkinNotification: state.checkin.notification,
     selectedGuest: state.checkin.selectedGuest,
-    idBasedData: state.guests.idBasedData,
-    showCheckinModal: state.checkin.showCheckinModal,
-    loaded: state.checkin.loaded
+    checkinLoaded: state.checkin.loaded
   };
 }
 
@@ -38,8 +39,10 @@ export default class Checkin extends Component {
     selectedGuest: PropTypes.object,
     showCheckinModal: PropTypes.bool.isRequired,
     checkinDate: PropTypes.object.isRequired,
-    idBasedData: PropTypes.object,
+    guests: PropTypes.object,
+    checkins: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    checkinLoaded: PropTypes.bool.isRequired
   };
 
   static defaultProps = {
@@ -47,7 +50,8 @@ export default class Checkin extends Component {
     selectedGuest: null,
     showCheckinModal: false,
     checkinDate: new Date(),
-    loaded: false
+    checkins: [],
+    checkinLoaded: false
   };
 
   constructor(props) {
@@ -58,7 +62,7 @@ export default class Checkin extends Component {
     event.preventDefault();
     const path = event.target.pathname;
     const checkinGuestId = path.match(/\/checkin\/(\d+)/)[1];
-    const guest = searchGuestbyId(this.props.idBasedData, checkinGuestId);
+    const guest = searchGuestbyId(this.props.guests, checkinGuestId);
     this.props.dispatch(startCheckin(guest));
   }
 
@@ -73,7 +77,7 @@ export default class Checkin extends Component {
   }
 
   render() {
-    const { showCheckinModal, selectedGuest, checkinDate, guestNotification, checkinNotification, dispatch } = this.props;
+    const { showCheckinModal, selectedGuest, checkinDate, guestNotification, checkinNotification, dispatch, checkinLoaded } = this.props;
 
     let guestId = null;
     let guestFirstName = null;
@@ -95,7 +99,7 @@ export default class Checkin extends Component {
             </Col>
             <Col xs={6} md={4}>
               <h2 className={style.text_center}>{moment(checkinDate).format('MM/DD/YYYY')}</h2>
-              <CheckinList checkinDate={checkinDate} {...this.props}/>
+              <CheckinList loaded={checkinLoaded} {...this.props}/>
             </Col>
           </Row>
         </Grid>

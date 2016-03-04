@@ -9,7 +9,7 @@ const START_CHECKIN = 'butler/checkin/START_CHECKIN';
 const FINISH_CHECKIN = 'butler/checkin/FINISH_CHECKIN';
 const DELETE_CHECKIN = 'butler/checkin/DELETE_CHECKIN';
 const DELETE_CHECKIN_SUCCESS = 'butler/checkin/DELETE_CHECKIN_SUCCESS';
-const DELETE_CHECKIN_FAIL = 'butler/checkin/DELETE_CHECKIN_FAIL';
+export const DELETE_CHECKIN_FAIL = 'butler/checkin/DELETE_CHECKIN_FAIL';
 // const LOAD_GUEST_HISTORY = 'butler/checkin/LOAD_GUEST_HISTORY';
 // const LOAD_GUEST_HISTORY_SUCCESS = 'butler/checkin/LOAD_GUEST_HISTORY_SUCCESS';
 // const LOAD_GUEST_HISTORY_FAIL = 'butler/checkin/LOAD_GUEST_HISTORY_FAIL';
@@ -19,6 +19,7 @@ const DELETE_CHECKIN_FAIL = 'butler/checkin/DELETE_CHECKIN_FAIL';
 const moment = require('moment');
 const { buildCheckinPayLoad, mapIncomingCheckins } =
 require('helpers/checkinDataMapper');
+const { isEmpty, filter } = require('lodash');
 
 const initialState = {
   loading: false,
@@ -28,6 +29,15 @@ const initialState = {
   notification: null,
   checkins: null
 };
+
+function removeCheckinFromList(checkinId, checkinList) {
+  if (isEmpty(checkinList) || !checkinId) {
+    return checkinList;
+  }
+  return filter(checkinList, (item) => {
+    return item.id !== checkinId;
+  });
+}
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -65,7 +75,27 @@ export default function reducer(state = initialState, action = {}) {
     case DELETE_CHECKIN:
       return {
         ...state,
-
+        loading: true,
+        loaded: false,
+      };
+    case DELETE_CHECKIN_SUCCESS:
+      const checkinId = action.checkinId;
+      const updatedCheckinList = removeCheckinFromList(checkinId, state.checkins);
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        checkins: updatedCheckinList
+      };
+    case DELETE_CHECKIN_FAIL:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        notification: {
+          status: DELETE_CHECKIN_FAIL,
+          data: action.error
+        }
       };
     case LOAD_CHECKINS:
       return {
@@ -117,9 +147,15 @@ export function finishCheckin() {
   return { type: FINISH_CHECKIN };
 }
 
-export function deleteCheckin(guest) {
-  console.log('Need to delete checkin.')
-  // return { type: DELETE_CHECKIN, guest };
+export function deleteCheckin(checkinId) {
+  if (!checkinId) {
+    return { type: DELETE_CHECKIN_FAIL, error: "Guest wasn't provided" };
+  }
+  return {
+    types: [DELETE_CHECKIN, DELETE_CHECKIN_SUCCESS, DELETE_CHECKIN_FAIL],
+    promise: (client) => client.del(`/checkins/${checkinId}`),
+    checkinId
+  };
 }
 
 /**
@@ -137,7 +173,3 @@ export function loadCheckins(start, end) {
     promise: (client) => client.get('/checkins', { startDate: startDate, endDate: endDate })
   };
 }
-//
-// function loadCheckins(guest) {
-//
-// }

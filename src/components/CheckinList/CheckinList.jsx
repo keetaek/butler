@@ -1,30 +1,19 @@
 const React = require('react');
 const { Component, PropTypes } = React;
-import { connect } from 'react-redux';
 const { ListGroup } = require('react-bootstrap');
 const { loadCheckins } = require('redux/modules/checkin');
 const { searchGuestbyId } = require('redux/modules/guests');
 const CheckinListItem = require('components/CheckinList/CheckinListItem/CheckinListItem');
 const { isEmpty } = require('lodash');
 
-
-function select(state) {
-  return {
-    checkins: state.checkin.checkins,
-    loaded: state.checkin.loaded,
-    guests: state.guests.idBasedData,
-  };
-}
-
-@connect(select)
 class CheckinList extends Component {
 
   static propTypes = {
     loaded: PropTypes.bool.isRequired,
-    checkins: PropTypes.array.isRequired,
-    guests: PropTypes.object,
     checkinDate: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    checkins: PropTypes.array,
+    guests: PropTypes.object
   };
 
   static defaultProps = {
@@ -39,7 +28,6 @@ class CheckinList extends Component {
 
   componentWillMount() {
     const { checkinDate, dispatch } = this.props;
-    console.log('Component Will Mount');
     dispatch(loadCheckins(checkinDate));
   }
 
@@ -48,11 +36,10 @@ class CheckinList extends Component {
       return null;
     }
     return checkins.map((checkin) => {
+      const checkinId = checkin.id;
       const guestId = checkin.guestId;
-      console.log('Guest ID', guestId);
       const guest = searchGuestbyId(guests, guestId);
-      console.log('Real Guest object', guest);
-      return <CheckinListItem guest={guest} {...this.props} />;
+      return <CheckinListItem key={checkinId} guest={guest} checkinId={checkinId} {...this.props} />;
     });
   }
 
@@ -62,7 +49,6 @@ class CheckinList extends Component {
       // Return loading indicator
     }
     const checkinList = this.buildCheckinListItems(checkins, guests);
-    console.log('checkinList', checkinList);
     return (
       <ListGroup componentClass="ul">
         {checkinList}

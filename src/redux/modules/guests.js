@@ -119,7 +119,6 @@ export default function reducer(state = initialState, action = {}) {
       // Just add a newly added item to the list.
       const newGuest = mapIncomingGuest(action.result);
       const listWithNewItem = concat(state.data, newGuest);
-      console.log('CREATE SUCCESS');
       return {
         ...state,
         loading: false,
