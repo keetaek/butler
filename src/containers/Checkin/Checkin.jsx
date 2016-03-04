@@ -46,13 +46,12 @@ export default class Checkin extends Component {
     notificationMessage: '',
     selectedGuest: null,
     showCheckinModal: false,
-    checkinDate: moment(),
+    checkinDate: new Date(),
     loaded: false
   };
 
   constructor(props) {
     super(props);
-    require('./Checkin.scss');
   }
 
   onClickCheckinLinkHandler(event) {
@@ -84,17 +83,18 @@ export default class Checkin extends Component {
       guestFirstName = selectedGuest.firstName;
       guestLastName = selectedGuest.lastName;
     }
-
+    const style = require('./Checkin.scss');
     return (
       <div className="container">
         <h1>Check in</h1>
         <Helmet title="Check-in"/>
         <Grid>
           <Row className="show-grid">
-            <Col xs={12} md={8}>
+            <Col xs={12} md={8} className={style.vertical_line}>
               <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
             </Col>
             <Col xs={6} md={4}>
+              <h2 className={style.text_center}>{moment(checkinDate).format('MM/DD/YYYY')}</h2>
               <CheckinList checkinDate={checkinDate} {...this.props}/>
             </Col>
           </Row>
