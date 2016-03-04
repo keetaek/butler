@@ -190,6 +190,6 @@ export function loadCheckins(start, end) {
   }
   return {
     types: [LOAD_CHECKINS, LOAD_CHECKINS_SUCCESS, LOAD_CHECKINS_FAIL],
-    promise: (client) => client.get('/checkins', { startDate: startDate, endDate: endDate })
+    promise: (client) => client.get('/checkins', { params: { startDate: startDate, endDate: endDate } })
   };
 }

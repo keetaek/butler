@@ -1,7 +1,15 @@
 .vertical_line {
-  border-right: thick solid #d3d3d3;
+  border-right: thin solid #d3d3d3;
 }
 
 .text_center {
   text-align:center
+}
+
+.checkin_date_selector {
+  height: 46px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px
 }

@@ -11,6 +11,9 @@ const Notification = require('components/CheckinNotification/CheckinNotification
 const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
 const { updateGuest, searchGuestbyId } = require('redux/modules/guests');
 const moment = require('moment');
+const DatePicker = require('react-datepicker');
+require('react-datepicker/dist/react-datepicker.css');
+const { loadCheckins } = require('redux/modules/checkin');
 
 function select(state) {
   return {
@@ -38,7 +41,6 @@ export default class Checkin extends Component {
     }),
     selectedGuest: PropTypes.object,
     showCheckinModal: PropTypes.bool.isRequired,
-    checkinDate: PropTypes.object.isRequired,
     guests: PropTypes.object,
     checkins: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
@@ -49,13 +51,15 @@ export default class Checkin extends Component {
     notificationMessage: '',
     selectedGuest: null,
     showCheckinModal: false,
-    checkinDate: new Date(),
     checkins: [],
     checkinLoaded: false
   };
 
   constructor(props) {
     super(props);
+    this.state = {
+      checkinDate: moment()
+    };
   }
 
   onClickCheckinLinkHandler(event) {
@@ -75,9 +79,13 @@ export default class Checkin extends Component {
     this.refs.guestForm.submit();
     this.props.dispatch(finishCheckin());
   }
+  handleCheckinDateChange(date) {
+    this.setState({ checkinDate: date });
+    this.props.dispatch(loadCheckins(date));
+  }
 
   render() {
-    const { showCheckinModal, selectedGuest, checkinDate, guestNotification, checkinNotification, dispatch, checkinLoaded } = this.props;
+    const { showCheckinModal, selectedGuest, guestNotification, checkinNotification, dispatch, checkinLoaded } = this.props;
 
     let guestId = null;
     let guestFirstName = null;
@@ -98,14 +106,17 @@ export default class Checkin extends Component {
               <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
             </Col>
             <Col xs={6} md={4}>
-              <h2 className={style.text_center}>{moment(checkinDate).format('MM/DD/YYYY')}</h2>
-              <CheckinList loaded={checkinLoaded} {...this.props}/>
+              <DatePicker
+                  selected={this.state.checkinDate}
+                  onChange={::this.handleCheckinDateChange} />
+
+                <CheckinList loaded={checkinLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
             </Col>
           </Row>
         </Grid>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in:  ${guestFirstName} ${guestLastName}`}>
-          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
+          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: this.state.checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>
           <hr />
