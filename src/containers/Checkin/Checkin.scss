@@ -6,10 +6,15 @@
   text-align:center
 }
 
-.checkin_date_selector {
-  height: 46px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-  border-radius: 6px
+.header_inline {
+  display: inline-block;
+}
+
+.header_spacing {
+  margin-left: 15px;
+}
+
+.calendar {
+  margin-left: 5px;
+  font-size: 1.5rem;
 }

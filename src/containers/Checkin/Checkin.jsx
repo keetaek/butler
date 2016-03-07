@@ -1,18 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
 import { GuestList } from 'components';
 import { connect } from 'react-redux';
+import DayPicker from 'react-day-picker';
+require('react-day-picker/lib/style.css');
 const FormModal = require('components/FormModal/FormModal');
 const CheckinForm = require('components/Checkin/checkinForm');
 const GuestForm = require('components/GuestList/GuestForm');
 const CheckinList = require('components/CheckinList/CheckinList');
+const ButlerPopover = require('components/ButlerPopover/ButlerPopover');
 const Notification = require('components/CheckinNotification/CheckinNotification');
 const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
 const { updateGuest, searchGuestbyId } = require('redux/modules/guests');
 const moment = require('moment');
-const DatePicker = require('react-datepicker');
-require('react-datepicker/dist/react-datepicker.css');
 const { loadCheckins } = require('redux/modules/checkin');
 
 function select(state) {
@@ -79,7 +80,10 @@ export default class Checkin extends Component {
     this.refs.guestForm.submit();
     this.props.dispatch(finishCheckin());
   }
-  handleCheckinDateChange(date) {
+  handleCheckinDateChange(event, date) {
+    event.preventDefault();
+    // Hide popover
+    this.refs.butlerPopover.togglePopover();
     this.setState({ checkinDate: date });
     this.props.dispatch(loadCheckins(date));
   }
@@ -98,7 +102,15 @@ export default class Checkin extends Component {
     const style = require('./Checkin.scss');
     return (
       <div className="container">
-        <h1>Check in</h1>
+        <h1 className={style.header_inline}>Check in</h1>
+        <h3 className={`${style.header_inline} ${style.header_spacing}`}>
+          <ButlerPopover ref="butlerPopover" id="datePickerPopover" popoverContent={(<DayPicker onDayClick={ ::this.handleCheckinDateChange} />)}>
+            <a>
+              {moment(this.state.checkinDate).format('MM-DD-YYYY')}
+              <Glyphicon glyph="calendar" className={style.calendar}/>
+            </a>
+          </ButlerPopover>
+        </h3>
         <Helmet title="Check-in"/>
         <Grid>
           <Row className="show-grid">
@@ -106,11 +118,7 @@ export default class Checkin extends Component {
               <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
             </Col>
             <Col xs={6} md={4}>
-              <DatePicker
-                  selected={this.state.checkinDate}
-                  onChange={::this.handleCheckinDateChange} />
-
-                <CheckinList loaded={checkinLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
+              <CheckinList loaded={checkinLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
             </Col>
           </Row>
         </Grid>
