@@ -112,12 +112,14 @@ export default class Checkin extends Component {
           </ButlerPopover>
         </h3>
         <Helmet title="Check-in"/>
+        <hr style={{marginTop: '0px', marginBottom: '10px'}}/>
         <Grid>
           <Row className="show-grid">
-            <Col xs={12} md={8} className={style.vertical_line}>
+            <Col md={7} className={style.vertical_line}>
               <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
             </Col>
-            <Col xs={6} md={4}>
+            <Col md={5}>
+              <h4 style={{textAlign: 'center'}}>Checked-in Guests</h4>
               <CheckinList loaded={checkinLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
             </Col>
           </Row>
