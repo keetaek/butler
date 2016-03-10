@@ -29,7 +29,7 @@ class CheckinList extends Component {
       const checkinId = checkin.id;
       const guestId = checkin.guestId;
       const guest = searchGuestbyId(guests, guestId);
-      return <CheckinListItem key={checkinId} guest={guest} checkinId={checkinId} {...this.props} />;
+      return <CheckinListItem key={checkinId} guest={guest} checkin={checkin} {...this.props} />;
     });
   }
 
