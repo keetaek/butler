@@ -31,12 +31,14 @@ const initialState = {
 };
 
 function addNewCheckin(newCheckin, list) {
-  if (!newCheckin || isEmpty(list)) {
-    return list;
+  const updatedList = list || [];
+  if (!newCheckin) {
+    return updatedList;
   }
+
   const mappedData = mapIncomingCheckin(newCheckin);
-  list.push(mappedData);
-  return list;
+  updatedList.push(mappedData);
+  return updatedList;
 }
 
 function removeCheckinFromList(checkinId, checkinList) {

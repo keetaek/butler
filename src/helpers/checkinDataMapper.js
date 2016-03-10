@@ -7,7 +7,6 @@ export function mapIncomingCheckin(data) {
   if (isEmpty(data)) {
     return null;
   }
-
   return {
     id: data.id,
     guestId: data.guest_id,
@@ -21,7 +20,7 @@ export function mapIncomingCheckin(data) {
 
 export function mapIncomingCheckins(rawData) {
   if (isEmpty(rawData)) {
-    return null;
+    return [];
   }
   return rawData.map(mapIncomingCheckin);
 }
@@ -30,8 +29,7 @@ export function buildCheckinPayLoad(data) {
   if (isEmpty(data)) {
     return null;
   }
-  // default to now
-  const checkinDate = data.date || moment();
+  const checkinDate = data.checkinDate || moment();
   return {
     'guest_id': data.guestId,
     'feel_safe': data.feelSafe || FEEL_SAFE_DEFAULT_VALUE,

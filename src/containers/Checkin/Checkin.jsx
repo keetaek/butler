@@ -24,7 +24,7 @@ function select(state) {
     showCheckinModal: state.checkin.showCheckinModal,
     checkinNotification: state.checkin.notification,
     selectedGuest: state.checkin.selectedGuest,
-    checkinLoaded: state.checkin.loaded
+    checkinLoaded: state.checkin.loaded,
   };
 }
 
@@ -45,7 +45,7 @@ export default class Checkin extends Component {
     guests: PropTypes.object,
     checkins: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
-    checkinLoaded: PropTypes.bool.isRequired
+    checkinLoaded: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -53,7 +53,7 @@ export default class Checkin extends Component {
     selectedGuest: null,
     showCheckinModal: false,
     checkins: [],
-    checkinLoaded: false
+    checkinLoaded: false,
   };
 
   constructor(props) {
@@ -78,6 +78,7 @@ export default class Checkin extends Component {
   checkinHandler() {
     this.refs.checkinForm.submit();
     this.refs.guestForm.submit();
+
     this.props.dispatch(finishCheckin());
   }
   handleCheckinDateChange(event, date) {
@@ -99,6 +100,7 @@ export default class Checkin extends Component {
       guestFirstName = selectedGuest.firstName;
       guestLastName = selectedGuest.lastName;
     }
+    const formattedCheckinDate = moment(this.state.checkinDate).format('MM-DD-YYYY');
     const style = require('./Checkin.scss');
     return (
       <div className="container">
@@ -106,7 +108,7 @@ export default class Checkin extends Component {
         <h3 className={`${style.header_inline} ${style.header_spacing}`}>
           <ButlerPopover ref="butlerPopover" id="datePickerPopover" popoverContent={(<DayPicker onDayClick={ ::this.handleCheckinDateChange} />)}>
             <a>
-              {moment(this.state.checkinDate).format('MM-DD-YYYY')}
+              {formattedCheckinDate}
               <Glyphicon glyph="calendar" className={style.calendar}/>
             </a>
           </ButlerPopover>
@@ -125,7 +127,7 @@ export default class Checkin extends Component {
           </Row>
         </Grid>
 
-        <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in:  ${guestFirstName} ${guestLastName}`}>
+        <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in (${formattedCheckinDate}): ${guestFirstName} ${guestLastName}`}>
           <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: this.state.checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>

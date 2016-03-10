@@ -24,7 +24,7 @@ export default class CheckinForm extends Component {
   };
 
   render() {
-    const {fields: { feelSafe, healthIssue, reportedItems, note } } = this.props;
+    const { feelSafe, healthIssue, reportedItems, note } = this.props.fields;
 
     return (
       <span>
