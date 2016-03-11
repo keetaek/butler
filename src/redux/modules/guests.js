@@ -49,8 +49,8 @@ function searchHelper(searchTerm, guestFullList) {
   const regex = new RegExp(searchTerm, 'gi');
   if (!isEmpty(guestFullList)) {
     return filter(guestFullList, (guest) => {
-      if (!isEmpty(guest.first_name) && guest.first_name.match(regex) ||
-          !isEmpty(guest.last_name) && guest.last_name.match(regex) ||
+      if (!isEmpty(guest.firstName) && guest.firstName.match(regex) ||
+          !isEmpty(guest.lastName) && guest.lastName.match(regex) ||
           !isEmpty(guest.nickname) && guest.nickname.match(regex)) {
         return true;
       }
