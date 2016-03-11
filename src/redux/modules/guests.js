@@ -18,8 +18,10 @@ const UPDATE = 'butler/guests/UPDATE';
 export const UPDATE_SUCCESS = 'butler/guests/UPDATE_SUCCESS';
 export const UPDATE_FAIL = 'butler/guests/UPDATE_FAIL';
 
-const CLEAR_NOTIFICATION = 'butler/guests/CLEAR_NOTIFICATION';
+const START_GUEST_FORM = 'butler/guests/START_GUEST_FORM';
+const FINISH_GUEST_FORM = 'butler/guests/FINISH_GUEST_FORM';
 
+const CLEAR_NOTIFICATION = 'butler/guests/CLEAR_NOTIFICATION';
 const SEARCH = 'butler/guests/SEARCH';
 
 
@@ -32,9 +34,8 @@ const initialState = {
   error: null,
   searchTerm: null,
   selectedGuest: null,
-  selectedGuestLoading: false,
-  selectedGuestLoaded: false,
-  notification: null
+  notification: null,
+  showCheckinModal: false
 };
 
 
@@ -86,34 +87,6 @@ export default function reducer(state = initialState, action = {}) {
         idBasedData: null,
         error: action.error
       };
-    // TODO; LOAD IS NOT BEING USED.
-    // case LOAD:
-    //   return {
-    //     ...state,
-    //     selectedGuestLoading: true
-    //   };
-    // case LOAD_SUCCESS:
-    //   const transformedGuest = mapIncomingGuest(action.result);
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     loaded: true,
-    //     selectedGuest: transformedGuest,
-    //     selectedGuestLoading: false,
-    //     selectedGuestLoaded: true,
-    //     // Freshly loaded data.
-    //     error: null
-    //   };
-    // case LOAD_FAIL:
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     loaded: false,
-    //     selectedGuest: null,
-    //     selectedGuestLoading: false,
-    //     selectedGuestLoaded: false,
-    //     error: action.error
-    //   };
 
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
@@ -121,13 +94,13 @@ export default function reducer(state = initialState, action = {}) {
       const listWithNewItem = concat(state.data, newGuest);
       return {
         ...state,
+        showGuestModal: false,
         loading: false,
         loaded: true,
         // Just adding the newly added item
         data: listWithNewItem,
         filteredData: listWithNewItem,
         idBasedData: createdIdBasedData((listWithNewItem)),
-        showModal: false,
         notification: {
           status: CREATE_SUCCESS,
           data: newGuest
@@ -138,12 +111,12 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_FAIL:
       return {
         ...state,
+        showGuestModal: false,
         loading: false,
         loaded: false,
         data: null,
         filteredData: null,
         idBasedData: null,
-        showModal: false,
         error: action.error,
         notification: {
           status: CREATE_FAIL,
@@ -164,10 +137,10 @@ export default function reducer(state = initialState, action = {}) {
       }, []);
       return {
         ...state,
+        showGuestModal: false,
         data: listWithUpdatedItem,
         filteredData: listWithUpdatedItem,
         idBasedData: createdIdBasedData((listWithUpdatedItem)),
-        showModal: false,
         notification: {
           status: UPDATE_SUCCESS,
           data: updatedItem
@@ -176,7 +149,7 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_FAIL:
       return {
         ...state,
-        showModal: false,
+        showGuestModal: false,
         notification: {
           status: UPDATE_FAIL,
           data: action.error
@@ -194,6 +167,19 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         notification: null
+      };
+    case START_GUEST_FORM:
+      const guest = action.guest;
+      return {
+        ...state,
+        selectedGuest: guest,
+        showGuestModal: true,
+      };
+    case FINISH_GUEST_FORM:
+      return {
+        ...state,
+        selectedGuest: null,
+        showGuestModal: false,
       };
     default:
       return state;
@@ -272,4 +258,12 @@ export function searchGuestbyId(idBasedData, id) {
     return idBasedData[id];
   }
   return null;
+}
+
+export function startGuestForm(guest) {
+  return { type: START_GUEST_FORM, guest };
+}
+
+export function finishGuestForm() {
+  return { type: FINISH_GUEST_FORM };
 }

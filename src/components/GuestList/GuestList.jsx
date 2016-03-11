@@ -8,7 +8,7 @@ const { Button, Glyphicon } = require('react-bootstrap');
 const GuestForm = require('components/GuestList/GuestForm');
 const FormModal = require('components/FormModal/FormModal');
 const moment = require('moment');
-const { addNewGuest } = require('redux/modules/guests');
+const { addNewGuest, startGuestForm, finishGuestForm } = require('redux/modules/guests');
 
 const DateCell = ({rowIndex, data, col, ...props}) => {
   const dateField = data[rowIndex][col];
@@ -24,9 +24,9 @@ const TextCell = ({rowIndex, data, col, ...props}) => (
   </Cell>
 );
 
-const CheckinCell = ({rowIndex, data, col, checkinHandler, ...props}) => (
+const ActionCell = ({rowIndex, data, col, actionLabel, actionHandler, ...props}) => (
   <Cell {...props}>
-    <Link to={`/checkin/${data[rowIndex][col]}`} onClick={checkinHandler} >Checkin</Link>
+    <Link to={`/${actionLabel}/${data[rowIndex][col]}`} onClick={actionHandler(data[rowIndex])}>{actionLabel}</Link>
   </Cell>
 );
 
@@ -37,6 +37,8 @@ function select(state) {
     error: state.guests.error,
     loading: state.guests.loading,
     loaded: state.guests.loaded,
+    showGuestModal: state.guests.showGuestModal,
+    selectedGuest: state.guests.selectedGuest
   };
 }
 
@@ -48,22 +50,17 @@ export default class GuestList extends Component {
     error: PropTypes.object,
     loading: PropTypes.bool,
     loaded: PropTypes.bool,
-    isCheckin: PropTypes.bool.isRequired,
-    checkinHandler: PropTypes.func,
-    postAddGuestHandler: PropTypes.func,
+    actionLabel: PropTypes.string.isRequired,
+    actionHandler: PropTypes.func,
+    showGuestModal: PropTypes.bool,
+    selectedGuest: PropTypes.object,
     dispatch: PropTypes.func.isRequired
   }
 
-  static defaultProps = {
-    isCheckin: false,
-  }
   constructor(props) {
     super(props);
     this._onFilterChange = this._onFilterChange.bind(this);
     require('fixed-data-table/dist/fixed-data-table.min.css');
-    this.state = {
-      showModal: false
-    };
   }
   /**
    * Loading the data if not loaded yet.
@@ -76,11 +73,11 @@ export default class GuestList extends Component {
   }
 
   openModal() {
-    this.setState({showModal: true});
+    this.props.dispatch(startGuestForm());
   }
 
   closeModal() {
-    this.setState({showModal: false});
+    this.props.dispatch(finishGuestForm());
   }
 
   _onFilterChange(event) {
@@ -94,74 +91,21 @@ export default class GuestList extends Component {
   }
 
   handleSubmit() {
-    this.refs.addGuestForm.submit();  // will return a promise
+    this.refs.guestForm.submit();  // will return a promise
     this.closeModal();
-    if (this.props.postAddGuestHandler) {
-      this.props.postAddGuestHandler();
-    }
   }
 
   render() {
-    const { filteredGuests, loaded, isCheckin, checkinHandler, dispatch } = this.props;
+    const { filteredGuests, loaded, actionLabel, actionHandler, showGuestModal, selectedGuest, dispatch } = this.props;
     const styles = require('./GuestList.scss');
+    const formTitle = selectedGuest ? 'Update Guest' : 'Add New Guest';
+
     if (!loaded) {
       return (
         <p> Loading ... </p>
       );
     }
-    if (isCheckin) {
-      return (
-        <div className={styles.guest_search_container}>
-          <input
-            onChange={this._onFilterChange}
-            className={styles.search_input + ' form-control'}
-            placeholder="Filter by first, last or nickname"
-          />
-        <Button bsStyle="primary" onClick={::this.openModal} className={styles.right_top_action_button}><Glyphicon glyph="plus" /> Add New Guest </Button>
-          <Table
-            rowHeight={50}
-            headerHeight={50}
-            rowsCount={filteredGuests.length}
-            width={600}
-            height={300}
-            {...this.props}>
-            <Column
-              header={<Cell>First Name</Cell>}
-              cell={<TextCell data={filteredGuests} col="firstName" />}
-              fixed
-              width={100}
-            />
-            <Column
-              header={<Cell>Last Name</Cell>}
-              cell={<TextCell data={filteredGuests} col="lastName" />}
-              fixed
-              width={100}
-            />
-            <Column
-              header={<Cell>Nickname</Cell>}
-              cell={<TextCell data={filteredGuests} col="nickname" />}
-              fixed
-              width={100}
-            />
-            <Column
-              header={<Cell>Birthdate</Cell>}
-              cell={<DateCell data={filteredGuests} col="birthdate" />}
-              width={200}
-            />
-            <Column
-              header={<Cell>Checkin</Cell>}
-              cell={<CheckinCell data={filteredGuests} col="id" checkinHandler = {checkinHandler} />}
-              width={100}
-            />
-          </Table>
-          <FormModal showModal={this.state.showModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={'Add New Guest'}>
-            <GuestForm ref="addGuestForm" onSubmit={data => {
-              dispatch(addNewGuest(data));
-            }}/>
-          </FormModal>
-        </div>
-      );
-    }
+
     return (
       <div className={styles.guest_search_container}>
         <input
@@ -200,10 +144,14 @@ export default class GuestList extends Component {
             cell={<DateCell data={filteredGuests} col="birthdate" />}
             width={200}
           />
+          <Column
+            header={<Cell>Action</Cell>}
+            cell={<ActionCell data={filteredGuests} col="id" actionLabel={actionLabel} actionHandler={actionHandler} />}
+            width={100}
+          />
         </Table>
-
-        <FormModal showModal={this.state.showModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={'Add New Guest'}>
-          <GuestForm ref="addGuestForm" onSubmit={data => {
+        <FormModal showModal={showGuestModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={formTitle}>
+          <GuestForm ref="guestForm" initialValues={selectedGuest} onSubmit={data => {
             dispatch(addNewGuest(data));
           }}/>
         </FormModal>

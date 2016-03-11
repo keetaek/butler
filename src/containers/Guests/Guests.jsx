@@ -1,10 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { GuestList } from 'components';
+const { startGuestForm } = require('redux/modules/guests');
 
+@connect(() => {return {};})
 export default class Guests extends Component {
-  showSnackBar() {
-    console.log('Show Snack bar in Guest');
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+  };
+
+  onClickUpdateLinkHandler(guest) {
+    return (event) => {
+      event.preventDefault();
+      this.props.dispatch(startGuestForm(guest));
+    };
   }
 
   render() {
@@ -12,7 +22,7 @@ export default class Guests extends Component {
       <div className="container">
         <h1>Guests</h1>
         <Helmet title="Guests"/>
-        <GuestList {...this.props} postAddGuestHandler={this.showSnackBar} />
+        <GuestList actionLabel="Update" actionHandler={::this.onClickUpdateLinkHandler} {...this.props} />
       </div>
     );
   }

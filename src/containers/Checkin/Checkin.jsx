@@ -12,7 +12,7 @@ const CheckinList = require('components/CheckinList/CheckinList');
 const ButlerPopover = require('components/ButlerPopover/ButlerPopover');
 const Notification = require('components/CheckinNotification/CheckinNotification');
 const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
-const { updateGuest, searchGuestbyId } = require('redux/modules/guests');
+const { updateGuest } = require('redux/modules/guests');
 const moment = require('moment');
 const { loadCheckins } = require('redux/modules/checkin');
 
@@ -63,12 +63,11 @@ export default class Checkin extends Component {
     };
   }
 
-  onClickCheckinLinkHandler(event) {
-    event.preventDefault();
-    const path = event.target.pathname;
-    const checkinGuestId = path.match(/\/checkin\/(\d+)/)[1];
-    const guest = searchGuestbyId(this.props.guests, checkinGuestId);
-    this.props.dispatch(startCheckin(guest));
+  onClickCheckinLinkHandler(guest) {
+    return (event) => {
+      event.preventDefault();
+      this.props.dispatch(startCheckin(guest));
+    };
   }
 
   closeCheckin() {
@@ -78,9 +77,9 @@ export default class Checkin extends Component {
   checkinHandler() {
     this.refs.checkinForm.submit();
     this.refs.guestForm.submit();
-
-    this.props.dispatch(finishCheckin());
+    this.closeCheckin();
   }
+
   handleCheckinDateChange(event, date) {
     event.preventDefault();
     // Hide popover
@@ -118,7 +117,7 @@ export default class Checkin extends Component {
         <Grid>
           <Row className="show-grid">
             <Col md={7} className={style.vertical_line}>
-              <GuestList {...this.props} isCheckin checkinHandler={::this.onClickCheckinLinkHandler} />
+              <GuestList {...this.props} actionLabel="Checkin" actionHandler={::this.onClickCheckinLinkHandler} />
             </Col>
             <Col md={5}>
               <h4 style={{textAlign: 'center'}}>Checked-in Guests</h4>
