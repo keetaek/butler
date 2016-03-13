@@ -6,4 +6,4 @@ function checkContentType(req, res, next) {
   return next();
 }
 
-module.exports = checkContentType
+module.exports = checkContentType;

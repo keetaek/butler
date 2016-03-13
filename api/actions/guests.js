@@ -1,9 +1,9 @@
 const express = require('express');
 const models = require('../models/index');
-const checkContentType = require('../middlewares/checkContentType');
+const checkContentType = require('middlewares/checkContentType');
 const isEmpty = require('lodash').isEmpty;
 const moment = require('moment');
-const util = require('util');
+const { validatePayloadCreateGuest } = require('middlewares/validations/guestValidations');
 
 async function getGuests() {
   return models.Guest.findAll({});
@@ -92,7 +92,7 @@ module.exports = () => {
     }
   });
 
-  router.put('/:id', checkContentType, async (req, res, next) => {
+  router.put('/:id', checkContentType, validatePayloadCreateGuest, async (req, res, next) => {
     try {
       const data = await updateGuest(req);
       res.status(200).send(data);
@@ -101,34 +101,7 @@ module.exports = () => {
     }
   });
 
-  router.post('/', (req, res, next) => {
-    req.checkBody({
-      'first_name': {
-        notEmpty: true
-      },
-      'last_name': {
-        notEmpty: true
-      },
-      'birthdate': {
-        optional: true,
-        isDate: true
-      },
-      'identification_need_by': {
-        optional: true,
-        isDate: true
-      },
-      'intake_form_collect_date': {
-        optional: true,
-        isDate: true
-      }
-    });
-    const errors = req.validationErrors();
-    if (errors) {
-      res.send('There have been validation errors: ' + util.inspect(errors), 400);
-      return;
-    }
-    next();
-  }, async (req, res, next) => {
+  router.post('/', checkContentType, validatePayloadCreateGuest, async (req, res, next) => {
     try {
       const data = await createGuest(req);
       res.status(201).send(data);
