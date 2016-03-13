@@ -238,9 +238,9 @@ export function addNewGuest(fields) {
   };
 }
 
-export function updateGuest(guestId, fields) {
+export function updateGuest(guest, fields) {
   const payload = buildPayload(fields);
-
+  const guestId = guest.id;
   return {
     types: [UPDATE, UPDATE_SUCCESS, UPDATE_FAIL],
     promise: (client) => client.put(`/guests/${guestId}`, {

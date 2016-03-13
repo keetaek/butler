@@ -8,7 +8,7 @@ const { Button, Glyphicon } = require('react-bootstrap');
 const GuestForm = require('components/GuestList/GuestForm');
 const FormModal = require('components/FormModal/FormModal');
 const moment = require('moment');
-const { addNewGuest, startGuestForm, finishGuestForm } = require('redux/modules/guests');
+const { addNewGuest, updateGuest, startGuestForm, finishGuestForm } = require('redux/modules/guests');
 
 const DateCell = ({rowIndex, data, col, ...props}) => {
   const dateField = data[rowIndex][col];
@@ -72,8 +72,14 @@ export default class GuestList extends Component {
     }
   }
 
-  openModal() {
-    this.props.dispatch(startGuestForm());
+  getFormSubmitAction(data, guest) {
+    let action;
+    if (guest) {
+      action = updateGuest(guest, data);
+    } else {
+      action = addNewGuest(data);
+    }
+    return action;
   }
 
   closeModal() {
@@ -95,6 +101,9 @@ export default class GuestList extends Component {
     this.closeModal();
   }
 
+  addNewGuestHandler() {
+    this.props.dispatch(startGuestForm());
+  }
   render() {
     const { filteredGuests, loaded, actionLabel, actionHandler, showGuestModal, selectedGuest, dispatch } = this.props;
     const styles = require('./GuestList.scss');
@@ -113,7 +122,7 @@ export default class GuestList extends Component {
           className={styles.search_input + ' form-control'}
           placeholder="Filter by first, last or nickname"
         />
-      <Button bsStyle="primary" onClick={::this.openModal} className={styles.right_top_action_button}><Glyphicon glyph="plus" /> Add New Guest </Button>
+      <Button bsStyle="primary" onClick={::this.addNewGuestHandler} className={styles.right_top_action_button}><Glyphicon glyph="plus" /> Add New Guest </Button>
         <Table
           rowHeight={50}
           headerHeight={50}
@@ -152,7 +161,7 @@ export default class GuestList extends Component {
         </Table>
         <FormModal showModal={showGuestModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={formTitle}>
           <GuestForm ref="guestForm" initialValues={selectedGuest} onSubmit={data => {
-            dispatch(addNewGuest(data));
+            dispatch(this.getFormSubmitAction(data, selectedGuest));
           }}/>
         </FormModal>
       </div>
