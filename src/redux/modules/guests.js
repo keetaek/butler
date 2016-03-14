@@ -1,4 +1,4 @@
-const { mapIncomingGuests, mapIncomingGuest, createdIdBasedData } =
+const { mapIncomingGuests, mapIncomingGuest, createdIdBasedData, buildGuestPayLoad } =
 require('helpers/guestDataMapper');
 const { reduce, isEmpty, filter, concat } = require('lodash');
 
@@ -186,25 +186,6 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-
-function buildPayload(fields) {
-  return {
-    first_name: fields.firstName,
-    last_name: fields.lastName,
-    nickname: fields.nickname,
-    birthdate: fields.birthdate,
-    gender: fields.gender,
-    emergency_contact_name: fields.emergencyContactName,
-    emergency_contact_phone: fields.identificationNeedBy,
-    identification_type: fields.identificationType,
-    identification_value: fields.identificationValue,
-    identification_need_by: fields.identificationNeedBy,
-    identification_note: fields.identificationNote,
-    intake_form_collect_date: fields.intakeFormCollectDate,
-    intake_form_collected_by: fields.intakeFormCollectedBy
-  };
-}
-
 export function isLoaded(globalState) {
   return globalState.guests && globalState.guests.loaded;
 }
@@ -228,7 +209,7 @@ export function searchRequest(searchTerm) {
 }
 
 export function addNewGuest(fields) {
-  const payload = buildPayload(fields);
+  const payload = buildGuestPayLoad(fields);
 
   return {
     types: [CREATE, CREATE_SUCCESS, CREATE_FAIL],
@@ -239,7 +220,7 @@ export function addNewGuest(fields) {
 }
 
 export function updateGuest(guest, fields) {
-  const payload = buildPayload(fields);
+  const payload = buildGuestPayLoad(fields);
   const guestId = guest.id;
   return {
     types: [UPDATE, UPDATE_SUCCESS, UPDATE_FAIL],

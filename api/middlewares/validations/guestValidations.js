@@ -10,17 +10,8 @@ function validatePayloadCreateGuest(req, res, next) {
       notEmpty: true
     },
     'birthdate': {
-      optional: true,
       isDate: true
     },
-    'identification_need_by': {
-      optional: true,
-      isDate: true
-    },
-    'intake_form_collect_date': {
-      optional: true,
-      isDate: true
-    }
   });
   const errors = req.validationErrors();
   if (errors) {
