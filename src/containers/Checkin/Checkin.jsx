@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
+import { Grid, Row, Col, Glyphicon, Input } from 'react-bootstrap';
 import { GuestList } from 'components';
 import { connect } from 'react-redux';
 import DayPicker from 'react-day-picker';
@@ -59,7 +59,8 @@ export default class Checkin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checkinDate: moment()
+      checkinDate: moment(),
+      showUpdateGuest: false
     };
   }
 
@@ -71,13 +72,21 @@ export default class Checkin extends Component {
   }
 
   closeCheckin() {
+    // Reset showUpdateGuest flag
+    this.setState({ showUpdateGuest: false });
     this.props.dispatch(finishCheckin());
   }
 
   checkinHandler() {
+    if (this.state.showUpdateGuest) {
+      this.refs.guestForm.submit();
+    }
     this.refs.checkinForm.submit();
-    this.refs.guestForm.submit();
     this.closeCheckin();
+  }
+
+  toggleUpdateGuest() {
+    this.setState({ showUpdateGuest: !this.state.showUpdateGuest });
   }
 
   handleCheckinDateChange(event, date) {
@@ -101,6 +110,16 @@ export default class Checkin extends Component {
     }
     const formattedCheckinDate = moment(this.state.checkinDate).format('MM-DD-YYYY');
     const style = require('./Checkin.scss');
+    let guestFormStyle;
+    let submitButtonLabel;
+    if (this.state.showUpdateGuest) {
+      guestFormStyle = style.show_content;
+      submitButtonLabel = 'Checkin and Update';
+    } else {
+      guestFormStyle = style.hide_content;
+      submitButtonLabel = 'Checkin';
+    }
+
     return (
       <div className="container">
         <h1 className={style.header_inline}>Check in</h1>
@@ -126,16 +145,17 @@ export default class Checkin extends Component {
           </Row>
         </Grid>
 
-        <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={'Save'} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in (${formattedCheckinDate}): ${guestFirstName} ${guestLastName}`}>
+        <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={submitButtonLabel} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in (${formattedCheckinDate}): ${guestFirstName} ${guestLastName}`}>
           <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: this.state.checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>
-          <hr />
-          <GuestForm ref="guestForm" initialValues={selectedGuest} onSubmit={data => {
-            dispatch(updateGuest(guestId, data));
-          }}/>
+          <Input type="checkbox" label="Update Guest" labelClassName="col-md-4" onChange={::this.toggleUpdateGuest} {...this.state.showUpdateGuest} />
+          <div className={guestFormStyle}>
+            <GuestForm ref="guestForm" initialValues={selectedGuest} onSubmit={data => {
+              dispatch(updateGuest(guestId, data));
+            }}/>
+          </div>
         </FormModal>
-
          <Notification guestNotification={guestNotification} checkinNotification={checkinNotification} dispatch={dispatch}/>
 
       </div>

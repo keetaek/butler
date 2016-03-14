@@ -20,6 +20,7 @@ export default class CheckinForm extends Component {
       reportedItems: PropTypes.object,
       note: PropTypes.object
     }).isRequired,
+    guestUpdateForm: PropTypes.object,
     dispatch: PropTypes.func.isRequired
   };
 
