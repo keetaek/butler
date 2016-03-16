@@ -98,7 +98,6 @@ export default class GuestList extends Component {
 
   handleSubmit() {
     this.refs.guestForm.submit();  // will return a promise
-    this.closeModal();
   }
 
   addNewGuestHandler() {
