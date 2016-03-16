@@ -145,13 +145,13 @@ export default class Checkin extends Component {
         </Grid>
 
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={submitButtonLabel} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in (${formattedCheckinDate}): ${guestFirstName} ${guestLastName}`}>
-          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: this.state.checkinDate }} selectedGuest={selectedGuest} onSubmit={data => {
+          <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: this.state.checkinDate }} onSubmit={data => {
             dispatch(checkinGuest(data));
           }}/>
           <Input type="checkbox" label="Update Guest" labelClassName="col-md-4" onChange={::this.toggleUpdateGuest} {...this.state.showUpdateGuest} />
           <div className={guestFormStyle}>
             <GuestForm ref="guestForm" initialValues={selectedGuest} onSubmit={data => {
-              dispatch(updateGuest(guestId, data));
+              dispatch(updateGuest(selectedGuest, data));
             }}/>
           </div>
         </FormModal>

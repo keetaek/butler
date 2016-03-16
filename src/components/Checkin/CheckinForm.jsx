@@ -10,7 +10,6 @@ const { Input } = require('react-bootstrap');
 })
 export default class CheckinForm extends Component {
   static propTypes = {
-    selectedGuest: PropTypes.object,
     fields: PropTypes.shape({
       guestId: PropTypes.object.isRequired,
       checkinDate: PropTypes.object.isRequired,
