@@ -1,46 +1,26 @@
 import React, {Component} from 'react';
 import Helmet from 'react-helmet';
-
+import { Jumbotron } from 'react-bootstrap';
 export default class About extends Component {
 
-  state = {
-    showKitten: false
-  }
-
-  handleToggleKitten = () => this.setState({showKitten: !this.state.showKitten});
-
   render() {
-    const {showKitten} = this.state;
-    const kitten = require('./kitten.jpg');
     return (
       <div className="container">
-        <h1>About Us</h1>
         <Helmet title="About Us"/>
 
-        <p>This project was originally created by Erik Rasmussen
-          (<a href="https://twitter.com/erikras" target="_blank">@erikras</a>), but has since seen many contributions
-          from the open source community. Thank you to <a
-            href="https://github.com/erikras/react-redux-universal-hot-example/graphs/contributors"
-            target="_blank">all the contributors</a>.
-        </p>
+        <Jumbotron>
+          <h1>Welcome to Butler!</h1>
+          <p>Butler is an open source project to digitize any homeless shelter operations.
+            The project was created to support volunteers and staffs of a homeless shelter to checkin their guests with the minimum hassle.
 
-        <h3>Mini Bar <span style={{color: '#aaa'}}>(not that kind)</span></h3>
-
-        <p>Hey! You found the mini info bar! The following component is display-only. Note that it shows the same
-          time as the info bar.</p>
-
-        <h3>Images</h3>
-
-        <p>
-          Psst! Would you like to see a kitten?
-
-          <button className={'btn btn-' + (showKitten ? 'danger' : 'success')}
-                  style={{marginLeft: 50}}
-                  onClick={this.handleToggleKitten}>
-            {showKitten ? 'No! Take it away!' : 'Yes! Please!'}</button>
-        </p>
-
-        {showKitten && <div><img src={kitten}/></div>}
+            This project was initially created by Keetaek Hong (<a href="https://www.linkedin.com/in/keetaek-hong-94115823" target="_blank">LinkedIn</a>)
+          </p>
+          <p>Currently, we are welcoming other contributors to solidify and improve its code base. <a
+            href="https://github.com/keetaek/butler"
+            target="_blank">GitHub</a>
+          </p>
+          <p>Please feel free to fork, adopt and deploy as you see fit </p>
+        </Jumbotron>
       </div>
     );
   }
