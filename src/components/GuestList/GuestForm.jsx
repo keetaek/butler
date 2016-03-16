@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 const { reduxForm } = require('redux-form');
 const { Input } = require('react-bootstrap');
+const validate = require('components/GuestList/GuestFormValidation');
+const { isEmpty } = require('lodash');
 
 @reduxForm({
   form: 'guestForm',
@@ -8,6 +10,7 @@ const { Input } = require('react-bootstrap');
             'emergencyContactName', 'emergencyContactPhone', 'identificationType', 'identificationValue',
             'identificationNeedBy', 'identificationNote',
             'intakeFormCollectDate', 'intakeFormCollectedBy'],
+  validate,
 })
 export default class GuestForm extends Component {
   static propTypes = {
@@ -29,24 +32,37 @@ export default class GuestForm extends Component {
     dispatch: PropTypes.func.isRequired
   };
 
+  styleFieldPerValidation(field) {
+    let style;
+    if (field.touched) {
+      if (field.error) {
+        style = 'error';
+      } else if (!isEmpty(field.value)) {
+        style = 'success';
+      }
+    }
+    return style;
+  }
+
   render() {
     const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
     const styles = require('./GuestForm.scss');
+
     return (
       <span>
         <form>
           <fieldset>
             <h4>Basic Info</h4>
             <div className="row form-group">
-              <Input type="text" placeholder="First Name" label="First Name" labelClassName="col-md-2" wrapperClassName="col-md-4" groupClassName={styles.inline_form_group} {...firstName} />
-              <Input type="text" placeholder="Last Name" label="Last Name" labelClassName="col-md-2" wrapperClassName="col-md-4" groupClassName={styles.inline_form_group} {...lastName} />
+              <Input type="text" bsStyle={this.styleFieldPerValidation(firstName)} placeholder="First Name" label="First Name" labelClassName="col-md-2" wrapperClassName="col-md-4" groupClassName={styles.inline_form_group} help={firstName.touched && firstName.error} {...firstName} />
+              <Input type="text" bsStyle={this.styleFieldPerValidation(lastName)} placeholder="Last Name" label="Last Name" labelClassName="col-md-2" wrapperClassName="col-md-4" groupClassName={styles.inline_form_group} help={lastName.touched && lastName.error} {...lastName} />
             </div>
             <div className="row form-group">
-              <Input type="text" placeholder="Nickname" label="Nickname" labelClassName="col-md-2" wrapperClassName="col-md-4"
-              groupClassName={styles.inline_form_group}
+              <Input type="text" bsStyle={this.styleFieldPerValidation(nickname)} placeholder="Nickname" label="Nickname" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              groupClassName={styles.inline_form_group} help={nickname.touched && nickname.error}
               {...nickname} />
-              <Input type="date" label="Birthdate" labelClassName="col-md-2" wrapperClassName="col-md-4"
-              groupClassName={styles.inline_form_group}
+            <Input type="date" bsStyle={this.styleFieldPerValidation(birthdate)} label="Birthdate" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              groupClassName={styles.inline_form_group} help={birthdate.touched && birthdate.error}
               {...birthdate} />
             </div>
             <div className="row">
@@ -62,11 +78,11 @@ export default class GuestForm extends Component {
           <fieldset>
             <h4>Emergency Contact</h4>
             <div className="row form-group">
-              <Input type="text" placeholder="name" label="Name"
+              <Input type="text" bsStyle={this.styleFieldPerValidation(emergencyContactName)} placeholder="name" label="Name"
               labelClassName="col-md-2" wrapperClassName="col-md-4"
               groupClassName={styles.inline_form_group} {...emergencyContactName} />
-            <Input type="tel" label="Phone Number" labelClassName="col-md-2" wrapperClassName="col-md-4"
-              groupClassName={styles.inline_form_group} {...emergencyContactPhone} />
+            <Input type="tel" label="Phone Number" bsStyle={this.styleFieldPerValidation(emergencyContactPhone)} labelClassName="col-md-2" wrapperClassName="col-md-4"
+              groupClassName={styles.inline_form_group} help={emergencyContactPhone.touched && emergencyContactPhone.error} {...emergencyContactPhone} />
             </div>
           </fieldset>
           <fieldset>
@@ -79,19 +95,19 @@ export default class GuestForm extends Component {
                 <option value="passport">Passport</option>
                 <option value="other">Other</option>
               </Input>
-              <Input type="text" label="Identification #" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              <Input type="text" label="Identification #" bsStyle={this.styleFieldPerValidation(identificationValue)} labelClassName="col-md-2" wrapperClassName="col-md-4"
               groupClassName={styles.inline_form_group} {...identificationValue} />
             </div>
             <div className="row form-group">
-              <Input type="date" label="ID need by" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              <Input type="date" label="ID need by" bsStyle={this.styleFieldPerValidation(identificationNeedBy)} labelClassName="col-md-2" wrapperClassName="col-md-4"
               groupClassName={styles.inline_form_group} {...identificationNeedBy} />
               <Input type="text" placeholder="note" label="Note" labelClassName="col-md-2" wrapperClassName="col-md-4"
               groupClassName={styles.inline_form_group} {...identificationNote} />
             </div>
             <div className="row form-group">
-              <Input type="date" label="Collection Date" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              <Input type="date" label="Collection Date" bsStyle={this.styleFieldPerValidation(intakeFormCollectDate)} labelClassName="col-md-2" wrapperClassName="col-md-4"
               groupClassName={styles.inline_form_group} {...intakeFormCollectDate} />
-              <Input type="text" label="Collected By" labelClassName="col-md-2" wrapperClassName="col-md-4"
+              <Input type="text" label="Collected By" bsStyle={this.styleFieldPerValidation(intakeFormCollectedBy)} labelClassName="col-md-2" wrapperClassName="col-md-4"
               groupClassName={styles.inline_form_group} {...intakeFormCollectedBy} />
             </div>
           </fieldset>
