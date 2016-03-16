@@ -67,12 +67,14 @@ export default class Checkin extends Component {
   onClickCheckinLinkHandler(guest) {
     return (event) => {
       event.preventDefault();
+      // Resetting showUpdateGuest flag in case the modal was closed in the result of the submission.
+      this.setState({ showUpdateGuest: false });
       this.props.dispatch(startCheckin(guest));
     };
   }
 
   closeCheckin() {
-    // Reset showUpdateGuest flag
+    // Resetting showUpdateGuest flag
     this.setState({ showUpdateGuest: false });
     this.props.dispatch(finishCheckin());
   }
