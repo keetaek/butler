@@ -82,7 +82,6 @@ export default class Checkin extends Component {
       this.refs.guestForm.submit();
     }
     this.refs.checkinForm.submit();
-    this.closeCheckin();
   }
 
   toggleUpdateGuest() {
