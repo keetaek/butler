@@ -1,4 +1,4 @@
-const { isEmpty, reduce, omit, isUndefined } = require('lodash');
+const { isEmpty, reduce } = require('lodash');
 const moment = require('moment');
 
 export function mapIncomingGuest(rawData) {
