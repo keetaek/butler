@@ -30,7 +30,7 @@ const validate = values => {
   }
 
   if (values.birthdate) {
-    if (!moment(values.birthdate, 'MM/DD/YYYY').isValid()) {
+    if (!moment(values.birthdate).isValid()) {
       errors.birthdate = 'Must be mm/dd/yyyy';
     }
   }
