@@ -11,7 +11,7 @@ const GuestForm = require('components/GuestList/GuestForm');
 const CheckinList = require('components/CheckinList/CheckinList');
 const ButlerPopover = require('components/ButlerPopover/ButlerPopover');
 const Notification = require('components/CheckinNotification/CheckinNotification');
-const { startCheckin, finishCheckin, checkinGuest } = require('redux/modules/checkin');
+const { startCheckin, finishCheckin, checkinGuest, isGuestAlreadyCheckedIn } = require('redux/modules/checkin');
 const { updateGuest } = require('redux/modules/guests');
 const moment = require('moment');
 const { loadCheckins } = require('redux/modules/checkin');
@@ -69,7 +69,11 @@ export default class Checkin extends Component {
       event.preventDefault();
       // Resetting showUpdateGuest flag in case the modal was closed in the result of the submission.
       this.setState({ showUpdateGuest: false });
-      this.props.dispatch(startCheckin(guest));
+      if (isGuestAlreadyCheckedIn(guest.id, this.props.checkins)) {
+        alert('Guest ' + guest.firstName + ' already checked-in');
+      } else {
+        this.props.dispatch(startCheckin(guest));
+      }
     };
   }
 

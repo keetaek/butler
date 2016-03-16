@@ -19,7 +19,7 @@ export const DELETE_CHECKIN_FAIL = 'butler/checkin/DELETE_CHECKIN_FAIL';
 const moment = require('moment');
 const { buildCheckinPayLoad, mapIncomingCheckins, mapIncomingCheckin } =
 require('helpers/checkinDataMapper');
-const { isEmpty, filter } = require('lodash');
+const { isEmpty, filter, find } = require('lodash');
 
 const initialState = {
   loading: false,
@@ -156,7 +156,7 @@ export function checkinGuest(fields) {
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],
     promise: (client) => client.post('/checkins', {
       data: payload,
-      guestId: fields.id
+      guestId: fields.guestId
     })
   };
 }
@@ -194,4 +194,17 @@ export function loadCheckins(start, end) {
     types: [LOAD_CHECKINS, LOAD_CHECKINS_SUCCESS, LOAD_CHECKINS_FAIL],
     promise: (client) => client.get('/checkins', { params: { startDate: startDate, endDate: endDate } })
   };
+}
+
+export function isGuestAlreadyCheckedIn(guestId, checkinList) {
+  if (!checkinList || isEmpty(checkinList)) {
+    return false;
+  }
+  const checkin = find(checkinList, (item) => {
+    return item.guestId === guestId;
+  });
+  if (checkin) {
+    return true;
+  }
+  return false;
 }
