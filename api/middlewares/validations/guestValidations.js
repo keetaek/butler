@@ -8,10 +8,7 @@ function validatePayloadCreateGuest(req, res, next) {
     },
     'last_name': {
       notEmpty: true
-    },
-    'birthdate': {
-      isDate: true
-    },
+    }
   });
   const errors = req.validationErrors();
   if (errors) {
