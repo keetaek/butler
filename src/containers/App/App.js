@@ -98,7 +98,7 @@ export default class App extends Component {
         </div>
 
         <div className="well text-center">
-          Have questions? Ask for help <a
+          Have questions? <a
           href="mailto:keetaek@gmail.com?Subject=Butler%20questions"
           target="_blank">Email</a>
         </div>
