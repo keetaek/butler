@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import DayPicker from 'react-day-picker';
 require('react-day-picker/lib/style.css');
 const FormModal = require('components/FormModal/FormModal');
-const CheckinForm = require('components/Checkin/checkinForm');
+const CheckinForm = require('components/Checkin/CheckinForm');
 const GuestForm = require('components/GuestList/GuestForm');
 const CheckinList = require('components/CheckinList/CheckinList');
 const ButlerPopover = require('components/ButlerPopover/ButlerPopover');
