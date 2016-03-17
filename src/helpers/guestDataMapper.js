@@ -27,7 +27,7 @@ export function mapIncomingGuest(rawData) {
 
 export function mapIncomingGuests(rawData) {
   if (isEmpty(rawData)) {
-    return null;
+    return [];
   }
   return rawData.map(mapIncomingGuest);
 }
@@ -55,7 +55,7 @@ export function buildGuestPayLoad(data) {
 
 export function createdIdBasedData(rawData) {
   if (isEmpty(rawData)) {
-    return null;
+    return {};
   }
 
   return reduce(rawData, (result, value) => {

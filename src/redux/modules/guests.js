@@ -28,8 +28,8 @@ const SEARCH = 'butler/guests/SEARCH';
 const initialState = {
   loaded: false,
   loading: false,
-  data: null,
-  filteredData: null,
+  data: [],
+  filteredData: [],
   idBasedData: null, // created to search by id.
   error: null,
   searchTerm: null,
