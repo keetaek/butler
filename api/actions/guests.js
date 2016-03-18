@@ -17,6 +17,25 @@ async function getGuest(req) {
   });
 }
 
+/**
+ * Formatting the phone number consistently before saving it into the database.
+ *
+ * @param  {[type]} phoneNumber [description]
+ * @return {[type]}             [description]
+ */
+function formatPhoneNumber(phoneNumber) {
+  const regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  if (!phoneNumber || phoneNumber.length === 0) {
+    return null;
+  }
+  const matched = phoneNumber.match(regex);
+  // The regex match should return [{input}, {firstMatch}, {secondMatch}, {thirdMatch}]
+  if (matched && matched.length < 4) {
+    return null;
+  }
+  return matched[1] + matched[2] + matched[3];
+}
+
 function parseDate(dateField) {
   if (isEmpty(dateField)) {
     return null;
@@ -29,6 +48,7 @@ function updateFields(payload) {
   payload.birthdate = parseDate(payload.birthdate);
   payload.identification_need_by = parseDate(payload.identification_need_by);
   payload.intake_form_collect_date = parseDate(payload.intake_form_collect_date);
+  payload.emergency_contact_phone = formatPhoneNumber(payload.emergency_contact_phone);
 }
 
 async function createGuest(req) {
