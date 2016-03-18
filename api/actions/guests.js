@@ -6,7 +6,7 @@ const moment = require('moment');
 const { validatePayloadCreateGuest } = require('middlewares/validations/guestValidations');
 
 async function getGuests() {
-  return models.Guest.findAll({});
+  return models.Guest.findAll({order: 'id'});
 }
 
 async function getGuest(req) {

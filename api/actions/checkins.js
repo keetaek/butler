@@ -23,9 +23,9 @@ async function getCheckins(startDate, endDate, guestId) {
   const queryCondition = checkinQueryBuilder(startDate, endDate, guestId);
   let queryResult;
   if (isEmpty(queryCondition)) {
-    queryResult = models.Checkin.findAll({});
+    queryResult = models.Checkin.findAll({order: 'id'});
   } else {
-    queryResult = models.Checkin.findAll({ where: queryCondition });
+    queryResult = models.Checkin.findAll({ where: queryCondition, order: 'id' });
   }
   return queryResult;
 }
