@@ -25,6 +25,7 @@ function select(state) {
     checkinNotification: state.checkin.notification,
     selectedGuest: state.checkin.selectedGuest,
     checkinLoaded: state.checkin.loaded,
+    guestsLoaded: state.guests.loaded,
     submittingCheckin: state.checkin.submitting,
     submittingGuest: state.guests.submitting
   };
@@ -47,6 +48,7 @@ export default class Checkin extends Component {
     guests: PropTypes.object,
     checkins: PropTypes.array,
     checkinLoaded: PropTypes.bool.isRequired,
+    guestsLoaded: PropTypes.bool.isRequired,
     submittingCheckin: PropTypes.bool,
     submittingGuest: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
@@ -57,7 +59,6 @@ export default class Checkin extends Component {
     selectedGuest: null,
     showCheckinModal: false,
     checkins: [],
-    checkinLoaded: false,
   };
 
   constructor(props) {
@@ -107,7 +108,7 @@ export default class Checkin extends Component {
   }
 
   render() {
-    const { showCheckinModal, selectedGuest, guestNotification, checkinNotification, checkinLoaded, submittingCheckin, submittingGuest, dispatch } = this.props;
+    const { showCheckinModal, selectedGuest, guestNotification, checkinNotification, checkinLoaded, guestsLoaded, submittingCheckin, submittingGuest, dispatch } = this.props;
     const style = require('./Checkin.scss');
     let guestId = null;
     let guestFirstName = null;
@@ -150,7 +151,7 @@ export default class Checkin extends Component {
             </Col>
             <Col md={5}>
               <h4 style={{textAlign: 'center'}}>Checked-in Guests</h4>
-              <CheckinList loaded={checkinLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
+              <CheckinList loaded={checkinLoaded && guestsLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
             </Col>
           </Row>
         </Grid>

@@ -36,7 +36,7 @@ class CheckinList extends Component {
   render() {
     const { loaded, checkins, guests } = this.props;
     if (!loaded) {
-      // Return loading indicator
+      return (<p> Loading ... </p>);
     }
     const checkinList = this.buildCheckinListItems(checkins, guests);
     return (
