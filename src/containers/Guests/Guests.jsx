@@ -22,7 +22,7 @@ export default class Guests extends Component {
       <div className="container">
         <h1>Guests</h1>
         <Helmet title="Guests"/>
-        <GuestList actionLabel="Update" actionHandler={::this.onClickUpdateLinkHandler} {...this.props} />
+        <GuestList actionLabel="View/Update" actionHandler={::this.onClickUpdateLinkHandler} {...this.props} />
       </div>
     );
   }

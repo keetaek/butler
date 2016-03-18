@@ -152,12 +152,12 @@ export default class GuestList extends Component {
           <Column
             header={<Cell>Birthdate</Cell>}
             cell={<DateCell data={filteredGuests} col="birthdate" />}
-            width={200}
+            width={150}
           />
           <Column
             header={<Cell>Action</Cell>}
             cell={<ActionCell data={filteredGuests} col="id" actionLabel={actionLabel} actionHandler={actionHandler} />}
-            width={100}
+            width={150}
           />
         </Table>
         <FormModal showModal={showGuestModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} submitting={submitting} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={formTitle}>
