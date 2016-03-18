@@ -47,7 +47,6 @@ export default class GuestForm extends Component {
   render() {
     const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
     const styles = require('./GuestForm.scss');
-
     return (
       <span>
         <form>
@@ -68,11 +67,12 @@ export default class GuestForm extends Component {
             <div className="row">
               <label className={'col-md-2 ' + styles.label_margin}
                 >Gender</label>
-               <Input label="Male" type="radio" name="gender" checked={gender.value === 'male'} value="male" groupClassName="radio-inline {styles.inline_form_group}" {...gender} />
-              <Input label="Female" type="radio" name="gender" checked={gender.value === 'female'} value="female" groupClassName="radio-inline" {...gender} />
-              <Input label="MTF" type="radio" name="gender" checked={gender.value === 'mtf'} value="mtf" groupClassName="radio-inline"{...gender} />
-              <Input label="FTM" type="radio" name="gender" checked={gender.value === 'ftm'} value="ftm" groupClassName="radio-inline"{...gender} />
-              <Input label="Other" type="radio" name="gender" checked={gender.value === 'other'} value="other" groupClassName="radio-inline"{...gender} />
+              {/* Radio buttons are treated little differently. It doesn't use the spread operator - https://github.com/erikras/redux-form/issues/124 */}
+              <Input label="Male" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'male'} value="male" groupClassName="radio-inline {styles.inline_form_group}" />
+              <Input label="Female" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'female'} value="female" groupClassName="radio-inline" />
+              <Input label="MTF" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'mtf'} value="mtf" groupClassName="radio-inline" />
+              <Input label="FTM" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'ftm'} value="ftm" groupClassName="radio-inline" />
+              <Input label="Other" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'other'} value="other" groupClassName="radio-inline" />
             </div>
           </fieldset>
           <fieldset>

@@ -109,7 +109,6 @@ export default class GuestList extends Component {
     const { filteredGuests, loaded, actionLabel, actionHandler, showGuestModal, selectedGuest, submitting, dispatch } = this.props;
     const styles = require('./GuestList.scss');
     const formTitle = selectedGuest ? 'Update Guest' : 'Add New Guest';
-
     if (!loaded) {
       return (
         <p> Loading ... </p>
