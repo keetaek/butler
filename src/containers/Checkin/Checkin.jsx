@@ -49,8 +49,8 @@ export default class Checkin extends Component {
     checkins: PropTypes.array,
     checkinLoaded: PropTypes.bool.isRequired,
     guestsLoaded: PropTypes.bool.isRequired,
-    submittingCheckin: PropTypes.bool,
-    submittingGuest: PropTypes.bool,
+    submittingCheckin: PropTypes.bool.isRequired,
+    submittingGuest: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
