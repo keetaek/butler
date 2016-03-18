@@ -128,7 +128,7 @@ export default class GuestList extends Component {
           headerHeight={50}
           rowsCount={filteredGuests.length}
           width={600}
-          height={300}
+          height={500}
           {...this.props}>
           <Column
             header={<Cell>First Name</Cell>}
