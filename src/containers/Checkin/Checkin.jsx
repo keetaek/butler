@@ -149,7 +149,6 @@ export default class Checkin extends Component {
             </Col>
           </Row>
         </Grid>
-
         <FormModal showModal={showCheckinModal} onClose={::this.closeCheckin} cancelButtonLabel={'Cancel'} submitButtonLabel={submitButtonLabel} cancelHandler={::this.closeCheckin} submitHandler={::this.checkinHandler} title={`Check-in (${formattedCheckinDate}): ${guestFirstName} ${guestLastName}`}>
           <CheckinForm ref="checkinForm" initialValues={{ feelSafe: true, healthIssue: false, guestId: guestId, checkinDate: this.state.checkinDate }} onSubmit={data => {
             dispatch(checkinGuest(data));

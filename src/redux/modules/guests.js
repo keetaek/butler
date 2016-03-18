@@ -28,6 +28,7 @@ const SEARCH = 'butler/guests/SEARCH';
 const initialState = {
   loaded: false,
   loading: false,
+  submitting: false, // flag to indicate the subitting action in is progress
   data: [],
   filteredData: [],
   idBasedData: null, // created to search by id.
@@ -87,6 +88,12 @@ export default function reducer(state = initialState, action = {}) {
         idBasedData: null,
         error: action.error
       };
+    case CREATE: {
+      return {
+        ...state,
+        submitting: true
+      };
+    }
 
     case CREATE_SUCCESS:
       // Just add a newly added item to the list.
@@ -95,8 +102,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         showGuestModal: false,
-        loading: false,
-        loaded: true,
+        submitting: false,
         // Just adding the newly added item
         data: listWithNewItem,
         filteredData: listWithNewItem,
@@ -112,8 +118,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         showGuestModal: false,
-        loading: false,
-        loaded: false,
+        submitting: false,
         data: null,
         filteredData: null,
         idBasedData: null,
@@ -123,7 +128,11 @@ export default function reducer(state = initialState, action = {}) {
           data: action.error
         }
       };
-
+    case UPDATE:
+      return {
+        ...state,
+        submitting: true
+      };
     case UPDATE_SUCCESS:
       // Just add a newly added item to the list.
       const updatedItem = mapIncomingGuest(action.result);
@@ -138,6 +147,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         showGuestModal: false,
+        submitting: false,
         data: listWithUpdatedItem,
         filteredData: listWithUpdatedItem,
         idBasedData: createdIdBasedData((listWithUpdatedItem)),
@@ -149,6 +159,7 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_FAIL:
       return {
         ...state,
+        submitting: false,
         showGuestModal: false,
         notification: {
           status: UPDATE_FAIL,

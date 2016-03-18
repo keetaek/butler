@@ -15,7 +15,9 @@ export default class FormModal extends Component {
     cancelButtonLabel: PropTypes.string.isRequired,
     submitButtonLabel: PropTypes.string.isRequired,
     cancelHandler: PropTypes.func,
-    submitHandler: PropTypes.func
+    submitHandler: PropTypes.func,
+    // submitting is to show different label in the submit button while the service call is made.
+    submitting: PropTypes.bool
   }
 
   static defaultProps = {
@@ -28,7 +30,7 @@ export default class FormModal extends Component {
 
 
   render() {
-    const { showModal, title, children, cancelButtonLabel, submitButtonLabel, cancelHandler, submitHandler } = this.props;
+    const { showModal, title, children, cancelButtonLabel, submitButtonLabel, cancelHandler, submitHandler, submitting } = this.props;
     return (
       <span>
         <Modal show={showModal} onHide={::this.close} bsSize="large">
@@ -40,7 +42,7 @@ export default class FormModal extends Component {
         </Modal.Body>
         <Modal.Footer>
           <Button bsStyle="default" onClick={cancelHandler}>{cancelButtonLabel}</Button>
-          <Button bsStyle="primary" onClick={submitHandler}>{submitButtonLabel}</Button>
+          <Button bsStyle="primary" disabled={submitting} onClick={!submitting ? submitHandler : null}>{submitting ? 'In progress' : submitButtonLabel}</Button>
         </Modal.Footer>
       </Modal>
     </span>

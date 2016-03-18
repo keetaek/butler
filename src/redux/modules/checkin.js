@@ -24,6 +24,7 @@ const { isEmpty, filter, find } = require('lodash');
 const initialState = {
   loading: false,
   loaded: false,
+  submitting: false,
   showCheckinModal: false,
   selectedGuest: null,
   notification: null,

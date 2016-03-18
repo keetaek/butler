@@ -37,6 +37,7 @@ function select(state) {
     error: state.guests.error,
     loading: state.guests.loading,
     loaded: state.guests.loaded,
+    submitting: state.guests.submitting,
     showGuestModal: state.guests.showGuestModal,
     selectedGuest: state.guests.selectedGuest
   };
@@ -50,6 +51,7 @@ export default class GuestList extends Component {
     error: PropTypes.object,
     loading: PropTypes.bool,
     loaded: PropTypes.bool,
+    submitting: PropTypes.bool,
     actionLabel: PropTypes.string.isRequired,
     actionHandler: PropTypes.func,
     showGuestModal: PropTypes.bool,
@@ -104,7 +106,7 @@ export default class GuestList extends Component {
     this.props.dispatch(startGuestForm());
   }
   render() {
-    const { filteredGuests, loaded, actionLabel, actionHandler, showGuestModal, selectedGuest, dispatch } = this.props;
+    const { filteredGuests, loaded, actionLabel, actionHandler, showGuestModal, selectedGuest, submitting, dispatch } = this.props;
     const styles = require('./GuestList.scss');
     const formTitle = selectedGuest ? 'Update Guest' : 'Add New Guest';
 
@@ -158,7 +160,7 @@ export default class GuestList extends Component {
             width={100}
           />
         </Table>
-        <FormModal showModal={showGuestModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={formTitle}>
+        <FormModal showModal={showGuestModal} onClose={::this.closeModal} cancelButtonLabel={'Cancel'} submitButtonLabel={'Submit'} submitting={submitting} cancelHandler={::this.closeModal} submitHandler={::this.handleSubmit} title={formTitle}>
           <GuestForm ref="guestForm" initialValues={selectedGuest} onSubmit={data => {
             dispatch(this.getFormSubmitAction(data, selectedGuest));
           }}/>
