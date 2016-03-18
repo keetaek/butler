@@ -12,15 +12,15 @@ export function mapIncomingGuest(rawData) {
     lastName: rawData.last_name,
     nickname: rawData.nickname,
     // Why changing date format? To conform to RFC3339
-    birthdate: rawData.birthdate ? moment(rawData.birthdate).format('YYYY-MM-DD') : null,
+    birthdate: rawData.birthdate ? moment.utc(rawData.birthdate).format('YYYY-MM-DD') : null,
     gender: rawData.gender,
     emergencyContactName: rawData.emergency_contact_name,
     emergencyContactPhone: rawData.emergency_contact_phone,
     identificationType: rawData.identification_type,
     identificationValue: rawData.identification_value,
-    identificationNeedBy: rawData.identification_need_by ? moment(rawData.identification_need_by).format('YYYY-MM-DD') : null,
+    identificationNeedBy: rawData.identification_need_by ? moment.utc(rawData.identification_need_by).format('YYYY-MM-DD') : null,
     identificationNote: rawData.identification_note,
-    intakeFormCollectDate: rawData.intake_form_collect_date ? moment(rawData.intake_form_collect_date).format('YYYY-MM-DD') : null,
+    intakeFormCollectDate: rawData.intake_form_collect_date ? moment.utc(rawData.intake_form_collect_date).format('YYYY-MM-DD') : null,
     intakeFormCollectedBy: rawData.intake_form_collected_by
   };
 }

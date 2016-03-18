@@ -10,10 +10,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     checkin_date: {
       type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: true
+      },
       // Why do we have to do this?
       // getDataValue for Date field will return Date object and assume the date field was in UTC. We need to ensure there aren't any time fields.
       get: function() {
-        return moment(this.getDataValue('checkin_date')).utc().format('YYYY-MM-DD');
+        return moment.utc(this.getDataValue('checkin_date')).format('YYYY-MM-DD');
       }
     },
     feel_safe: DataTypes.BOOLEAN,
