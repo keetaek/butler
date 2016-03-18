@@ -27,6 +27,5 @@ module.exports = {
 
   down: function (migration) {
     return migration.dropTable('Guests');
-
   }
 };
