@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     feel_safe: DataTypes.BOOLEAN,
-    heatlh_issue: DataTypes.BOOLEAN,
+    health_issue: DataTypes.BOOLEAN,
     reported_items: DataTypes.TEXT,
     note: DataTypes.TEXT
   });

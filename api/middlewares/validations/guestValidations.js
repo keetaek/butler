@@ -1,7 +1,6 @@
 const util = require('util');
 
 function validatePayloadCreateGuest(req, res, next) {
-  console.log('Is it getting called?');
   req.checkBody({
     'first_name': {
       notEmpty: true

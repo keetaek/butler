@@ -50,7 +50,6 @@ export default class CheckinNotification extends Component {
             action: {
               label: 'Checkin',
               callback: () => {
-                console.log('CHECKIN. ... ');
                 dispatch((startCheckin(guest)));
               }
             },

@@ -1,7 +1,5 @@
 const { isEmpty } = require('lodash');
 const moment = require('moment');
-const FEEL_SAFE_DEFAULT_VALUE = true;
-const HEALTH_ISSUE_DEFAULT_VALUE = false;
 
 export function mapIncomingCheckin(data) {
   if (isEmpty(data)) {
@@ -32,8 +30,8 @@ export function buildCheckinPayLoad(data) {
   const checkinDate = data.checkinDate || moment();
   return {
     'guest_id': data.guestId,
-    'feel_safe': data.feelSafe || FEEL_SAFE_DEFAULT_VALUE,
-    'health_issue': data.healthIssue || HEALTH_ISSUE_DEFAULT_VALUE,
+    'feel_safe': data.feelSafe,
+    'health_issue': data.healthIssue,
     'checkin_date': moment(checkinDate).format('YYYY-MM-DD'),
     'reported_items': data.reportedItems || '',
     'note': data.note || ''

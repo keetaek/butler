@@ -17,7 +17,7 @@ module.exports = {
       },
       checkin_date: DataTypes.DATEONLY,
       feel_safe: DataTypes.BOOLEAN,
-      heatlh_issue: DataTypes.BOOLEAN,
+      health_issue: DataTypes.BOOLEAN,
       reported_items: DataTypes.TEXT,
       note: DataTypes.TEXT,
       createdAt: DataTypes.DATE,
