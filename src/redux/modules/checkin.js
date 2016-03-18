@@ -56,15 +56,13 @@ export default function reducer(state = initialState, action = {}) {
     case CHECKIN:
       return {
         ...state,
-        loading: true,
-        loaded: false,
+        submitting: true
       };
     case CHECKIN_SUCCESS:
       return {
         ...state,
         showCheckinModal: false,
-        loading: false,
-        loaded: true,
+        submitting: false,
         checkins: addNewCheckin(action.result, state.checkins),
         notification: {
           status: CHECKIN_SUCCESS,
@@ -75,8 +73,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         showCheckinModal: false,
-        loading: false,
-        loaded: true,
+        submitting: false,
         notification: {
           status: CHECKIN_FAIL,
           data: action.error
@@ -95,26 +92,19 @@ export default function reducer(state = initialState, action = {}) {
         selectedGuest: null,
         showCheckinModal: false,
       };
-    case DELETE_CHECKIN:
-      return {
-        ...state,
-        loading: true,
-        loaded: false,
-      };
+
     case DELETE_CHECKIN_SUCCESS:
       const checkinId = action.checkinId;
       const updatedCheckinList = removeCheckinFromList(checkinId, state.checkins);
       return {
         ...state,
-        loading: false,
-        loaded: true,
+        // NOTE: submitting is not set here because we care less about the result
+        // We won't show any loading spinner for the delete action
         checkins: updatedCheckinList
       };
     case DELETE_CHECKIN_FAIL:
       return {
         ...state,
-        loading: false,
-        loaded: true,
         notification: {
           status: DELETE_CHECKIN_FAIL,
           data: action.error
