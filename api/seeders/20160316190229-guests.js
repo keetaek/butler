@@ -8,7 +8,7 @@ function createFakeData(numData) {
       last_name: Faker.name.lastName(),
       nickname: Faker.name.firstName(),
       birthdate: Faker.date.past(50, new Date('Sat Sep 20 1999 21:35:02 GMT+0200 (CEST)')),
-      gender: 'M',
+      gender: Faker.random.arrayElement(['male', 'female', 'mtf', 'ftm', 'other']),
       emergency_contact_name: Faker.name.findName(),
       emergency_contact_phone: Faker.phone.phoneNumber('###-###-####'),
       identification_type: 'state',
