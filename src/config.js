@@ -18,21 +18,18 @@ module.exports = Object.assign({
     title: 'Butler',
     description: 'All the modern best practices in one example.',
     head: {
-      titleTemplate: 'React Redux Example: %s',
+      titleTemplate: 'Homeless Shelter Management: %s',
       meta: [
         {name: 'description', content: 'All the modern best practices in one example.'},
         {charset: 'utf-8'},
-        {property: 'og:site_name', content: 'React Redux Example'},
+        {property: 'og:site_name', content: 'Butler'},
         {property: 'og:image', content: 'https://react-redux.herokuapp.com/logo.jpg'},
         {property: 'og:locale', content: 'en_US'},
-        {property: 'og:title', content: 'React Redux Example'},
-        {property: 'og:description', content: 'All the modern best practices in one example.'},
+        {property: 'og:title', content: 'Butler'},
+        {property: 'og:description', content: 'Homeless Shelter Management Web Application'},
         {property: 'og:card', content: 'summary'},
-        {property: 'og:site', content: '@erikras'},
-        {property: 'og:creator', content: '@erikras'},
-        {property: 'og:title', content: 'React Redux Example'},
-        {property: 'og:description', content: 'All the modern best practices in one example.'},
-        {property: 'og:image', content: 'https://react-redux.herokuapp.com/logo.jpg'},
+        {property: 'og:site', content: '@keetaek'},
+        {property: 'og:creator', content: '@keetaek'},
         {property: 'og:image:width', content: '200'},
         {property: 'og:image:height', content: '200'}
       ]
