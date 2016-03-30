@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 const NotificationSystem = require('react-notification-system');
 const clearGuestNotification = require('redux/modules/guests').clearNotification;
 const clearCheckinNotification = require('redux/modules/checkin').clearNotification;
-const { startCheckin, CHECKIN_FAIL } = require('redux/modules/checkin');
+const { startCheckin, CHECKIN_FAIL, START_CHECKIN_FAIL } = require('redux/modules/checkin');
 const { CREATE_SUCCESS, CREATE_FAIL, UPDATE_FAIL } = require('redux/modules/guests');
+
 // const { clone } = require('lodash');
 
 /**
@@ -41,9 +42,9 @@ export default class CheckinNotification extends Component {
 
   addNotifications(guestNotification, checkinNotification, dispatch) {
     if (guestNotification) {
+      const guest = guestNotification.data;
       switch (guestNotification.status) {
         case CREATE_SUCCESS:
-          const guest = guestNotification.data;
           this.notificationSystem.addNotification({
             message: `Guest ${guest.firstName} has been added to the system!`,
             level: 'success',
@@ -86,6 +87,8 @@ export default class CheckinNotification extends Component {
       }
     }
     if (checkinNotification) {
+      console.log('TESTSSS', checkinNotification.status);
+      const checkinData = checkinNotification.data;
       switch (checkinNotification.status) {
         case CHECKIN_FAIL:
           this.notificationSystem.addNotification({
@@ -98,7 +101,21 @@ export default class CheckinNotification extends Component {
             }
           });
           break;
+        case START_CHECKIN_FAIL:
+          console.log('START CHECKIN FAILLLLL');
+          const reason = checkinData.reason;
+          this.notificationSystem.addNotification({
+            message: `${reason}`,
+            level: 'error',
+            autoDismiss: 5,
+            uid: `${START_CHECKIN_FAIL}`,
+            onRemove: () => {
+              dispatch(clearCheckinNotification());
+            }
+          });
+          break;
         default:
+          console.log('Did it end up in the default block?');
           break;
       }
     }

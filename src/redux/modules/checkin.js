@@ -6,16 +6,16 @@ const LOAD_CHECKINS = 'butler/checkin/LOAD_CHECKINS';
 const LOAD_CHECKINS_SUCCESS = 'butler/checkin/LOAD_CHECKINS_SUCCESS';
 export const LOAD_CHECKINS_FAIL = 'butler/checkin/LOAD_CHECKINS_FAIL';
 const START_CHECKIN = 'butler/checkin/START_CHECKIN';
+const START_CHECKIN_SUCCESS = 'butler/checkin/START_CHECKIN_SUCCESS';
+export const START_CHECKIN_FAIL = 'butler/checkin/START_CHECKIN_FAIL';
 const FINISH_CHECKIN = 'butler/checkin/FINISH_CHECKIN';
 const DELETE_CHECKIN = 'butler/checkin/DELETE_CHECKIN';
 const DELETE_CHECKIN_SUCCESS = 'butler/checkin/DELETE_CHECKIN_SUCCESS';
 export const DELETE_CHECKIN_FAIL = 'butler/checkin/DELETE_CHECKIN_FAIL';
+const CLEAR_NOTIFICATION = 'butler/checkin/CLEAR_NOTIFICATION';
 // const LOAD_GUEST_HISTORY = 'butler/checkin/LOAD_GUEST_HISTORY';
 // const LOAD_GUEST_HISTORY_SUCCESS = 'butler/checkin/LOAD_GUEST_HISTORY_SUCCESS';
 // const LOAD_GUEST_HISTORY_FAIL = 'butler/checkin/LOAD_GUEST_HISTORY_FAIL';
-// const UPDATE = 'butler/checkin/UPDATE';
-// const UPDATE_SUCCESS = 'butler/checkin/UPDATE_SUCCESS';
-// const UPDATE_FAIL = 'butler/checkin/UPDATE_FAIL';
 const moment = require('moment');
 const { buildCheckinPayLoad, mapIncomingCheckins, mapIncomingCheckin } =
 require('helpers/checkinDataMapper');
@@ -52,6 +52,7 @@ function removeCheckinFromList(checkinId, checkinList) {
 }
 
 export default function reducer(state = initialState, action = {}) {
+  const guest = action.guest;
   switch (action.type) {
     case CHECKIN:
       return {
@@ -79,12 +80,21 @@ export default function reducer(state = initialState, action = {}) {
           data: action.error
         }
       };
-    case START_CHECKIN:
-      const guest = action.guest;
+    case START_CHECKIN_SUCCESS:
       return {
         ...state,
         selectedGuest: guest,
         showCheckinModal: true,
+      };
+    case START_CHECKIN_FAIL:
+      return {
+        ...state,
+        selectedGuest: guest,
+        showCheckinModal: true,
+        notification: {
+          status: START_CHECKIN_FAIL,
+          data: action.error
+        }
       };
     case FINISH_CHECKIN:
       return {
@@ -136,6 +146,11 @@ export default function reducer(state = initialState, action = {}) {
       };
     case RESET:
       return initialState;
+    case CLEAR_NOTIFICATION:
+      return {
+        ...state,
+        notification: null
+      };
     default:
       return state;
   }
@@ -153,7 +168,15 @@ export function checkinGuest(fields) {
 }
 
 export function startCheckin(guest) {
-  return { type: START_CHECKIN, guest };
+  return {
+    types: [START_CHECKIN, START_CHECKIN_SUCCESS, START_CHECKIN_FAIL],
+    promise: (client) => client.get('/checkins/validate', {
+      guestId: guest.id
+    }),
+    guest
+  };
+
+  // return { type: START_CHECKIN, guest };
 }
 
 export function finishCheckin() {
@@ -169,6 +192,10 @@ export function deleteCheckin(checkinId) {
     promise: (client) => client.del(`/checkins/${checkinId}`),
     checkinId
   };
+}
+
+export function clearNotification() {
+  return { type: CLEAR_NOTIFICATION };
 }
 
 /**
