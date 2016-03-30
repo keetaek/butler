@@ -7,10 +7,10 @@ async function getGuests() {
   return models.Guest.findAll({ order: ['first_name', 'last_name', 'id'] });
 }
 
-async function getGuest(req) {
+async function getGuest(guestId) {
   return models.Guest.find({
     where: {
-      id: req.params.id
+      id: guestId
     }
   });
 }

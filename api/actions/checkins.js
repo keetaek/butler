@@ -1,11 +1,39 @@
 const express = require('express');
 const checkContentType = require('../middlewares/checkContentType');
-const { getCheckins, getCheckin, createCheckin, updateCheckin, deleteCheckin } = require('actions/handlers/checkinHandler');
+const { getCheckins, getCheckin, createCheckin, updateCheckin, deleteCheckin, getCheckinCount } = require('actions/handlers/checkinHandler');
+const { getGuest } = require('actions/handlers/guestHandler');
+const constants = require('utils/constants');
+
+async function validateCheckin(guestId) {
+  const checkinCount = await getCheckinCount(guestId);
+  const guestInfo = await getGuest(guestId);
+  const identification = guestInfo.identification_value;
+
+  if (checkinCount > constants.checkin.maxCheckinBeforeIdRequired &&
+  (identification && identification.length > 0 )) {
+    return { valid: true };
+  }
+  return { valid: false, code: constants.checkin.validation.noIdFound.code, reason: constants.checkin.validation.noIdFound.reason };
+}
 
 module.exports = () => {
 /*eslint-disable */
   const router = express.Router();
 /*eslint-enable */
+
+  router.get('/validate', async (req, res, next) => {
+    try {
+      const guestId = req.query.guestId;
+      const data = await validateCheckin(guestId);
+      if (data) {
+        res.status(200).send(data);
+      } else {
+        res.status(500).end();
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 
   // e.g. api/checkins/3
   router.get('/:id', async (req, res, next) => {

@@ -11,7 +11,8 @@ module.exports = () => {
   // e.g. api/guests/3
   router.get('/:id', async (req, res, next) => {
     try {
-      const data = await getGuest(req);
+      const guestId = req.params.id;
+      const data = await getGuest(guestId);
       if (data) {
         res.status(200).send(data);
       } else {

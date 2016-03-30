@@ -1,5 +1,6 @@
 const models = require('models/index');
 const { isEmpty } = require('lodash');
+const constants = require('utils/constants');
 
 function checkinQueryBuilder(startDate, endDate, guestId) {
   const condition = {};
@@ -36,6 +37,11 @@ async function getCheckin(req) {
   });
 }
 
+async function getCheckinCount(guestId) {
+  const checkinCount = await models.Checkin.count({ where: { guest_id: guestId }, limit: constants.checkin.maxCheckinBeforeIdRequired });
+  return checkinCount;
+}
+
 async function createCheckin(req) {
   return models.Checkin.create({
     ...req.body
@@ -64,4 +70,4 @@ function deleteCheckin(req) {
   });
 }
 
-module.exports = { getCheckins, getCheckin, createCheckin, updateCheckin, deleteCheckin };
+module.exports = { getCheckins, getCheckin, createCheckin, updateCheckin, deleteCheckin, getCheckinCount };
