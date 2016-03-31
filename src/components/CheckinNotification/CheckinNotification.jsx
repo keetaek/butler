@@ -21,12 +21,6 @@ export default class CheckinNotification extends Component {
       data: PropTypes.object
     }),
     dispatch: PropTypes.func
-    // showNotification: PropTypes.bool.isRequired,
-    // message: PropTypes.string.isRequired,
-    // actionText: PropTypes.string,
-    // onClickActionHandler: PropTypes.func,
-    // onDismissHandler: PropTypes.func,
-    // dismissAfter: PropTypes.number,
   }
 
   componentDidMount() {
