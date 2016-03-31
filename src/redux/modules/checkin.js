@@ -170,9 +170,7 @@ export function checkinGuest(fields) {
 export function startCheckin(guest) {
   return {
     types: [START_CHECKIN, START_CHECKIN_SUCCESS, START_CHECKIN_FAIL],
-    promise: (client) => client.get('/checkins/validate', {
-      guestId: guest.id
-    }),
+    promise: (client) => client.get('/checkins/validate', { params: { guestId: guest.id }}),
     guest
   };
 

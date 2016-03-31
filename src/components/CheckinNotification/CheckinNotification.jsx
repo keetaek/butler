@@ -87,7 +87,6 @@ export default class CheckinNotification extends Component {
       }
     }
     if (checkinNotification) {
-      console.log('TESTSSS', checkinNotification.status);
       const checkinData = checkinNotification.data;
       switch (checkinNotification.status) {
         case CHECKIN_FAIL:
@@ -102,7 +101,6 @@ export default class CheckinNotification extends Component {
           });
           break;
         case START_CHECKIN_FAIL:
-          console.log('START CHECKIN FAILLLLL');
           const reason = checkinData.reason;
           this.notificationSystem.addNotification({
             message: `${reason}`,
@@ -115,7 +113,6 @@ export default class CheckinNotification extends Component {
           });
           break;
         default:
-          console.log('Did it end up in the default block?');
           break;
       }
     }

@@ -7,13 +7,14 @@ const constants = require('utils/constants');
 async function validateCheckin(guestId) {
   const checkinCount = await getCheckinCount(guestId);
   const guestInfo = await getGuest(guestId);
-  const identification = guestInfo.identification_value;
+  const identification = guestInfo ? guestInfo.identification_value : null;
 
-  if (checkinCount > constants.checkin.maxCheckinBeforeIdRequired &&
-  (identification && identification.length > 0 )) {
-    return { valid: true };
+  if (checkinCount > constants.checkin.maxCheckinBeforeIdRequired) {
+    if (!identification || identification.length === 0) {
+      return { valid: false, code: constants.checkin.validation.noIdFound.code, reason: constants.checkin.validation.noIdFound.reason };
+    }
   }
-  return { valid: false, code: constants.checkin.validation.noIdFound.code, reason: constants.checkin.validation.noIdFound.reason };
+  return { valid: true };
 }
 
 module.exports = () => {
@@ -25,10 +26,10 @@ module.exports = () => {
     try {
       const guestId = req.query.guestId;
       const data = await validateCheckin(guestId);
-      if (data) {
+      if (data.valid) {
         res.status(200).send(data);
       } else {
-        res.status(500).end();
+        res.status(422).send(data);
       }
     } catch (err) {
       next(err);

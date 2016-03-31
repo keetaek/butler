@@ -4,7 +4,7 @@ module.exports = {
     validation: {
       noIdFound: {
         code: 0,
-        reason: 'No ID found in the system',
+        reason: `Guest has checked in more than 5 times. Please check ID`,
       }
     }
   }
