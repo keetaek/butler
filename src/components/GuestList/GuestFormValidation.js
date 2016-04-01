@@ -29,10 +29,10 @@ const validate = values => {
     }
   }
 
-  if (values.birthdate) {
-    if (!moment(values.birthdate).isValid()) {
-      errors.birthdate = 'Must be mm/dd/yyyy';
-    }
+  if (!values.birthdate) {
+    errors.birthdate = 'Required';
+  } else if (!moment(values.birthdate).isValid()) {
+    errors.birthdate = 'Must be mm/dd/yyyy';
   }
 
   if (values.emergencyContactPhone) {
