@@ -3,16 +3,27 @@ const checkContentType = require('../middlewares/checkContentType');
 const { getCheckins, getCheckin, createCheckin, updateCheckin, deleteCheckin, getCheckinCount } = require('actions/handlers/checkinHandler');
 const { getGuest } = require('actions/handlers/guestHandler');
 const constants = require('utils/constants');
+const moment = require('moment');
 
 async function validateCheckin(guestId) {
   const checkinCount = await getCheckinCount(guestId);
   const guestInfo = await getGuest(guestId);
   const identification = guestInfo ? guestInfo.identification_value : null;
-
+  const issueCollection = [];
   if (checkinCount > constants.checkin.maxCheckinBeforeIdRequired) {
     if (!identification || identification.length === 0) {
-      return { valid: false, code: constants.checkin.validation.noIdFound.code, reason: constants.checkin.validation.noIdFound.reason };
+      issueCollection.push({ code: constants.checkin.validation.noIdFound.code, reason: constants.checkin.validation.noIdFound.reason });
     }
+  }
+  const minAllowedDate = moment(guestInfo.birthdate).add(constants.checkin.validation.acceptableAge.min, 'years');
+  // Why add 1? because the birthdate of the following year is when the age to bump up.
+  const maxAllowedDate = moment(guestInfo.birthdate).add(constants.checkin.validation.acceptableAge.max + 1, 'years');
+  if (moment().isBefore(minAllowedDate) || moment().isAfter(maxAllowedDate)) {
+    issueCollection.push({ code: constants.checkin.validation.acceptableAge.code, reason: constants.checkin.validation.acceptableAge.reason });
+  }
+
+  if (issueCollection.length > 0) {
+    return { valid: false, issues: issueCollection };
   }
   return { valid: true };
 }

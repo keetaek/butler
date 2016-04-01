@@ -4,8 +4,17 @@ const clearGuestNotification = require('redux/modules/guests').clearNotification
 const clearCheckinNotification = require('redux/modules/checkin').clearNotification;
 const { startCheckin, CHECKIN_FAIL, START_CHECKIN_FAIL } = require('redux/modules/checkin');
 const { CREATE_SUCCESS, CREATE_FAIL, UPDATE_FAIL } = require('redux/modules/guests');
+const { map, join } = require('lodash');
 
-// const { clone } = require('lodash');
+function parseValidationIssues(issueCollection) {
+  if (!issueCollection || issueCollection.length === 0) {
+    return '';
+  }
+  return join(map(issueCollection, (item) => {
+    return item.reason;
+  }), ' and ');
+}
+
 
 /**
  * Show Checkin Notification based on Guest status and Checkin status
@@ -40,6 +49,7 @@ export default class CheckinNotification extends Component {
       switch (guestNotification.status) {
         case CREATE_SUCCESS:
           this.notificationSystem.addNotification({
+            title: 'New Guest',
             message: `Guest ${guest.firstName} has been added to the system!`,
             level: 'success',
             action: {
@@ -95,9 +105,9 @@ export default class CheckinNotification extends Component {
           });
           break;
         case START_CHECKIN_FAIL:
-          const reason = checkinData.reason;
           this.notificationSystem.addNotification({
-            message: `${reason}`,
+            title: 'Validation Warning',
+            message: `${parseValidationIssues(checkinData.issues)}`,
             level: 'error',
             autoDismiss: 5,
             uid: `${START_CHECKIN_FAIL}`,
