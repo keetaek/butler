@@ -11,6 +11,14 @@
     "dialect": "postgres"
   },
   "production": {
+    "database": "butler_production",
+    "host": "127.0.0.1",
+    "port": "5432",
+    "username": "postgres",
+    "password": "admin",
+    "dialect": "postgres"
+  },
+  "production-heroku": {
     "use_env_variable": "DATABASE_URL",
     "username": "root",
     "password": null,
