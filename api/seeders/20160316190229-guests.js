@@ -25,7 +25,6 @@ function createFakeData(numData) {
 module.exports = {
   up: function (queryInterface, Sequelize) {
     const mockData = createFakeData(50);
-
     return queryInterface.bulkInsert('Guests', mockData, {});
   },
 

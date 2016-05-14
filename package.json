@@ -1,17 +1,17 @@
 {
-  "name": "react-redux-universal-hot-example",
-  "description": "Example of an isomorphic (universal) webapp using react redux and hot reloading",
-  "author": "Erik Rasmussen <rasmussenerik@gmail.com> (http://github.com/erikras)",
+  "name": "Butler",
+  "description": "Shelter Management Software",
+  "author": "Keetaek Hong <keetaek@gmail.com> (https://github.com/keetaek)",
   "license": "MIT",
-  "version": "0.9.0",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/erikras/react-redux-universal-hot-example"
+    "url": "https://github.com/keetaek/butler"
   },
-  "homepage": "https://github.com/erikras/react-redux-universal-hot-example",
+  "homepage": "https://github.com/keetaek/butler",
   "keywords": [
     "react",
-    "isomorphic",
+    "butler",
     "universal",
     "webpack",
     "express",
@@ -19,8 +19,9 @@
     "react-hot-reloader",
     "redux",
     "starter",
-    "boilerplate",
-    "babel"
+    "homeless",
+    "babel",
+    "shelter"
   ],
   "main": "bin/server.js",
   "scripts": {
@@ -44,7 +45,11 @@
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
+<<<<<<< HEAD
         "PORT": 80,
+=======
+        "PORT": 8080,
+>>>>>>> 440c988b6c17cbbc59d8057a885ba7931214e148
         "APIPORT": 3030
       }
     },
@@ -135,7 +140,8 @@
     "url-loader": "^0.5.7",
     "util": "^0.10.3",
     "warning": "^2.1.0",
-    "webpack-isomorphic-tools": "^2.2.18"
+    "webpack-isomorphic-tools": "^2.2.18",
+    "winser": "^1.0.2"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
