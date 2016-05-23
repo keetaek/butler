@@ -22,7 +22,8 @@
     "port": "5432",
     "dialect": "postgres",
     "username": "postgres",
-    "password": "admin"
+    "password": "admin",
+    "logging": false
   },
   "production-heroku": {
     "use_env_variable": "DATABASE_URL",
