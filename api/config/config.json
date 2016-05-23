@@ -3,20 +3,26 @@
     "database": "butler_development",
     "host": "127.0.0.1",
     "port": "5432",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "username": "postgres",
+    "password": "admin"
+
   },
   "test": {
     "database": "butler_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "port": "5432",
+    "dialect": "postgres",
+    "username": "postgres",
+    "password": "admin"
   },
   "production": {
     "database": "butler_production",
     "host": "127.0.0.1",
     "port": "5432",
+    "dialect": "postgres",
     "username": "postgres",
-    "password": "admin",
-    "dialect": "postgres"
+    "password": "admin"
   },
   "production-heroku": {
     "use_env_variable": "DATABASE_URL",

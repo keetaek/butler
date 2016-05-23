@@ -29,8 +29,7 @@
     "start-prod": "better-npm-run start-prod",
     "start-prod-api": "better-npm-run start-prod-api",
     "build": "webpack --verbose --colors --display-error-details --config webpack/prod.config.js",
-    "postinstall": "webpack --display-error-details --config webpack/prod.config.js winser -i -s -c",
-    "preuninstall": "winser -r -x -s",
+    "postinstall": "webpack --display-error-details --config webpack/prod.config.js",
     "lint": "eslint -c .eslintrc src api",
     "start-dev": "better-npm-run start-dev",
     "start-dev-api": "better-npm-run start-dev-api",
@@ -137,8 +136,7 @@
     "url-loader": "^0.5.7",
     "util": "^0.10.3",
     "warning": "^2.1.0",
-    "webpack-isomorphic-tools": "^2.2.18",
-    "winser": "^1.0.2"
+    "webpack-isomorphic-tools": "^2.2.18"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
