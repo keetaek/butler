@@ -45,11 +45,7 @@
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
-<<<<<<< HEAD
         "PORT": 80,
-=======
-        "PORT": 8080,
->>>>>>> 440c988b6c17cbbc59d8057a885ba7931214e148
         "APIPORT": 3030
       }
     },
@@ -140,8 +136,7 @@
     "url-loader": "^0.5.7",
     "util": "^0.10.3",
     "warning": "^2.1.0",
-    "webpack-isomorphic-tools": "^2.2.18",
-    "winser": "^1.0.2"
+    "webpack-isomorphic-tools": "^2.2.18"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
