@@ -3,10 +3,7 @@
     "database": "butler_development",
     "host": "127.0.0.1",
     "port": "5432",
-    "dialect": "postgres",
-    "username": "postgres",
-    "password": "admin"
-
+    "dialect": "postgres"
   },
   "test": {
     "database": "butler_test",
