@@ -12,6 +12,7 @@ module.exports = {
       nickname: DataTypes.STRING,
       birthdate: DataTypes.DATEONLY,
       gender: DataTypes.STRING,
+      gender_note: DataTypes.STRING,
       emergency_contact_name: DataTypes.STRING,
       emergency_contact_phone: DataTypes.STRING,
       identification_type: DataTypes.STRING,
