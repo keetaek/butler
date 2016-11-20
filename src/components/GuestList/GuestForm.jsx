@@ -6,7 +6,7 @@ const { isEmpty } = require('lodash');
 
 @reduxForm({
   form: 'guestForm',
-  fields: ['firstName', 'lastName', 'nickname', 'birthdate', 'gender',
+  fields: ['firstName', 'lastName', 'nickname', 'birthdate', 'gender', 'genderNote',
             'emergencyContactName', 'emergencyContactPhone', 'identificationType', 'identificationValue',
             'identificationNeedBy', 'identificationNote',
             'intakeFormCollectDate', 'intakeFormCollectedBy'],
@@ -20,6 +20,7 @@ export default class GuestForm extends Component {
       nickname: PropTypes.object.isRequired,
       birthdate: PropTypes.object.isRequired,
       gender: PropTypes.object.isRequired,
+      genderNote: PropTypes.object.isRequired,
       emergencyContactName: PropTypes.object.isRequired,
       emergencyContactPhone: PropTypes.object.isRequired,
       identificationType: PropTypes.object.isRequired,
@@ -45,7 +46,7 @@ export default class GuestForm extends Component {
   }
 
   render() {
-    const {fields: { firstName, lastName, nickname, birthdate, gender, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
+    const {fields: { firstName, lastName, nickname, birthdate, gender, genderNote, emergencyContactName, emergencyContactPhone, identificationType, identificationValue, identificationNeedBy, identificationNote, intakeFormCollectDate, intakeFormCollectedBy } } = this.props;
     const styles = require('./GuestForm.scss');
     return (
       <span>
@@ -73,6 +74,8 @@ export default class GuestForm extends Component {
               <Input label="MTF" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'mtf'} value="mtf" groupClassName="radio-inline" />
               <Input label="FTM" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'ftm'} value="ftm" groupClassName="radio-inline" />
               <Input label="Other" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'other'} value="other" groupClassName="radio-inline" />
+              <Input type="text" bsStyle={this.styleFieldPerValidation(genderNote)} placeholder="Note" label="Others"
+              labelClassName="col-md-2" wrapperClassName="col-md-4" {...genderNote} />
             </div>
           </fieldset>
           <fieldset>

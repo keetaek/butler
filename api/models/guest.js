@@ -14,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     gender: DataTypes.STRING,
+    gender_note: DataTypes.STRING,
     emergency_contact_name: DataTypes.STRING,
     emergency_contact_phone: DataTypes.STRING,
     identification_type: DataTypes.STRING,

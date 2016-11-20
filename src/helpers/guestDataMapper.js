@@ -14,6 +14,7 @@ export function mapIncomingGuest(rawData) {
     // Why changing date format? To conform to RFC3339
     birthdate: rawData.birthdate ? moment.utc(rawData.birthdate).format('YYYY-MM-DD') : null,
     gender: rawData.gender,
+    genderNote: rawData.gender_note,
     emergencyContactName: rawData.emergency_contact_name,
     emergencyContactPhone: rawData.emergency_contact_phone,
     identificationType: rawData.identification_type,
@@ -42,6 +43,7 @@ export function buildGuestPayLoad(data) {
     nickname: data.nickname,
     birthdate: data.birthdate ? moment(data.birthdate).format('YYYY-MM-DD') : '',
     gender: data.gender,
+    gender_note: data.genderNote,
     emergency_contact_name: data.emergencyContactName,
     emergency_contact_phone: data.emergencyContactPhone,
     identification_type: data.identificationType,
