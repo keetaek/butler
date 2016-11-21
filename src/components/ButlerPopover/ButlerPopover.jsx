@@ -4,8 +4,6 @@ const { OverlayTrigger, Popover } = require('react-bootstrap');
 
 export default class ButlerPopover extends Component {
   static propTypes = {
-    cancelHandler: PropTypes.func,
-    submitHandler: PropTypes.func,
     children: PropTypes.node.isRequired,
     popoverContent: PropTypes.node.isRequired,
     id: PropTypes.string.isRequired
