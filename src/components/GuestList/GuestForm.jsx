@@ -74,8 +74,7 @@ export default class GuestForm extends Component {
               <Input label="MTF" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'mtf'} value="mtf" groupClassName="radio-inline" />
               <Input label="FTM" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'ftm'} value="ftm" groupClassName="radio-inline" />
               <Input label="Other" type="radio" name="gender" onChange={gender.onChange} checked={gender.value === 'other'} value="other" groupClassName="radio-inline" />
-              <Input type="text" bsStyle={this.styleFieldPerValidation(genderNote)} placeholder="Note" label="Others"
-              labelClassName="col-md-2" wrapperClassName="col-md-4" {...genderNote} />
+              <Input type="text" bsStyle={this.styleFieldPerValidation(genderNote)} placeholder="Gender Pronoun" label="Gender Note" labelClassName="col-md-2" wrapperClassName="col-md-4" {...genderNote} />
             </div>
           </fieldset>
           <fieldset>
