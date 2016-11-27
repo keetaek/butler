@@ -1,8 +1,8 @@
 const Faker = require('faker');
 
-function createFakeData(numData) {
+export function createFakeData(numData) {
   const guests = [];
-  for (let i = 0 ; i < numData; i++) {
+  for (let i = 0; i < numData; i++) {
     const item = {
       id: i,
       first_name: Faker.name.firstName(),
