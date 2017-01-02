@@ -11,7 +11,7 @@ const GuestForm = require('components/GuestList/GuestForm');
 const CheckinList = require('components/CheckinList/CheckinList');
 const ButlerPopover = require('components/ButlerPopover/ButlerPopover');
 const Notification = require('components/CheckinNotification/CheckinNotification');
-const { startCheckin, finishCheckin, checkinGuest, isGuestAlreadyCheckedIn } = require('redux/modules/checkin');
+const { startCheckin, finishCheckin, checkinGuest, checkinTempUser, isGuestAlreadyCheckedIn } = require('redux/modules/checkin');
 const { updateGuest } = require('redux/modules/guests');
 const moment = require('moment');
 const { loadCheckins } = require('redux/modules/checkin');
@@ -88,6 +88,13 @@ export default class Checkin extends Component {
     this.refs.checkinForm.submit();
   }
 
+  /**
+   * Checkin placeholder user.
+   */
+  checkinPlaceholderGuestHandler() {
+    this.props.dispatch(checkinTempUser());
+  }
+
   handleCheckinDateChange(event, date) {
     event.preventDefault();
     // Hide popover
@@ -130,6 +137,9 @@ export default class Checkin extends Component {
             </Col>
             <Col md={5}>
               <h4 style={{textAlign: 'center'}}>Checked-in Guests</h4>
+              <div className={style.right_top_action_button}>
+                <Button bsStyle="warning" onClick={::this.checkinPlaceholderGuestHandler}><Glyphicon glyph="plus" /> Placeholder Checkin </Button>
+              </div>
               <CheckinList loaded={checkinLoaded && guestsLoaded} checkinDate={this.state.checkinDate} {...this.props}/>
             </Col>
           </Row>
