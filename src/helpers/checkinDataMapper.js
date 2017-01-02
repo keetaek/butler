@@ -23,7 +23,7 @@ export function mapIncomingCheckins(rawData) {
   return rawData.map(mapIncomingCheckin);
 }
 
-export function buildCheckinPayLoad(data) {
+export function buildCheckinPayload(data) {
   if (isEmpty(data)) {
     return null;
   }
@@ -35,5 +35,23 @@ export function buildCheckinPayLoad(data) {
     'checkin_date': moment(checkinDate).format('YYYY-MM-DD'),
     'reported_items': data.reportedItems || '',
     'note': data.note || ''
+  };
+}
+
+/**
+ * Building payload to check in placeholder guest.
+ *
+ * What is a 'placeholder' guest? A placeholder guest is so that the shelter staff can reserve spots before the particular guest arrives
+ *
+ * @return {[type]} [description]
+ */
+export function buildTempCheckinPayload() {
+  return {
+    'guest_id': -1,
+    'feel_safe': true,
+    'health_issue': false,
+    'checkin_date': moment().format('YYYY-MM-DD'),
+    'reported_items': '',
+    'note': ''
   };
 }

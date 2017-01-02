@@ -17,7 +17,7 @@ const CLEAR_NOTIFICATION = 'butler/checkin/CLEAR_NOTIFICATION';
 // const LOAD_GUEST_HISTORY_SUCCESS = 'butler/checkin/LOAD_GUEST_HISTORY_SUCCESS';
 // const LOAD_GUEST_HISTORY_FAIL = 'butler/checkin/LOAD_GUEST_HISTORY_FAIL';
 const moment = require('moment');
-const { buildCheckinPayLoad, mapIncomingCheckins, mapIncomingCheckin } =
+const { buildCheckinPayload, buildTempCheckinPayload, mapIncomingCheckins, mapIncomingCheckin } =
 require('helpers/checkinDataMapper');
 const { isEmpty, filter, find } = require('lodash');
 
@@ -156,15 +156,36 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-export function checkinGuest(fields) {
-  const payload = buildCheckinPayLoad(fields);
+function postCheckinRequest(payload) {
   return {
     types: [CHECKIN, CHECKIN_SUCCESS, CHECKIN_FAIL],
     promise: (client) => client.post('/checkins', {
-      data: payload,
-      guestId: fields.guestId
+      data: payload
     })
   };
+}
+
+/**
+ * Checking in a placeholder guest to reserve a spot.
+ *
+ * This method doesn't take payload as it builds one with pre-defined values.
+ * @return resulting state
+ */
+export function checkinTempUser() {
+  const payload = buildTempCheckinPayload();
+  return postCheckinRequest(payload);
+}
+
+/**
+ * This function takes the form fields,
+ * then builds a payload,
+ * then makes Checkin request.
+ * @param  {[type]} fields [description]
+ * @return {[type]}        [description]
+ */
+export function checkinGuest(fields) {
+  const payload = buildCheckinPayload(fields);
+  return postCheckinRequest(payload);
 }
 
 export function startCheckin(guest) {

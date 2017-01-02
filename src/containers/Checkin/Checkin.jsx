@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
+import { Grid, Row, Col, Glyphicon, Button } from 'react-bootstrap';
 import { GuestList } from 'components';
 import { connect } from 'react-redux';
 import DayPicker from 'react-day-picker';
